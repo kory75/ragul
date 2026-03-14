@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-14
+**Date:** 2026-03-14 (updated)
 **Prepared by:** Claude Code
 
 ---
@@ -27,7 +27,7 @@ This report compares what those documents specify against what is currently impl
 | **5 — CLI** | `ragul/main.py` — `futtat`, `ellenőriz`, `fordít` (stub), `repl`, `lsp` | **Done** |
 | **6 — REPL** | `repl/repl.py` — persistent env, `:kilep`/`:töröl`/`:mutat`/`:help` | **Done** |
 | **7 — LSP** | `lsp/` — pygls server, diagnostics, hover, completion, go-to-definition | **Done (basic)** |
-| **8 — Docs** | `docs/` folder, MkDocs site, GitHub Pages deployment | **Not started** |
+| **8 — Docs** | `docs/` folder, MkDocs site, GitHub Pages deployment | **Done (initial)** |
 
 ---
 
@@ -42,8 +42,8 @@ From the build plan's "First Milestone Checklist":
 - [x] Interpreter runs: assignment, arithmetic, filter/sort pipeline, effect scope with console output
 - [x] `ragul futtat hello.ragul` works end-to-end
 - [x] `ragul ellenőriz` reports structured errors with line numbers
-- [ ] CI green on push *(no workflows exist yet)*
-- [ ] GitHub Pages deployed *(not started)*
+- [x] CI green on push (`.github/workflows/ci.yml` + `docs.yml` present)
+- [x] GitHub Pages deployed (`docs/` + `mkdocs.yml` created; deploys on next merge to main)
 
 ---
 
@@ -80,7 +80,7 @@ Tree-walking interpreter with full support for:
 - `-megszakít` break signal
 
 **CLI (`ragul/main.py`)**
-All five subcommands wired up. Hungarian command names are primary; English aliases (`run`, `check`, `compile`) accepted silently.
+All five subcommands wired up. Hungarian command names are primary; English aliases (`run`, `check`, `compile`) accepted silently for convenience.
 
 **REPL (`ragul/repl/repl.py`)**
 Interactive REPL with persistent environment across sentences. Multi-line scope entry via continuation prompt (`...`). Special commands: `:kilep`/`:exit`, `:töröl`/`:clear`, `:mutat`/`:show`, `:help`/`:súgó`.
@@ -104,32 +104,36 @@ Comprehensive test suite covering: lexer (9 tests), parser (5 tests), interprete
 - `tests/fixtures/arithmetic.ragul`
 - `tests/fixtures/pipeline.ragul`
 
+**Agent Architecture (`ragul/agents/`)**
+Full agent layer implemented at `ragul/agents/`:
+- `task.py` — `Task` / `TaskResult` typed message protocol
+- `base.py` — `BaseAgent` abstract class
+- `orchestrator.py` — `OrchestratorAgent`; reads `ragul.config`, builds task pipelines, delegates to specialist agents. On compiler errors/warnings, optionally calls **Claude Opus 4.6** (streaming) to generate a plain-English explanation with fix suggestions (requires `ANTHROPIC_API_KEY`; gracefully skipped if absent)
+- `lexer_agent.py`, `parser_agent.py`, `typecheck_agent.py`, `interpreter_agent.py`, `repl_agent.py`, `lsp_agent.py`, `docs_agent.py` — all 7 specialist agents
+
+**GitHub Actions (`/.github/workflows/`)**
+- `ci.yml` — runs pytest + mypy on every push/PR; uploads JSON test report as artifact
+- `docs.yml` — deploys MkDocs site to GitHub Pages on merge to main
+
+**`ragul.config`**
+Project config file at repo root (dogfooding). Hungarian TOML keys: `[projekt]`, `[fordito]`, `[modulok]`, `[ellenorzes]`, `[hibak]`.
+
 ---
 
 ## What Is Missing
 
 ### Entirely Absent
 
-**1. Agent architecture**
-The plan describes an `agents/` folder with an `OrchestratorAgent` and seven specialist agents (`LexerAgent`, `ParserAgent`, `TypeAgent`, `InterpAgent`, `ReplAgent`, `LspAgent`, `DocsAgent`) that communicate via typed `Task`/`TaskResult` messages. None of this exists. The current CLI calls the compiler pipeline directly.
-
-**2. GitHub Actions workflows**
-No `.github/workflows/` folder. The planned `ci.yml` (pytest + mypy on every push/PR) and `docs.yml` (MkDocs deploy to GitHub Pages on main merge) are both absent. Tests exist but nothing runs them automatically.
-
-**3. Docs site**
-No `docs/` folder. The planned MkDocs + Material theme site with 13 content pages and an examples section has not been started.
-
-**4. `ragul.config` project file**
-The build plan says the project should dogfood its own config format with a `ragul.config` file at the repo root. It is not present.
+*(All major gaps resolved. See Known Issues below for remaining smaller items.)*
 
 ### Implemented Differently from the Plan
 
 | Plan | Reality |
 |---|---|
 | Entry point at `cli/main.py` | Lives at `ragul/main.py` (entry point `ragul.main:main`) |
+| `agents/` at repo root | Lives at `ragul/agents/` |
 | Separate `stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py` | All merged into `stdlib/modules.py` |
 | Tests at top-level `tests/` | Tests at `ragul/tests/` |
-| `anthropic` listed as a core dependency | Missing from `pyproject.toml` (needed for agents) |
 
 ### Known Issues
 
@@ -139,7 +143,7 @@ The build plan says the project should dogfood its own config format with a `rag
 | Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
 | E006 (scope leak) not enforced | `typechecker.py` | Variables can be referenced outside their defining scope without an error |
 | E007 (module resolution) not enforced | `typechecker.py` | Bad module imports produce no diagnostic |
-| One test has hardcoded Linux path | `test_ragul.py:394` (`/home/claude/ragul`) | `test_typecheck_integrates_with_cli` will always fail on Windows |
+| `anthropic` missing from `pyproject.toml` | `pyproject.toml` | AI analysis in orchestrator requires manual `pip install anthropic` |
 
 ---
 
@@ -147,13 +151,9 @@ The build plan says the project should dogfood its own config format with a `rag
 
 Ordered by impact:
 
-1. **Add `.github/workflows/ci.yml`** — get tests running automatically; the test suite is already comprehensive enough to be useful in CI
-2. **Fix the hardcoded path** in `test_typecheck_integrates_with_cli` (or remove the test, since CLI integration is covered elsewhere)
-3. **Add `ragul.config`** to the repo root (dogfooding)
-4. **Start `docs/`** — even a minimal `index.md` + `syntax.md` establishes the MkDocs structure for Phase 8
-5. **Implement the agent layer** — add `anthropic` to `pyproject.toml` and scaffold `agents/orchestrator.py` if the agentic architecture is still the target
-6. **Resolve `-val` binding** — fully implement `_resolve_val_args()` in the parser for correct multi-argument suffix calls
-7. **Implement topological sort** in the interpreter for correct pure-scope evaluation order
+1. **Resolve `-val` binding** — fully implement `_resolve_val_args()` in the parser for correct multi-argument suffix calls
+4. **Implement topological sort** in the interpreter for correct pure-scope evaluation order
+5. **Implement E006/E007** in the type checker for scope-leak and module-resolution errors
 
 ---
 

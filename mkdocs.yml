@@ -1,0 +1,51 @@
+site_name: Ragul
+site_description: An agglutinative programming language modelled on Hungarian suffix stacking
+site_author: Kornel Farkas
+repo_url: https://github.com/kornel-farkas/ragul
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
+nav:
+  - Home: index.md
+  - Language:
+    - Syntax: syntax.md
+    - Types: types.md
+    - Functions & Scopes: functions.md
+    - Control Flow: control.md
+    - Effects & I/O: effects.md
+    - Error Handling: errors.md
+    - Modules: modules.md
+  - Reference:
+    - Standard Library: stdlib.md
+    - Tooling & CLI: tooling.md
+  - Examples:
+    - Hello World: examples/hello.md
+    - Data Pipeline: examples/pipeline.md
