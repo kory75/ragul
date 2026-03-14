@@ -11,7 +11,7 @@ suffix chains by looking up functions in the stdlib registry.
 
 from __future__ import annotations
 import sys
-from typing import Any
+from typing import Any, Callable
 from ragul.model import Word, Sentence, Scope
 from ragul.stdlib.core import SUFFIX_REGISTRY
 from ragul.stdlib.modules import RagulHiba  # runtime error value
@@ -100,7 +100,7 @@ def _channel_stderr(value: Any) -> None:
 def _channel_bemenetről() -> str:
     return input()
 
-EFFECT_CHANNELS = {
+EFFECT_CHANNELS: dict[str, Callable[..., Any]] = {
     "képernyőre": _channel_képernyőre,
     "stderr":     _channel_stderr,
     "bemenetről": _channel_bemenetről,

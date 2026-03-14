@@ -52,7 +52,7 @@ class TypeEnv:
         self._bindings: dict[str, RagulType] = {}
         self.parent = parent
 
-    def set(self, name: str, t: RagulType) -> None:
+    def define(self, name: str, t: RagulType) -> None:
         self._bindings[name] = t
 
     def get(self, name: str) -> RagulType | None:
@@ -218,7 +218,7 @@ class TypeChecker:
                 source_type = RagulType.unknown()
 
             if source_type.base != RagulType.UNKNOWN:
-                env.set(target_word.root, source_type)
+                env.define(target_word.root, source_type)
 
             # E003 — parallel write conflict (pure scopes only)
             if target_word.root in write_targets and not in_effect:

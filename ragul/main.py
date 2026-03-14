@@ -32,9 +32,9 @@ def _run(source_path: Path, strict: bool = False) -> int:
                       flags={"strict": strict})
 
     for d in result.errors:
-        console.print(f"[bold red]{d.format()}[/bold red]", file=sys.stderr)
+        console.print(f"[bold red]{d.format()}[/bold red]")
     for d in result.warnings:
-        console.print(f"[yellow]{d.format()}[/yellow]", file=sys.stderr)
+        console.print(f"[yellow]{d.format()}[/yellow]")
 
     if result.ai_analysis:
         console.print("\n[cyan]── AI Analysis ──────────────────────────────────────[/cyan]")

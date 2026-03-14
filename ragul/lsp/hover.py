@@ -8,6 +8,11 @@ On hover over a WORD token, shows:
 """
 
 from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ragul.typechecker import TypeChecker
+
 from lsprotocol.types import (
     Hover,
     MarkupContent,
