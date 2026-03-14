@@ -1,7 +1,7 @@
 site_name: Ragul
 site_description: An agglutinative programming language modelled on Hungarian suffix stacking
 site_author: Kornel Farkas
-repo_url: https://github.com/kornel-farkas/ragul
+repo_url: https://github.com/kory75/ragul
 
 theme:
   name: material
@@ -47,5 +47,10 @@ nav:
     - Standard Library: stdlib.md
     - Tooling & CLI: tooling.md
   - Examples:
-    - Hello World: examples/hello.md
-    - Data Pipeline: examples/pipeline.md
+    - Hello World: examples/01_hello.md
+    - Arithmetic: examples/02_arithmetic.md
+    - Filter & Sort: examples/03_filter_sort.md
+    - String Operations: examples/04_strings.md
+    - Booleans & Comparisons: examples/05_booleans.md
+    - List Operations: examples/06_list_operations.md
+    - Error Handling: examples/07_error_handling.md
