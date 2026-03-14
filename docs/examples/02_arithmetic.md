@@ -2,40 +2,77 @@
 
 Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain operates on the result of the previous one — building a left-to-right pipeline inside a single word.
 
-```ragul
-program-nk-hatás
-    x-be  10-t.
-    y-be  3-t.
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        x-be  10-t.
+        y-be  3-t.
 
-    // Basic operations
-    ossz-be       x-y-össze-t.       // 10 + 3  = 13
-    kulonbseg-be  x-y-kivon-t.       // 10 - 3  = 7
-    szorzat-be    x-y-szoroz-t.      // 10 * 3  = 30
-    hanyados-be   x-y-oszt-t.        // 10 / 3  = 3.33
-    maradek-be    x-y-maradék-t.     // 10 mod 3 = 1
+        // Basic operations
+        ossz-be       x-y-össze-t.       // 10 + 3  = 13
+        kulonbseg-be  x-y-kivon-t.       // 10 - 3  = 7
+        szorzat-be    x-y-szoroz-t.      // 10 * 3  = 30
+        hanyados-be   x-y-oszt-t.        // 10 / 3  = 3.33
+        maradek-be    x-y-maradék-t.     // 10 mod 3 = 1
 
-    ossz-képernyőre-va.
-    kulonbseg-képernyőre-va.
-    szorzat-képernyőre-va.
-    hanyados-képernyőre-va.
-    maradek-képernyőre-va.
+        ossz-képernyőre-va.
+        kulonbseg-képernyőre-va.
+        szorzat-képernyőre-va.
+        hanyados-képernyőre-va.
+        maradek-képernyőre-va.
 
-    // Chained pipeline: (10 + 3) * 2 = 26
-    lanc-be  x-3-össze-2-szoroz-t.
-    lanc-képernyőre-va.
+        // Chained pipeline: (10 + 3) * 2 = 26
+        lanc-be  x-3-össze-2-szoroz-t.
+        lanc-képernyőre-va.
 
-    // Math suffixes
-    gyok-be     16-négyzetgyök-t.    // sqrt(16) = 4.0
-    hatvany-be   2-10-hatvány-t.     // 2^10 = 1024
+        // Math suffixes
+        gyok-be     16-négyzetgyök-t.    // sqrt(16) = 4.0
+        hatvany-be   2-10-hatvány-t.     // 2^10 = 1024
 
-    // Absolute value via subtraction then abs
-    negativ-be  0-7-kivon-t.         // 0 - 7 = -7
-    abs-be      negativ-abszolút-t.  // |-7| = 7
+        // Absolute value via subtraction then abs
+        negativ-be  0-7-kivon-t.         // 0 - 7 = -7
+        abs-be      negativ-abszolút-t.  // |-7| = 7
 
-    gyok-képernyőre-va.
-    hatvany-képernyőre-va.
-    abs-képernyőre-va.
-```
+        gyok-képernyőre-va.
+        hatvany-képernyőre-va.
+        abs-képernyőre-va.
+    ```
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        x->  10-obj.
+        y->  3-obj.
+
+        // Basic operations
+        sum->      x-y-add-obj.       // 10 + 3  = 13
+        diff->     x-y-sub-obj.       // 10 - 3  = 7
+        product->  x-y-mul-obj.       // 10 * 3  = 30
+        quotient-> x-y-div-obj.       // 10 / 3  = 3.33
+        rem->      x-y-rem-obj.       // 10 mod 3 = 1
+
+        sum-print-doing.
+        diff-print-doing.
+        product-print-doing.
+        quotient-print-doing.
+        rem-print-doing.
+
+        // Chained pipeline: (10 + 3) * 2 = 26
+        chain->  x-3-add-2-mul-obj.
+        chain-print-doing.
+
+        // Math suffixes
+        root->   16-sqrt-obj.         // sqrt(16) = 4.0
+        power->  2-10-pow-obj.        // 2^10 = 1024
+
+        // Absolute value via subtraction then abs
+        negative->  0-7-sub-obj.      // 0 - 7 = -7
+        absval->    negative-abs-obj. // |-7| = 7
+
+        root-print-doing.
+        power-print-doing.
+        absval-print-doing.
+    ```
 
 **Output:**
 
@@ -57,30 +94,44 @@ program-nk-hatás
 
 **Inline literal arguments** — numeric literals in the suffix chain are consumed as arguments by the next suffix:
 
-```ragul
-x-3-össze-t      // x + 3
-x-3-össze-2-szoroz-t  // (x + 3) × 2
-```
+=== "Hungarian"
+    ```ragul
+    x-3-össze-t          // x + 3
+    x-3-össze-2-szoroz-t // (x + 3) × 2
+    ```
+
+=== "English aliases"
+    ```ragul
+    x-3-add-obj          // x + 3
+    x-3-add-2-mul-obj    // (x + 3) × 2
+    ```
 
 **Variable references in chains** — a root name in the chain looks up that variable's value:
 
-```ragul
-x-y-össze-t      // x + y
-x-y-kivon-t      // x - y
-```
+=== "Hungarian"
+    ```ragul
+    x-y-össze-t  // x + y
+    x-y-kivon-t  // x - y
+    ```
+
+=== "English aliases"
+    ```ragul
+    x-y-add-obj  // x + y
+    x-y-sub-obj  // x - y
+    ```
 
 **Suffix reference**
 
-| Suffix | Operation |
-|---|---|
-| `-össze` | Add |
-| `-kivon` | Subtract |
-| `-szoroz` | Multiply |
-| `-oszt` | Divide |
-| `-maradék` | Modulo |
-| `-négyzetgyök` | Square root |
-| `-hatvány` | Power (arg: exponent) |
-| `-abszolút` | Absolute value |
+| Hungarian | English | Operation |
+|---|---|---|
+| `-össze` | `-add` | Add |
+| `-kivon` | `-sub` | Subtract |
+| `-szoroz` | `-mul` | Multiply |
+| `-oszt` | `-div` | Divide |
+| `-maradék` | `-rem` | Modulo |
+| `-négyzetgyök` | `-sqrt` | Square root |
+| `-hatvány` | `-pow` | Power (arg: exponent) |
+| `-abszolút` | `-abs` | Absolute value |
 
 ---
 

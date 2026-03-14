@@ -59,6 +59,64 @@ ALIAS_TABLE: dict[str, str] = {
     "-nk":          "-unk",    # short form of -unk
     "-em":          "-m",      # variant of -m
     "-ed":          "-d",      # variant of -d
+    # Scope modifier aliases
+    "-effect":      "-hatás",
+    "-if":          "-ha",
+    "-else":        "-hanem",
+    "-elif":        "-különben",
+    "-catch":       "-hibára",
+    "-module":      "-modul",
+    # Arithmetic suffix aliases
+    "-add":         "-össze",
+    "-sub":         "-kivon",
+    "-mul":         "-szoroz",
+    "-div":         "-oszt",
+    "-rem":         "-maradék",
+    # Comparison suffix aliases
+    "-above":       "-felett",
+    "-below":       "-alatt",
+    "-atleast":     "-legalább",
+    "-atmost":      "-legfeljebb",
+    "-eq":          "-egyenlő",
+    "-neq":         "-nemegyenlő",
+    # Logical suffix aliases
+    "-not":         "-nem",
+    "-and":         "-és",
+    "-or":          "-vagy",
+    # String suffix aliases (core)
+    "-concat":      "-összefűz",
+    # String suffix aliases (szöveg module)
+    "-len":         "-hossz",
+    "-upper":       "-nagybetűs",
+    "-lower":       "-kisbetűs",
+    "-contains":    "-tartalmaz",
+    "-startswith":  "-kezdődik",
+    "-endswith":    "-végződik",
+    "-split":       "-feloszt",
+    "-format":      "-formáz",
+    "-slice":       "-szelet",
+    "-replace":     "-csere",
+    "-tonum":       "-számmá",
+    # Math suffix aliases (matematika module)
+    "-sqrt":        "-négyzetgyök",
+    "-pow":         "-hatvány",
+    "-abs":         "-abszolút",
+    "-round":       "-kerekítve",
+    "-floor":       "-padló",
+    "-ceil":        "-plafon",
+    "-tostr":       "-szöteggé",
+    # List suffix aliases (lista module)
+    "-sorted":      "-rendezve",
+    "-reversed":    "-fordítva",
+    "-first":       "-első",
+    "-last":        "-utolsó",
+    "-unique":      "-egyedi",
+    "-flat":        "-lapítva",
+    "-filter":      "-szűrve",
+    "-append":      "-hozzáad",
+    "-remove":      "-eltávolít",
+    # Effect channel aliases
+    "-print":       "-képernyőre",
 }
 
 # Canonical case suffixes (outermost layer)

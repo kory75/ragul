@@ -2,11 +2,19 @@
 
 The simplest Ragul program — assign a string and print it.
 
-```ragul
-program-nk-hatás
-    üdvözlet-be  "Helló, világ!"-t.
-    üdvözlet-képernyőre-va.
-```
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        üdvözlet-be  "Helló, világ!"-t.
+        üdvözlet-képernyőre-va.
+    ```
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        greeting->  "Hello, World!"-obj.
+        greeting-print-doing.
+    ```
 
 **Run it:**
 
@@ -24,21 +32,31 @@ Helló, világ!
 
 ## What's happening
 
-- `program-nk-hatás` — declares an effect scope named `program`. The `-hatás` suffix marks it as eager: everything inside executes in order, top to bottom.
+- `program-nk-hatás` (`program-ours-effect`) — declares an effect scope named `program`. The `-hatás` / `-effect` suffix marks it as eager: everything inside executes in order, top to bottom.
 - `üdvözlet-be  "Helló, világ!"-t.` — assigns the string into the root `üdvözlet`. The compiler infers type `Szöveg`.
-- `üdvözlet-képernyőre-va.` — pipes `üdvözlet` to the `képernyőre` (screen) channel and executes it with `-va`.
+- `üdvözlet-képernyőre-va.` — pipes `üdvözlet` to the `képernyőre` (`-print`) channel and executes it with `-va` (`-doing`).
 
 ---
 
 ## Variation — with concatenation
 
-```ragul
-program-nk-hatás
-    név-be  "Ragul"-t.
-    üdvözlet-be  "Helló, "-t.
-    kimenet-be  üdvözlet-név-összefűz-t.
-    kimenet-képernyőre-va.
-```
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        név-be  "Ragul"-t.
+        üdvözlet-be  "Helló, "-t.
+        kimenet-be  üdvözlet-név-összefűz-t.
+        kimenet-képernyőre-va.
+    ```
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        name->     "Ragul"-obj.
+        greeting-> "Hello, "-obj.
+        output->   greeting-name-concat-obj.
+        output-print-doing.
+    ```
 
 **Output:**
 
@@ -46,7 +64,7 @@ program-nk-hatás
 Helló, Ragul
 ```
 
-The `-összefűz` suffix concatenates two strings. The second string is passed inline in the chain: `üdvözlet-név-összefűz-t` reads as *"üdvözlet, concatenated with név"*.
+The `-összefűz` / `-concat` suffix concatenates two strings. The second string is passed inline in the chain: `üdvözlet-név-összefűz-t` reads as *"üdvözlet, concatenated with név"*.
 
 ---
 

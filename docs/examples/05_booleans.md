@@ -2,40 +2,77 @@
 
 Demonstrates comparison operators and logical combinators. Comparisons produce `Logikai` (boolean) values — `igaz` (true) or `hamis` (false) — which can be stored, printed, and combined.
 
-```ragul
-program-nk-hatás
-    x-be  10-t.
-    y-be  3-t.
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        x-be  10-t.
+        y-be  3-t.
 
-    // Comparisons — produce Logikai values
-    nagyobb-be   x-y-felett-t.       // 10 > 3   = igaz
-    kisebb-be    x-y-alatt-t.        // 10 < 3   = hamis
-    legalabb-be  x-10-legalább-t.    // 10 >= 10 = igaz
-    egyenlo-be   x-10-egyenlő-t.     // 10 == 10 = igaz
+        // Comparisons — produce Logikai values
+        nagyobb-be   x-y-felett-t.       // 10 > 3   = igaz
+        kisebb-be    x-y-alatt-t.        // 10 < 3   = hamis
+        legalabb-be  x-10-legalább-t.    // 10 >= 10 = igaz
+        egyenlo-be   x-10-egyenlő-t.     // 10 == 10 = igaz
 
-    nagyobb-képernyőre-va.           // True
-    kisebb-képernyőre-va.            // False
-    legalabb-képernyőre-va.          // True
-    egyenlo-képernyőre-va.           // True
+        nagyobb-képernyőre-va.           // True
+        kisebb-képernyőre-va.            // False
+        legalabb-képernyőre-va.          // True
+        egyenlo-képernyőre-va.           // True
 
-    // Logical operators
-    p-be  igaz-t.
-    q-be  hamis-t.
+        // Logical operators
+        p-be  igaz-t.
+        q-be  hamis-t.
 
-    es-be   p-q-és-t.                // True AND False = False
-    vagy-be  p-q-vagy-t.             // True OR False  = True
-    nem-be   p-nem-t.                // NOT True       = False
+        es-be    p-q-és-t.               // True AND False = False
+        vagy-be  p-q-vagy-t.             // True OR False  = True
+        nem-be   p-nem-t.                // NOT True       = False
 
-    es-képernyőre-va.                // False
-    vagy-képernyőre-va.              // True
-    nem-képernyőre-va.               // False
+        es-képernyőre-va.                // False
+        vagy-képernyőre-va.              // True
+        nem-képernyőre-va.               // False
 
-    // Combining two comparisons
-    cmp1-be  x-y-felett-t.           // 10 > 3   = True
-    cmp2-be  x-10-legalább-t.        // 10 >= 10 = True
-    mindketto-be  cmp1-cmp2-és-t.    // True AND True = True
-    mindketto-képernyőre-va.         // True
-```
+        // Combining two comparisons
+        cmp1-be  x-y-felett-t.           // 10 > 3   = True
+        cmp2-be  x-10-legalább-t.        // 10 >= 10 = True
+        mindketto-be  cmp1-cmp2-és-t.    // True AND True = True
+        mindketto-képernyőre-va.         // True
+    ```
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        x->  10-obj.
+        y->  3-obj.
+
+        // Comparisons — produce Logikai values
+        greater->  x-y-above-obj.        // 10 > 3   = igaz
+        lesser->   x-y-below-obj.        // 10 < 3   = hamis
+        at_least-> x-10-atleast-obj.     // 10 >= 10 = igaz
+        equal->    x-10-eq-obj.          // 10 == 10 = igaz
+
+        greater-print-doing.             // True
+        lesser-print-doing.              // False
+        at_least-print-doing.            // True
+        equal-print-doing.               // True
+
+        // Logical operators
+        p->  igaz-obj.
+        q->  hamis-obj.
+
+        and_res->  p-q-and-obj.          // True AND False = False
+        or_res->   p-q-or-obj.           // True OR False  = True
+        not_res->  p-not-obj.            // NOT True       = False
+
+        and_res-print-doing.             // False
+        or_res-print-doing.              // True
+        not_res-print-doing.             // False
+
+        // Combining two comparisons
+        cmp1->  x-y-above-obj.           // 10 > 3   = True
+        cmp2->  x-10-atleast-obj.        // 10 >= 10 = True
+        both->  cmp1-cmp2-and-obj.       // True AND True = True
+        both-print-doing.                // True
+    ```
 
 **Output:**
 
@@ -56,34 +93,44 @@ True
 
 Comparison suffixes take an inline argument and return a `Logikai`:
 
-```ragul
-x-5-felett-t    // is x > 5?
-x-5-alatt-t     // is x < 5?
-x-5-legalább-t  // is x >= 5?
-x-5-legfeljebb-t // is x <= 5?
-x-5-egyenlő-t   // is x == 5?
-```
+=== "Hungarian"
+    ```ragul
+    x-5-felett-t     // is x > 5?
+    x-5-alatt-t      // is x < 5?
+    x-5-legalább-t   // is x >= 5?
+    x-5-legfeljebb-t // is x <= 5?
+    x-5-egyenlő-t    // is x == 5?
+    ```
 
-The argument can also be a variable:
+=== "English aliases"
+    ```ragul
+    x-5-above-obj    // is x > 5?
+    x-5-below-obj    // is x < 5?
+    x-5-atleast-obj  // is x >= 5?
+    x-5-atmost-obj   // is x <= 5?
+    x-5-eq-obj       // is x == 5?
+    ```
 
-```ragul
-x-y-felett-t    // is x > y?
-```
+The argument can also be a variable: `x-y-above-obj` means "is x > y?".
+
+!!! note "Boolean literals"
+    `igaz` (true) and `hamis` (false) are language keywords — they do not have English aliases.
+    The English alias system covers suffixes only.
 
 ---
 
 ## Suffix reference
 
-| Suffix | Expects | Produces | Description |
-|---|---|---|---|
-| `-felett` | `Szám` | `Logikai` | Greater than |
-| `-alatt` | `Szám` | `Logikai` | Less than |
-| `-legalább` | `Szám` | `Logikai` | Greater than or equal |
-| `-legfeljebb` | `Szám` | `Logikai` | Less than or equal |
-| `-egyenlő` | any | `Logikai` | Equality |
-| `-és` | `Logikai` | `Logikai` | Logical AND |
-| `-vagy` | `Logikai` | `Logikai` | Logical OR |
-| `-nem` | — | `Logikai` | Logical NOT |
+| Hungarian | English | Expects | Produces | Description |
+|---|---|---|---|---|
+| `-felett` | `-above` | `Szám` | `Logikai` | Greater than |
+| `-alatt` | `-below` | `Szám` | `Logikai` | Less than |
+| `-legalább` | `-atleast` | `Szám` | `Logikai` | Greater than or equal |
+| `-legfeljebb` | `-atmost` | `Szám` | `Logikai` | Less than or equal |
+| `-egyenlő` | `-eq` | any | `Logikai` | Equality |
+| `-és` | `-and` | `Logikai` | `Logikai` | Logical AND |
+| `-vagy` | `-or` | `Logikai` | `Logikai` | Logical OR |
+| `-nem` | `-not` | — | `Logikai` | Logical NOT |
 
 ---
 
