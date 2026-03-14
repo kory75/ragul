@@ -145,15 +145,30 @@ Project config file at repo root (dogfooding). Hungarian TOML keys: `[projekt]`,
 | E007 (module resolution) not enforced | `typechecker.py` | Bad module imports produce no diagnostic |
 | `anthropic` missing from `pyproject.toml` | `pyproject.toml` | AI analysis in orchestrator requires manual `pip install anthropic` |
 
+### Interpreter Bugs (discovered during examples authoring, 2026-03-14)
+
+| Bug | Location | Repro | Impact |
+|---|---|---|---|
+| Conditionals inside `-hatás` execute unconditionally | `interpreter.py` (effect scope eager loop) | `program-nk-hatás` with inner `-ha` block — condition ignored, block always runs | `-ha`/`-hanem` unusable inside effect scopes; conditional examples cannot be written |
+| `-hanem` not parsed as sibling of `-ha` | `parser.py` | Inner `-hanem` block inside hatás scope does not attach to its `-ha`; both branches always run | If/else logic silently broken |
+| Custom scope calls return input unchanged | `interpreter.py` (`_call_user_scope` / scope body execution) | `kétszeres-unk { szám-d. szám-szám-össze-t. }` called as `x-kétszeres-t` returns `x` unmodified | User-defined suffixes (functions) do not apply their body logic |
+| `-számmá` fails on numeric-looking string literals | `interpreter.py` (string literal coercion) | `"42"` assigned to a variable is stored as `int 42`, not `str "42"`; `-számmá(42)` raises TypeError caught as Hiba | `-számmá` only works on genuinely non-numeric strings; the primary use case (parse a number) is broken |
+| `-mindegyik` (for-each) loop crashes | `interpreter.py` | `loop_env` referenced before assignment | For-each loops entirely non-functional |
+| `-gyűjt` (fold) loop — untested | `interpreter.py` | Not verified; same code path as `-mindegyik` suggests same risk | Fold/reduce loops may be non-functional |
+
 ---
 
 ## Recommended Next Steps
 
 Ordered by impact:
 
-1. **Resolve `-val` binding** — fully implement `_resolve_val_args()` in the parser for correct multi-argument suffix calls
-4. **Implement topological sort** in the interpreter for correct pure-scope evaluation order
-5. **Implement E006/E007** in the type checker for scope-leak and module-resolution errors
+1. **Fix conditionals in effect scopes** — the `-ha`/`-hanem` condition check is bypassed by the eager evaluation loop in `interpreter.py`; fix so the condition gates execution even inside `-hatás`
+2. **Fix custom scope (function) calls** — `_call_user_scope()` in `interpreter.py` is not applying the scope body; user-defined suffixes silently return their input
+3. **Fix `-mindegyik` crash** — `loop_env` referenced before assignment; for-each loops are entirely broken
+4. **Fix string literal coercion** — numeric-looking strings (`"42"`) should be stored as strings, not auto-converted to integers
+5. **Resolve `-val` binding** — fully implement `_resolve_val_args()` in the parser for correct multi-argument suffix calls
+6. **Implement topological sort** in the interpreter for correct pure-scope evaluation order
+7. **Implement E006/E007** in the type checker for scope-leak and module-resolution errors
 
 ---
 
