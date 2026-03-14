@@ -1,0 +1,15 @@
+// pipeline.ragul — Filter and sort pipeline from spec §2.3
+
+program-nk-hatás
+	// Assign a list
+	számok-ba  [3, 1, 4, 1, 5, 9, 2, 6]-t.
+
+	// Remove duplicates, sort, filter > 3
+	egyediek-ba  számok-egyedi-t.
+	rendezett-ba  egyediek-rendezve-t.
+	nagyok-ba  rendezett-3-felett-t.
+
+	// Print results
+	számok-képernyőre-va.
+	rendezett-képernyőre-va.
+	nagyok-képernyőre-va.

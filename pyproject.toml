@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=45"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ragul"
+version = "0.1.0"
+description = "Ragul — an agglutinative programming language"
+requires-python = ">=3.11"
+dependencies = [
+    "rich>=13.0",
+    "pygls>=1.3",
+    "prompt_toolkit>=3.0",
+]
+
+[project.scripts]
+ragul = "ragul.main:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-json-report",
+    "mypy",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ragul*"]
+
+[tool.pytest.ini_options]
+testpaths = ["ragul/tests"]
+python_files = ["test_*.py"]

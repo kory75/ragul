@@ -1,0 +1,5 @@
+// hello.ragul — Hello World in Ragul
+
+program-nk-hatás
+	üdvözlet-ba  "Helló, világ!"-t.
+	üdvözlet-képernyőre-va.

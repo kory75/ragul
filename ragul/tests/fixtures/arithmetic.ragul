@@ -1,0 +1,25 @@
+// arithmetic.ragul — Arithmetic operations
+
+program-nk-hatás
+	// Basic arithmetic
+	x-ba  10-t.
+	y-ba  3-t.
+
+	össz-ba  x-y-össze-t.
+	különbség-ba  x-y-kivon-t.
+	szorzat-ba  x-y-szoroz-t.
+	hányados-ba  x-y-oszt-t.
+	maradék-ba  x-y-maradék-t.
+
+	össz-képernyőre-va.
+	különbség-képernyőre-va.
+	szorzat-képernyőre-va.
+	hányados-képernyőre-va.
+	maradék-képernyőre-va.
+
+	// Math operations
+	gyök-ba  16-négyzetgyök-t.
+	hatvány-ba  2-10-hatvány-t.
+
+	gyök-képernyőre-va.
+	hatvány-képernyőre-va.
