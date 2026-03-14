@@ -2,14 +2,10 @@
 
 ## Installation
 
-```bash
-pip install ragul
-```
-
-For development from source:
+Ragul is not yet on PyPI. Install from source:
 
 ```bash
-git clone https://github.com/kornel-farkas/ragul
+git clone https://github.com/kory75/ragul.git
 cd ragul
 pip install -e ".[dev]"
 ```

@@ -1,48 +1,37 @@
-# Ragul Compiler — v0.1.0
+# Ragul
 
-> *Ragul* — from Hungarian *rag* (suffix/affix) + *-ul* (in the manner of a language).  
+> *Ragul* — from Hungarian *rag* (suffix/affix) + *-ul* (in the manner of a language).
 > An experimental programming language whose core logic is modelled on agglutinative grammar.
 
----
+**Meaning is built by stacking suffixes onto a root — a suffix chain is a pipeline.**
 
-## What works in v0.1.0
+```ragul
+adatok-szűrve-rendezve-ból  5-felett-val  kimenet-ba  másol-va.
+// FROM data→filter(>5)→sort,  INTO output,  AS copy
+```
 
-| Feature | Status |
-|---|---|
-| Lexer with full alias normalisation | ✅ |
-| Parser → Scope tree (indentation-based) | ✅ |
-| Interpreter — assignment, arithmetic, comparisons | ✅ |
-| Inline suffix arguments (`x-3-össze-t`) | ✅ |
-| Variable references in chains (`a-b-össze-t`) | ✅ |
-| String & list literals | ✅ |
-| Effect scopes (`-nk-hatás`) + console I/O | ✅ |
-| `képernyőre` channel | ✅ |
-| Stdlib: core arithmetic, comparison, logical, string concat | ✅ |
-| Stdlib: `matematika` (sqrt, power, abs, round…) | ✅ |
-| Stdlib: `szöveg` (uppercase, split, length…) | ✅ |
-| Stdlib: `lista` (sort, filter, reverse, unique…) | ✅ |
-| Polymorphic suffixes (list filter vs scalar compare) | ✅ |
-| `ragul futtat` CLI | ✅ |
-| `ragul ellenőriz` CLI | ✅ |
-| REPL (`ragul repl`) | ✅ |
-| 47 automated tests, all passing | ✅ |
+📖 **[Full documentation →](https://kory75.github.io/ragul/)**
 
 ---
 
 ## Install
 
+Ragul is not yet on PyPI. Install from source:
+
 ```bash
+git clone https://github.com/kory75/ragul.git
+cd ragul
 pip install -e ".[dev]"
 ```
 
-Requires Python 3.11+.
+Requires **Python 3.11+**.
 
 ---
 
-## Running Programs
+## Quick Start
 
 ```bash
-# Run a Ragul source file
+# Run a program
 ragul futtat hello.ragul
 
 # Type-check without running
@@ -50,54 +39,121 @@ ragul ellenőriz hello.ragul
 
 # Interactive REPL
 ragul repl
+
+# Start the LSP server (for editor integration)
+ragul lsp
 ```
 
 ---
 
-## Language Quick Reference
+## Examples
 
-### Assignment
-```
-x-ba  3-t.
-üdvözlet-ba  "Helló, világ!"-t.
-számok-ba  [1, 2, 3]-t.
-```
+### Hello World
 
-### Arithmetic
-```
-y-ba  x-3-össze-t.       // x + 3
-z-ba  x-y-szoroz-t.      // x × y
-m-ba  x-5-maradék-t.     // x mod 5
-```
-
-### Effect scope (I/O)
-```
+```ragul
 program-nk-hatás
-    x-ba  "hello"-t.
-    x-képernyőre-va.
+    üdvözlet-be  "helló világ"-t.
+    üdvözlet-képernyőre-va.
 ```
 
-### Suffix chaining (pipeline)
-```
-rendezett-ba  számok-egyedi-rendezve-t.
-nagyok-ba     rendezett-3-felett-t.
+### Arithmetic pipeline
+
+```ragul
+program-nk-hatás
+    x-be  10-t.
+    y-be  x-3-össze-2-szoroz-t.   // (10 + 3) × 2 = 26
+    y-képernyőre-va.
 ```
 
-### Scope / function definition
+### Filter and sort a list
+
+```ragul
+program-nk-hatás
+    adatok-be  [7, 2, 15, 3, 9, 1, 12, 4]-t.
+    eredmény-be  adatok-szűrve-rendezve-ból  5-felett-val  t.
+    eredmény-képernyőre-va.
+// [7, 9, 12, 15]
 ```
+
+### Define and call a custom suffix
+
+```ragul
+// Define -kétszeres as a reusable suffix
 kétszeres-unk
     szám-d.
     szám-szám-össze-t.
 
-y-ba  x-kétszeres-t.
+program-nk-hatás
+    x-be  7-t.
+    y-be  x-kétszeres-t.    // 14
+    y-képernyőre-va.
 ```
 
-### Module import
+### Conditionals
+
+```ragul
+besoroló-nk-ha
+    szám-d.
+    szám-100-felett-ha
+        "nagy"-t.
+    -különben-ha  szám-50-felett-ha
+        "közepes"-t.
+    -hanem
+        "kicsi"-t.
+
+program-nk-hatás
+    kategória-be  75-besoroló-ha-t.
+    kategória-képernyőre-va.
+// közepes
 ```
-matematika-ból  négyzetgyök-val.
-szöveg-ből  nagybetűs-val.
-lista-ból.
+
+### Loops
+
+```ragul
+// Sum a list using fold
+összesítő-nk-gyűjt
+    elem-d.
+    összeg-d.
+    összeg-elem-össze-t.
+
+program-nk-hatás
+    lista-be  [1, 2, 3, 4, 5]-t.
+    összeg-be  lista-összesítő-gyűjt-t  0-val.
+    összeg-képernyőre-va.
+// 15
 ```
+
+### Error handling
+
+```ragul
+program-nk-hatás
+    tartalom-be  "adat.txt"-fájlolvasó-va-e.
+    tartalom-képernyőre-va.
+    -hibára
+        hiba-képernyőre-va.
+```
+
+---
+
+## What's in v0.1.0
+
+| Feature | Status |
+|---|---|
+| Lexer with full alias normalisation | ✅ |
+| Parser → Scope tree (indentation-based) | ✅ |
+| Static type checker (E001–E009, W001) | ✅ |
+| Interpreter — assignment, arithmetic, pipelines | ✅ |
+| All loop kinds: `-míg`, `-ig`, `-mindegyik`, `-gyűjt` | ✅ |
+| Conditionals: `-ha` / `-hanem` / `-különben-ha` | ✅ |
+| Error propagation: `-e` and `-hibára` | ✅ |
+| Effect scopes (`-nk-hatás`) + I/O channels | ✅ |
+| Stdlib: arithmetic, comparison, logical, string, list, math | ✅ |
+| CLI: `futtat`, `ellenőriz`, `fordít`, `repl`, `lsp` | ✅ |
+| Interactive REPL with persistent environment | ✅ |
+| LSP server: diagnostics, hover, completion, go-to-def | ✅ |
+| Agent architecture with Claude AI error analysis | ✅ |
+| GitHub Actions CI (pytest + mypy on every push) | ✅ |
+| Documentation site (GitHub Pages) | ✅ |
 
 ---
 
@@ -105,30 +161,94 @@ lista-ból.
 
 ```
 ragul/
-├── model.py        # Word, Sentence, Scope, RagulType dataclasses + alias table
-├── lexer.py        # Tokeniser with alias normalisation at lex time
-├── parser.py       # Two-pass: word construction + scope tree assembly
-├── interpreter.py  # Tree-walking eager evaluator
-├── errors.py       # Structured error types E001–E009, W001
-├── config.py       # ragul.config TOML loader
-└── stdlib/
-    ├── core.py     # Always-available: arithmetic, comparison, logical
-    └── modules.py  # matematika, szöveg, lista modules
+├── model.py          # Word, Sentence, Scope, RagulType + alias table
+├── lexer.py          # Tokeniser with alias normalisation at lex time
+├── parser.py         # Two-pass: word construction + scope tree assembly
+├── typechecker.py    # Static type checker, E001–E009, W001
+├── interpreter.py    # Tree-walking interpreter
+├── errors.py         # Structured error types and formatters
+├── config.py         # ragul.config TOML loader
+├── main.py           # CLI entry point
+├── stdlib/
+│   ├── core.py       # Arithmetic, comparison, logical, string concat
+│   └── modules.py    # matematika, szöveg, lista modules
+├── agents/
+│   ├── orchestrator.py   # Coordinates the pipeline; Claude AI error analysis
+│   ├── task.py           # Task / TaskResult message protocol
+│   └── ...               # LexerAgent, ParserAgent, TypeAgent, InterpAgent, ...
+├── repl/
+│   └── repl.py       # Interactive REPL
+└── lsp/
+    └── server.py     # pygls LSP server
 ```
 
 ---
 
-## Test Suite
+## Running Tests
 
 ```bash
-pytest tests/ -v
-# 47 passed in 0.15s
+pytest ragul/tests/ -v
+```
+
+With type checking:
+
+```bash
+python -m mypy ragul/ --ignore-missing-imports
 ```
 
 ---
 
-## Next Phases
+## Suffix Alias Quick Reference
 
-- **Phase 3** — Type checker (E001, E004, E005)
-- **Phase 7** — LSP server (diagnostics, hover, completion)
-- **Phase 8** — GitHub Pages documentation site
+Each suffix has a canonical Hungarian form plus English and symbolic aliases:
+
+| Role | Canonical | English | Symbol |
+|---|---|---|---|
+| Source (from) | `-ból` / `-ből` | `-from` | `-<` |
+| Target (into) | `-ba` / `-be` | `-into` | `->` |
+| Instrument (with) | `-val` / `-vel` | `-with` | `-&` |
+| Object (acted on) | `-t` | `-obj` | `-*` |
+| Action (execute) | `-va` / `-ve` | `-doing` | `-!` |
+| Error propagation | `-e` | `-else-fail` | `-?` |
+
+---
+
+## REPL
+
+```bash
+ragul repl
+```
+
+```
+>>> x-be  3-t.
+>>> y-be  x-kétszeres-t.
+>>> y-képernyőre-va.
+6
+>>> :mutat
+x = 3  (Szám)
+y = 6  (Szám)
+>>> :kilep
+```
+
+---
+
+## `ragul.config`
+
+Place at your project root:
+
+```toml
+[projekt]
+nev     = "my-project"
+verzio  = "0.1.0"
+belepes = "main.ragul"
+
+[ellenorzes]
+harmonia = "warn"   # "warn" | "strict" | "off"
+tipus    = "warn"   # "warn" | "strict" | "off"
+```
+
+---
+
+## License
+
+MIT

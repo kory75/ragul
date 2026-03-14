@@ -44,10 +44,17 @@ program-nk-hatás
 
 ## Getting Started
 
-Install Ragul and run a program:
+Ragul is not yet on PyPI. Install from source:
 
 ```bash
-pip install ragul
+git clone https://github.com/kory75/ragul.git
+cd ragul
+pip install -e ".[dev]"
+```
+
+Then run a program:
+
+```bash
 ragul futtat hello.ragul
 ```
 
