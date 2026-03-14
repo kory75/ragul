@@ -1,0 +1,39 @@
+// 02_arithmetic.ragul — Arithmetic & suffix chaining
+//
+// Suffix chains build pipelines left to right.
+// Each suffix operates on the result of the previous one.
+//
+// Run: ragul futtat examples/02_arithmetic.ragul
+
+program-nk-hatás
+	x-ba  10-t.
+	y-ba  3-t.
+
+	// Basic operations
+	ossz-ba       x-y-össze-t.       // 10 + 3  = 13
+	kulonbseg-ba  x-y-kivon-t.       // 10 - 3  = 7
+	szorzat-ba    x-y-szoroz-t.      // 10 * 3  = 30
+	hanyados-ba   x-y-oszt-t.        // 10 / 3  = 3.33
+	maradek-ba    x-y-maradék-t.     // 10 mod 3 = 1
+
+	ossz-képernyőre-va.
+	kulonbseg-képernyőre-va.
+	szorzat-képernyőre-va.
+	hanyados-képernyőre-va.
+	maradek-képernyőre-va.
+
+	// Chained pipeline: (10 + 3) * 2 = 26
+	lanc-ba  x-3-össze-2-szoroz-t.
+	lanc-képernyőre-va.
+
+	// Math suffixes
+	gyok-ba     16-négyzetgyök-t.    // sqrt(16) = 4.0
+	hatvany-ba   2-10-hatvány-t.     // 2^10 = 1024
+
+	// Absolute value: use subtraction to get a negative, then abs
+	negativ-ba  0-7-kivon-t.         // 0 - 7 = -7
+	abs-ba      negativ-abszolút-t.  // |-7| = 7
+
+	gyok-képernyőre-va.
+	hatvany-képernyőre-va.
+	abs-képernyőre-va.

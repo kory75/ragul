@@ -1,0 +1,39 @@
+// 05_booleans.ragul — Boolean values and comparisons
+//
+// Comparisons produce Logikai (boolean) values: igaz (true) or hamis (false).
+// Boolean results can be stored, printed, and combined with logical operators.
+//
+// Run: ragul futtat examples/05_booleans.ragul
+
+program-nk-hatás
+	x-ba  10-t.
+	y-ba  3-t.
+
+	// Comparisons — produce Logikai values
+	nagyobb-ba   x-y-felett-t.       // 10 > 3  = igaz
+	kisebb-ba    x-y-alatt-t.        // 10 < 3  = hamis
+	legalabb-ba  x-10-legalább-t.    // 10 >= 10 = igaz
+	egyenlo-ba   x-10-egyenlő-t.     // 10 == 10 = igaz
+
+	nagyobb-képernyőre-va.           // True
+	kisebb-képernyőre-va.            // False
+	legalabb-képernyőre-va.          // True
+	egyenlo-képernyőre-va.           // True
+
+	// Logical operators
+	p-ba  igaz-t.
+	q-ba  hamis-t.
+
+	es-ba   p-q-és-t.                // True AND False = False
+	vagy-ba  p-q-vagy-t.             // True OR False  = True
+	nem-ba   p-nem-t.                // NOT True       = False
+
+	es-képernyőre-va.                // False
+	vagy-képernyőre-va.              // True
+	nem-képernyőre-va.               // False
+
+	// Combining two comparisons with AND
+	cmp1-ba  x-y-felett-t.           // 10 > 3  = True
+	cmp2-ba  x-10-legalább-t.        // 10 >= 10 = True
+	mindketto-ba  cmp1-cmp2-és-t.    // True AND True = True
+	mindketto-képernyőre-va.         // True

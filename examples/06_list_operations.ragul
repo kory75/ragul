@@ -1,0 +1,46 @@
+// 06_list_operations.ragul — List operations
+//
+// Lists support a rich set of suffix operations.
+// Suffix chains pipeline transformations left to right.
+//
+// Run: ragul futtat examples/06_list_operations.ragul
+
+program-nk-hatás
+	szamok-ba  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-t.
+
+	// Sort ascending
+	rendezett-ba  szamok-rendezve-t.
+	rendezett-képernyőre-va.       // [1, 2, 3, 3, 4, 7, 9, 9, 12, 15]
+
+	// Remove duplicates
+	egyedi-ba  szamok-egyedi-t.
+	egyedi-képernyőre-va.          // [7, 2, 15, 3, 9, 1, 12, 4]  (order may vary)
+
+	// Sort + deduplicate pipeline
+	tiszta-ba  szamok-egyedi-rendezve-t.
+	tiszta-képernyőre-va.          // [1, 2, 3, 4, 7, 9, 12, 15]
+
+	// Reverse
+	fordított-ba  rendezett-fordítva-t.
+	fordított-képernyőre-va.       // [15, 12, 9, 9, 7, 4, 3, 3, 2, 1]
+
+	// Filter — condition inline in the chain
+	nagyok-ba  rendezett-3-felett-t.
+	nagyok-képernyőre-va.          // [4, 7, 9, 9, 12, 15]
+
+	// First and last
+	elso-ba   rendezett-első-t.
+	utolso-ba rendezett-utolsó-t.
+	elso-képernyőre-va.            // 1
+	utolso-képernyőre-va.          // 15
+
+	// Length
+	hossz-ba  szamok-hossz-t.
+	hossz-képernyőre-va.           // 10
+
+	// Add and remove elements
+	bovített-ba  rendezett-hozzáad-t  100-val.
+	bovített-képernyőre-va.        // [..., 100]
+
+	csökkentett-ba  rendezett-eltávolít-t  1-val.
+	csökkentett-képernyőre-va.     // list without first 1

@@ -1,0 +1,15 @@
+// 07_error_handling.ragul — Error handling
+//
+// Operations that can fail return a vagy (or) type.
+// -e propagates errors upward to the nearest -hibára boundary.
+//
+// Run: ragul futtat examples/07_error_handling.ragul
+
+program-nk-hatás
+	// -számmá tries to parse a string as a number — it fails on non-numeric strings.
+	// -e propagates the error upward; -hibára catches it.
+
+	n-ba  "not-a-number"-számmá-va-e.
+	n-képernyőre-va.
+	-hibára
+		"Error caught: could not parse string as number"-képernyőre-va.

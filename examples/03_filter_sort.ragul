@@ -1,0 +1,23 @@
+// 03_filter_sort.ragul — List pipelines
+//
+// Suffix chains work on lists too.
+// Filter, sort, deduplicate — all by stacking suffixes.
+//
+// Run: ragul futtat examples/03_filter_sort.ragul
+
+program-nk-hatás
+	számok-be  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-t.
+
+	// Remove duplicates, then sort ascending
+	rendezett-be  számok-egyedi-rendezve-t.
+
+	// Keep only numbers greater than 5
+	nagyok-be  rendezett-3-felett-t.
+
+	// Reverse the result
+	fordított-be  nagyok-fordítva-t.
+
+	számok-képernyőre-va.
+	rendezett-képernyőre-va.
+	nagyok-képernyőre-va.
+	fordított-képernyőre-va.

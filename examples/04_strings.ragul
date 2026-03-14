@@ -1,0 +1,40 @@
+// 04_strings.ragul — String operations
+//
+// String suffixes accept their argument inline in the chain.
+// Pass the argument directly: s-"needle"-tartalmaz-t
+//
+// Run: ragul futtat examples/04_strings.ragul
+
+program-nk-hatás
+	s-ba  "Hello, Ragul!"-t.
+
+	// Length
+	n-ba  s-hossz-t.
+	n-képernyőre-va.               // 13
+
+	// Case conversion
+	nagy-ba  s-nagybetűs-t.
+	kis-ba   s-kisbetűs-t.
+	nagy-képernyőre-va.            // HELLO, RAGUL!
+	kis-képernyőre-va.             // hello, ragul!
+
+	// Contains / starts / ends — pass needle inline in the chain
+	van-ba   s-"Ragul"-tartalmaz-t.
+	kezd-ba  s-"Hello"-kezdődik-t.
+	vegz-ba  s-"!"-végződik-t.
+	van-képernyőre-va.             // True
+	kezd-képernyőre-va.            // True
+	vegz-képernyőre-va.            // True
+
+	// Replace
+	uj-ba  s-"Ragul"-"world"-csere-t.
+	uj-képernyőre-va.              // Hello, world!
+
+	// Split — pass separator inline
+	szavak-ba  s-", "-feloszt-t.
+	szavak-képernyőre-va.          // ['Hello', 'Ragul!']
+
+	// Concatenation — pass second string inline
+	a-ba  "Ragul"-t.
+	b-ba  a-" rocks"-összefűz-t.
+	b-képernyőre-va.               // Ragul rocks
