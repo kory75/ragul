@@ -17,83 +17,62 @@ from pathlib import Path
 
 
 def _run(source_path: Path, strict: bool = False) -> int:
-    """Lex → parse → interpret."""
-    from ragul.lexer import lex
-    from ragul.parser import parse
-    from ragul.interpreter import Interpreter
-    from ragul.config import RagulConfig
-
-    source = source_path.read_text(encoding="utf-8")
-    filename = str(source_path)
-    cfg = RagulConfig.load()
-
-    tokens, lex_bag = lex(source, filename)
-    if lex_bag.has_errors:
-        print(lex_bag.format_all(), file=sys.stderr)
-        return 1
-
-    tree, parse_bag = parse(tokens, filename)
-    if parse_bag.has_errors:
-        print(parse_bag.format_all(), file=sys.stderr)
-        return 1
-
-    interp = Interpreter(tree, filename)
-
-    # Find and run the program scope (any -hatás scope at top level)
-    prog = None
-    for child in tree.children:
-        if child.is_effect:
-            prog = child
-            break
-
-    if prog is None:
-        # No effect scope — just interpret root (for scripts / REPL)
-        prog = tree
-
-    exit_code = interp.run()
-    return exit_code
-
-
-def _check(source_path: Path, strict: bool = False) -> int:
-    """Lex → parse → type-check."""
-    from ragul.lexer import lex
-    from ragul.parser import parse
-    from ragul.typechecker import TypeChecker
+    """Lex → parse → interpret (via OrchestratorAgent)."""
+    from ragul.agents.orchestrator import OrchestratorAgent
     from ragul.config import RagulConfig
     from rich.console import Console
 
-    console = Console()
-    source = source_path.read_text(encoding="utf-8")
+    console  = Console()
+    source   = source_path.read_text(encoding="utf-8")
     filename = str(source_path)
-    cfg = RagulConfig.load()
-    had_errors = False
+    cfg      = RagulConfig.load()
 
-    tokens, lex_bag = lex(source, filename)
-    if lex_bag.has_errors:
-        for d in lex_bag.errors:
-            console.print(f"[bold red]{d.format()}[/bold red]")
-        had_errors = True
+    orch   = OrchestratorAgent(config=cfg)
+    result = orch.run("futtat", source=source, filename=filename,
+                      flags={"strict": strict})
 
-    tree, parse_bag = parse(tokens, filename)
-    if parse_bag.has_errors:
-        for d in parse_bag.errors:
-            console.print(f"[bold red]{d.format()}[/bold red]")
-        had_errors = True
+    for d in result.errors:
+        console.print(f"[bold red]{d.format()}[/bold red]", file=sys.stderr)
+    for d in result.warnings:
+        console.print(f"[yellow]{d.format()}[/yellow]", file=sys.stderr)
 
-    if not had_errors:
-        checker = TypeChecker(tree, filename, cfg)
-        type_bag = checker.check()
-        for d in type_bag:
-            if d.is_error:
-                console.print(f"[bold red]{d.format()}[/bold red]")
-                had_errors = True
-            else:
-                console.print(f"[yellow]{d.format()}[/yellow]")
+    if result.ai_analysis:
+        console.print("\n[cyan]── AI Analysis ──────────────────────────────────────[/cyan]")
+        console.print(result.ai_analysis)
+        console.print("[cyan]─────────────────────────────────────────────────────[/cyan]\n")
 
-    if not had_errors:
+    return result.exit_code
+
+
+def _check(source_path: Path, strict: bool = False) -> int:
+    """Lex → parse → type-check (via OrchestratorAgent)."""
+    from ragul.agents.orchestrator import OrchestratorAgent
+    from ragul.config import RagulConfig
+    from rich.console import Console
+
+    console  = Console()
+    source   = source_path.read_text(encoding="utf-8")
+    filename = str(source_path)
+    cfg      = RagulConfig.load()
+
+    orch   = OrchestratorAgent(config=cfg)
+    result = orch.run("ellenőriz", source=source, filename=filename,
+                      flags={"strict": strict})
+
+    for d in result.errors:
+        console.print(f"[bold red]{d.format()}[/bold red]")
+    for d in result.warnings:
+        console.print(f"[yellow]{d.format()}[/yellow]")
+
+    if result.ai_analysis:
+        console.print("\n[cyan]── AI Analysis ──────────────────────────────────────[/cyan]")
+        console.print(result.ai_analysis)
+        console.print("[cyan]─────────────────────────────────────────────────────[/cyan]\n")
+
+    if result.ok and not result.errors:
         console.print(f"[bold green]✓ {filename}  —  no errors found[/bold green]")
 
-    return 1 if had_errors else 0
+    return result.exit_code
 
 
 def _repl() -> int:
