@@ -53,12 +53,21 @@ Start the interactive REPL:
 ragul repl
 ```
 
-```
->>> x-be  3-t.
->>> x-kétszeres-ból  kimenet-be  ír-va.
-6
->>>
-```
+=== "Hungarian"
+    ```
+    >>> x-be  3-t.
+    >>> x-kétszeres-ból  kimenet-be  ír-va.
+    6
+    >>>
+    ```
+
+=== "English aliases"
+    ```
+    >>> x->  3-obj.
+    >>> x-kétszeres-from  output->  write-doing.
+    6
+    >>>
+    ```
 
 REPL special commands:
 
@@ -129,7 +138,7 @@ nyelv = "en"         # "en" | "hu"
 | E002 | Suffix layer order | Suffix layers are out of order in the chain |
 | E003 | Parallel write conflict | Same root written twice in a pure scope |
 | E004 | Effect boundary violation | Effectful suffix called from a pure scope |
-| E005 | Unhandled `vagy` type | Fallible result used without `-e` or `-hibára` |
+| E005 | Unhandled `vagy` type | Fallible result used without `-e` / `-?` or `-hibára` / `-catch` |
 | E009 | Field mutation outside `-hatás` | Mutation of a field outside an effect scope |
 
 ### Warnings

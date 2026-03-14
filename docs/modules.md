@@ -13,18 +13,31 @@ Everything that applies to scopes applies to modules: their suffixes compose fre
 
 ## Declaring a Module
 
-A module is declared at the top level of a file using `-nk-modul`:
+A module is declared at the top level of a file using `-nk-modul` / `-ours-module`:
 
-```ragul
-matematika-nk-modul
-    kétszeres-unk
-        szám-d  Szám-ként.
-        szám-szám-össze-t  Szám-ként.
+=== "Hungarian"
+    ```ragul
+    matematika-nk-modul
+        kétszeres-unk
+            szám-d  Szám-ként.
+            szám-szám-össze-t  Szám-ként.
 
-    gyök-unk
-        szám-d  Szám-ként.
-        szám-négyzetgyök-t  Szám-ként.
-```
+        gyök-unk
+            szám-d  Szám-ként.
+            szám-négyzetgyök-t  Szám-ként.
+    ```
+
+=== "English aliases"
+    ```ragul
+    matematika-ours-module
+        kétszeres-ours
+            szám-yours  Szám-as.
+            szám-szám-add-obj  Szám-as.
+
+        gyök-ours
+            szám-yours  Szám-as.
+            szám-sqrt-obj  Szám-as.
+    ```
 
 This file defines the `matematika` module. Its public suffixes (`-kétszeres`, `-gyök`) are immediately available to any file that imports it.
 
@@ -32,31 +45,41 @@ This file defines the `matematika` module. Its public suffixes (`-kétszeres`, `
 
 ## Importing a Module
 
-Modules are imported using a `-t` sentence at the top of the file:
+Modules are imported using a `-t` / `-obj` sentence at the top of the file:
 
-```ragul
-matematika-t.
+=== "Hungarian"
+    ```ragul
+    matematika-t.
 
-program-nk-hatás
-    x-be  9-t.
-    y-be  x-gyök-t.
-    y-képernyőre-va.
-// prints: 3.0
-```
+    program-nk-hatás
+        x-be  9-t.
+        y-be  x-gyök-t.
+        y-képernyőre-va.
+    // prints: 3.0
+    ```
+
+=== "English aliases"
+    ```ragul
+    matematika-obj.
+
+    program-ours-effect
+        x->  9-obj.
+        y->  x-gyök-obj.
+        y-print-doing.
+    // prints: 3.0
+    ```
 
 ---
 
 ## Standard Library Modules
 
-The standard library ships three built-in modules:
+The standard library ships three built-in modules. All suffixes are available without any explicit import — the standard library is loaded automatically.
 
-| Module | Contents |
-|---|---|
-| `matematika` | Math operations: `-négyzetgyök`, `-hatvány`, `-abszolút`, `-kerekítve`, `-padló`, `-plafon`, `-log`, `-sin`, `-cos` |
-| `szöveg` | String operations: `-hossz`, `-nagybetűs`, `-kisbetűs`, `-tartalmaz`, `-kezdődik`, `-végződik`, `-feloszt`, `-formáz`, `-szelet`, `-csere`, `-számmá` |
-| `lista` | List operations: `-rendezve`, `-fordítva`, `-első`, `-utolsó`, `-egyedi`, `-lapítva`, `-szűrve`, `-hozzáad`, `-eltávolít` |
-
-These are available without any explicit import — the standard library is loaded automatically.
+| Module | Hungarian suffixes | English aliases |
+|---|---|---|
+| `matematika` | `-négyzetgyök`, `-hatvány`, `-abszolút`, `-kerekítve`, `-padló`, `-plafon`, `-log`, `-sin`, `-cos` | `-sqrt`, `-pow`, `-abs`, `-round`, `-floor`, `-ceil`, `-log`, `-sin`, `-cos` |
+| `szöveg` | `-hossz`, `-nagybetűs`, `-kisbetűs`, `-tartalmaz`, `-kezdődik`, `-végződik`, `-feloszt`, `-formáz`, `-szelet`, `-csere`, `-számmá` | `-len`, `-upper`, `-lower`, `-contains`, `-startswith`, `-endswith`, `-split`, `-format`, `-slice`, `-replace`, `-tonum` |
+| `lista` | `-rendezve`, `-fordítva`, `-első`, `-utolsó`, `-egyedi`, `-lapítva`, `-szűrve`, `-hozzáad`, `-eltávolít` | `-sorted`, `-reversed`, `-first`, `-last`, `-unique`, `-flat`, `-filter`, `-append`, `-remove` |
 
 ---
 

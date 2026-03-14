@@ -4,47 +4,87 @@
 
 **A named scope and a custom suffix are the same thing.** Defining a named scope simultaneously defines a suffix that can be applied anywhere. There is no separate function declaration syntax.
 
-```ragul
-kétszeres-unk
-    szám-d.
-    szám-szám-össze-t  Szám-ként.
-```
+=== "Hungarian"
+    ```ragul
+    kétszeres-unk
+        szám-d.
+        szám-szám-össze-t  Szám-ként.
+    ```
+
+=== "English aliases"
+    ```ragul
+    kétszeres-ours
+        szám-yours.
+        szám-szám-add-obj  Szám-as.
+    ```
 
 This definition makes `-kétszeres` immediately available as an aspect suffix:
 
-```ragul
-x-be  3-t.
-y-be  x-kétszeres-t.                    // y = 6
+=== "Hungarian"
+    ```ragul
+    x-be  3-t.
+    y-be  x-kétszeres-t.                    // y = 6
 
-lista-be  [1,2,3]-t.
-lista-kétszeres-ből  kimenet-be  ír-va.  // [2,4,6]
-```
+    lista-be  [1,2,3]-t.
+    lista-kétszeres-ből  kimenet-be  ír-va.  // [2,4,6]
+    ```
+
+=== "English aliases"
+    ```ragul
+    x->  3-obj.
+    y->  x-kétszeres-obj.                    // y = 6
+
+    lista->  [1,2,3]-obj.
+    lista-kétszeres-from  output->  write-doing.  // [2,4,6]
+    ```
 
 ---
 
 ## Parameters
 
-Parameters are roots marked with `-d` (yours — passed in). They receive values from the calling sentence via `-val` bindings, in left-to-right order:
+Parameters are roots marked with `-d` / `-yours` (passed in). They receive values from the calling sentence via `-val` / `-with` bindings, in left-to-right order:
 
-```ragul
-szűrőhatár-unk
-    lista-d.           // receives the root (first argument)
-    küszöb-d.          // receives the first -val argument
-    lista-küszöb-felett-szűrve-t  Lista-ként.
+=== "Hungarian"
+    ```ragul
+    szűrőhatár-unk
+        lista-d.           // receives the root (first argument)
+        küszöb-d.          // receives the first -val argument
+        lista-küszöb-felett-szűrve-t  Lista-ként.
 
-// Called as:
-kimenet-be  adatok-szűrőhatár-t  5-val.
-// adatok → lista-d, 5 → küszöb-d
-```
+    // Called as:
+    kimenet-be  adatok-szűrőhatár-t  5-val.
+    // adatok → lista-d, 5 → küszöb-d
+    ```
+
+=== "English aliases"
+    ```ragul
+    szűrőhatár-ours
+        lista-yours.       // receives the root (first argument)
+        threshold-yours.   // receives the first -with argument
+        lista-threshold-above-filter-obj  Lista-as.
+
+    // Called as:
+    output->  adatok-szűrőhatár-obj  5-with.
+    // adatok → lista-yours, 5 → threshold-yours
+    ```
 
 With type annotations:
 
-```ragul
-felett-unk
-    érték-d  Szám-ként.
-    küszöb-d  Szám-ként.
-    érték-küszöb-nagyobb-t  Logikai-ként.
-```
+=== "Hungarian"
+    ```ragul
+    felett-unk
+        érték-d  Szám-ként.
+        küszöb-d  Szám-ként.
+        érték-küszöb-nagyobb-t  Logikai-ként.
+    ```
+
+=== "English aliases"
+    ```ragul
+    felett-ours
+        value-yours  Szám-as.
+        threshold-yours  Szám-as.
+        value-threshold-above-obj  Logikai-as.
+    ```
 
 ---
 
@@ -52,11 +92,19 @@ felett-unk
 
 The final unnamed result root of a scope is its return value — no explicit return keyword needed:
 
-```ragul
-kétszeres-unk
-    szám-d.
-    szám-szám-össze-t.  // this is the return value
-```
+=== "Hungarian"
+    ```ragul
+    kétszeres-unk
+        szám-d.
+        szám-szám-össze-t.  // this is the return value
+    ```
+
+=== "English aliases"
+    ```ragul
+    kétszeres-ours
+        szám-yours.
+        szám-szám-add-obj.  // this is the return value
+    ```
 
 ---
 
@@ -66,30 +114,55 @@ kétszeres-unk
 
 Ragul uses indentation (tabs) to define scope boundaries. Roots defined within a scope cease to exist when that scope closes:
 
-```ragul
-számítás-unk
-    x-be  3-t.
-    y-be  10-t.
-    eredmény-be  x-y-össze-t.
+=== "Hungarian"
+    ```ragul
+    számítás-unk
+        x-be  3-t.
+        y-be  10-t.
+        eredmény-be  x-y-össze-t.
 
-// x, y, eredmény do not exist here
-```
+    // x, y, eredmény do not exist here
+    ```
+
+=== "English aliases"
+    ```ragul
+    számítás-ours
+        x->  3-obj.
+        y->  10-obj.
+        result->  x-y-add-obj.
+
+    // x, y, result do not exist here
+    ```
 
 ### Nested Scopes
 
 Scopes nest freely. Inner scopes can reference roots from outer scopes, but not vice versa:
 
-```ragul
-feldolgozás-unk
-    lista-be  [1,2,3,4,5]-t.
+=== "Hungarian"
+    ```ragul
+    feldolgozás-unk
+        lista-be  [1,2,3,4,5]-t.
 
-    szűrés-unk
-        kisebb-be  lista-szűrve-ből  3-alatt-val  t.
-        kisebb-ből  kimenet-be  ír-va.
+        szűrés-unk
+            kisebb-be  lista-szűrve-ből  3-alatt-val  t.
+            kisebb-ből  kimenet-be  ír-va.
 
-    // kisebb does not exist here
-    lista-ből  kimenet-be  ír-va.
-```
+        // kisebb does not exist here
+        lista-ből  kimenet-be  ír-va.
+    ```
+
+=== "English aliases"
+    ```ragul
+    feldolgozás-ours
+        lista->  [1,2,3,4,5]-obj.
+
+        szűrés-ours
+            smaller->  lista-filter-from  3-below-with  obj.
+            smaller-from  output->  write-doing.
+
+        // smaller does not exist here
+        lista-from  output->  write-doing.
+    ```
 
 ---
 
@@ -97,7 +170,7 @@ feldolgozás-unk
 
 Possession suffixes express explicit ownership when needed. Scoping is implicit by default — indentation handles it.
 
-| Suffix | Aliases | Meaning |
+| Hungarian | English | Meaning |
 |---|---|---|
 | *(implicit)* | — | Belongs to current scope (default) |
 | `-unk` / `-nk` | `-ours` | Explicitly owned by this scope |
@@ -107,12 +180,21 @@ Possession suffixes express explicit ownership when needed. Scoping is implicit 
 
 Usage mirrors `this.` in languages like C# — available when needed, not required:
 
-```ragul
-feldolgozás-unk
-    x-m-be  3-t.                        // immutable
-    bemenet-d.                          // parameter — passed in from outside
-    eredmény-unk-be  bemenet-szűrve-t.  // explicitly scoped result
-```
+=== "Hungarian"
+    ```ragul
+    feldolgozás-unk
+        x-m-be  3-t.                        // immutable
+        bemenet-d.                          // parameter — passed in from outside
+        eredmény-unk-be  bemenet-szűrve-t.  // explicitly scoped result
+    ```
+
+=== "English aliases"
+    ```ragul
+    feldolgozás-ours
+        x-mine->  3-obj.                      // immutable
+        input-yours.                          // parameter — passed in from outside
+        result-ours->  input-filter-obj.      // explicitly scoped result
+    ```
 
 ---
 
@@ -120,13 +202,13 @@ feldolgozás-unk
 
 | Traditional concept | Ragul equivalent |
 |---|---|
-| Function definition | Named scope |
+| Function definition | Named scope (`-unk` / `-ours`) |
 | Function call | Suffix in a chain |
-| Parameters | `-d` roots inside the scope |
+| Parameters | `-d` / `-yours` roots inside the scope |
 | Return value | Final result root |
 | Composition | Suffix stacking |
-| Modules | Nested scopes |
-| Type annotation | `-ként` on `-d` roots and return |
+| Modules | Nested scopes (`-modul` / `-module`) |
+| Type annotation | `-ként` / `-as` on `-d` roots and return |
 
 ---
 
@@ -134,35 +216,70 @@ feldolgozás-unk
 
 A small library of annotated suffixes:
 
-```ragul
-// Numeric operations
-kétszeres-unk
-    szám-d  Szám-ként.
-    szám-szám-össze-t  Szám-ként.
+=== "Hungarian"
+    ```ragul
+    // Numeric operations
+    kétszeres-unk
+        szám-d  Szám-ként.
+        szám-szám-össze-t  Szám-ként.
 
-felére-unk
-    szám-d  Szám-ként.
-    szám-2-oszt-t  Szám-ként.
+    felére-unk
+        szám-d  Szám-ként.
+        szám-2-oszt-t  Szám-ként.
 
-// Threshold filter
-szűrőhatár-unk
-    lista-d  Lista-ként.
-    küszöb-d  Szám-ként.
-    lista-szűrve-ből  küszöb-felett-val  t  Lista-ként.
+    // Threshold filter
+    szűrőhatár-unk
+        lista-d  Lista-ként.
+        küszöb-d  Szám-ként.
+        lista-szűrve-ből  küszöb-felett-val  t  Lista-ként.
 
-// Fallible file reader
-fájlolvasó-unk
-    útvonal-d  Szöveg-ként.
-    útvonal-fájlról-ből  olvas-va-t  vagy-Szöveg-vagy-Hiba-ként.
-```
+    // Fallible file reader
+    fájlolvasó-unk
+        útvonal-d  Szöveg-ként.
+        útvonal-fájlról-ből  olvas-va-t  vagy-Szöveg-vagy-Hiba-ként.
+    ```
+
+=== "English aliases"
+    ```ragul
+    // Numeric operations
+    kétszeres-ours
+        szám-yours  Szám-as.
+        szám-szám-add-obj  Szám-as.
+
+    felére-ours
+        szám-yours  Szám-as.
+        szám-2-div-obj  Szám-as.
+
+    // Threshold filter
+    szűrőhatár-ours
+        lista-yours  Lista-as.
+        threshold-yours  Szám-as.
+        lista-filter-from  threshold-above-with  obj  Lista-as.
+
+    // Fallible file reader
+    fájlolvasó-ours
+        path-yours  Szöveg-as.
+        path-fájlról-from  read-doing-obj  vagy-Szöveg-vagy-Hiba-as.
+    ```
 
 Calling these is unchanged — annotations are invisible at the call site:
 
-```ragul
-x-be  3-t.
-y-be  x-kétszeres-t.                     // y = 6
+=== "Hungarian"
+    ```ragul
+    x-be  3-t.
+    y-be  x-kétszeres-t.                     // y = 6
 
-kimenet-be  adatok-szűrőhatár-t  5-val.  // filter list above 5
+    kimenet-be  adatok-szűrőhatár-t  5-val.  // filter list above 5
 
-tartalom-be  "adat.txt"-fájlolvasó-va-e. // fallible — propagate error
-```
+    tartalom-be  "adat.txt"-fájlolvasó-va-e. // fallible — propagate error
+    ```
+
+=== "English aliases"
+    ```ragul
+    x->  3-obj.
+    y->  x-kétszeres-obj.                    // y = 6
+
+    output->  adatok-szűrőhatár-obj  5-with. // filter list above 5
+
+    content->  "adat.txt"-fájlolvasó-doing-?. // fallible — propagate error
+    ```

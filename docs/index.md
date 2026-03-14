@@ -10,10 +10,17 @@
 
 **Meaning is built by stacking suffixes onto a root.** Each suffix adds exactly one layer of semantic transformation. A Ragul word is not just a name — it is a pipeline.
 
-```
-data-szűrve-rendezve-ból
-// data → filter → sort → FROM
-```
+=== "Hungarian"
+    ```ragul
+    data-szűrve-rendezve-ból
+    // data → filter → sort → FROM
+    ```
+
+=== "English aliases"
+    ```ragul
+    data-filter-sorted-from
+    // data → filter → sort → FROM
+    ```
 
 Key properties that follow from this design:
 
@@ -26,19 +33,39 @@ Key properties that follow from this design:
 
 ## Quick Example
 
-```ragul
-// Define a suffix that doubles a number
-kétszeres-unk
-    szám-d.
-    szám-szám-össze-t.
+=== "Hungarian"
+    ```ragul
+    // Define a suffix that doubles a number
+    kétszeres-unk
+        szám-d.
+        szám-szám-össze-t.
 
-// Use it
-program-nk-hatás
-    x-be  3-t.
-    y-be  x-kétszeres-t.
-    y-képernyőre-va.
-// prints: 6
-```
+    // Use it
+    program-nk-hatás
+        x-be  3-t.
+        y-be  x-kétszeres-t.
+        y-képernyőre-va.
+    // prints: 6
+    ```
+
+=== "English aliases"
+    ```ragul
+    // Define a suffix that doubles a number
+    kétszeres-ours
+        szám-yours.
+        szám-szám-add-obj.
+
+    // Use it
+    program-ours-effect
+        x->  3-obj.
+        y->  x-kétszeres-obj.
+        y-print-doing.
+    // prints: 6
+    ```
+
+!!! note "Scope names are user-defined"
+    `kétszeres`, `szám`, `program`, `x`, `y` are root identifiers chosen by the programmer —
+    they can be any word in any language. Only the *suffixes* have English aliases.
 
 ---
 
@@ -56,12 +83,16 @@ Then run a program:
 
 ```bash
 ragul futtat hello.ragul
+# or
+ragul run hello.ragul
 ```
 
 Check a file for type errors:
 
 ```bash
 ragul ellenőriz hello.ragul
+# or
+ragul check hello.ragul
 ```
 
 Start the interactive REPL:
@@ -80,8 +111,9 @@ ragul repl
 | [Types](types.md) | Type system, generics, harmony, or-types |
 | [Functions & Scopes](functions.md) | Scopes, parameters, return values |
 | [Control Flow](control.md) | Conditionals, loops, early exit |
-| [Effects & I/O](effects.md) | The `-hatás` model, I/O channels |
-| [Error Handling](errors.md) | `vagy` types, `-e` propagation, `-hibára` |
+| [Effects & I/O](effects.md) | The `-hatás` / `-effect` model, I/O channels |
+| [Error Handling](errors.md) | `vagy` types, `-e` propagation, `-hibára` / `-catch` |
 | [Modules](modules.md) | Module system, imports, visibility |
 | [Standard Library](stdlib.md) | Built-in suffixes reference |
 | [Tooling & CLI](tooling.md) | CLI commands, `ragul.config`, error codes |
+| [Glossary](glossary.md) | Every suffix mapped to its English alias + pronunciation |

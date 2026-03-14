@@ -4,11 +4,19 @@
 
 Ragul is **inferred typed**. Types are never declared explicitly — the compiler traces them from usage:
 
-```ragul
-x-be  3-t.           // compiler: x is Szám
-y-be  "hello"-t.     // compiler: y is Szöveg
-lista-be  [1,2,3]-t. // compiler: lista is Lista-Szám
-```
+=== "Hungarian"
+    ```ragul
+    x-be  3-t.           // compiler: x is Szám
+    y-be  "hello"-t.     // compiler: y is Szöveg
+    lista-be  [1,2,3]-t. // compiler: lista is Lista-Szám
+    ```
+
+=== "English aliases"
+    ```ragul
+    x->  3-obj.           // compiler: x is Szám
+    y->  "hello"-obj.     // compiler: y is Szöveg
+    lista->  [1,2,3]-obj. // compiler: lista is Lista-Szám
+    ```
 
 ---
 
@@ -20,7 +28,7 @@ lista-be  [1,2,3]-t. // compiler: lista is Lista-Szám
 | `Szöveg` | Strings, text | `"hello"`, `"adat.txt"` |
 | `Lista` | Collections | `[1,2,3]`, `["a","b"]` |
 | `Logikai` | Booleans | `igaz`, `hamis` |
-| `Hiba` | Error values | propagated via `-e` |
+| `Hiba` | Error values | propagated via `-e` / `-?` |
 
 Types are capitalised to distinguish them from variable roots, which are lowercase.
 
@@ -45,11 +53,19 @@ This notation is consistent with the rest of Ragul — types are built by suffix
 
 `vagy` (meaning *or*) creates a union type. It is used when an operation may succeed or fail:
 
-```ragul
-// vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
-eredmény-be  "adat.txt"-fájlolvasó-va.
-// eredmény is vagy-Szöveg-vagy-Hiba
-```
+=== "Hungarian"
+    ```ragul
+    // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
+    eredmény-be  "adat.txt"-fájlolvasó-va.
+    // eredmény is vagy-Szöveg-vagy-Hiba
+    ```
+
+=== "English aliases"
+    ```ragul
+    // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
+    result->  "adat.txt"-fájlolvasó-doing.
+    // result is vagy-Szöveg-vagy-Hiba
+    ```
 
 The compiler enforces that both branches of a `vagy` type are handled before the value is used. See [Error Handling](errors.md) for the full model.
 
@@ -68,11 +84,19 @@ Suffix type checking has two levels:
 1. **Root guard** — does the root's type support this suffix at all?
 2. **Suffix guard** — does the suffix's contract accept the root's concrete type, including element types for `Lista-T`?
 
-```ragul
-szavak-be  ["a","b","c"]-t.        // Lista-Szöveg
-szavak-3-felett-szűrve-t.
-// ERROR: -felett expects Szám element — got Szöveg
-```
+=== "Hungarian"
+    ```ragul
+    szavak-be  ["a","b","c"]-t.        // Lista-Szöveg
+    szavak-3-felett-szűrve-t.
+    // ERROR: -felett expects Szám element — got Szöveg
+    ```
+
+=== "English aliases"
+    ```ragul
+    words->  ["a","b","c"]-obj.        // Lista-Szöveg
+    words-3-above-filter-obj.
+    // ERROR: -above expects Szám element — got Szöveg
+    ```
 
 ---
 
@@ -80,40 +104,56 @@ szavak-3-felett-szűrve-t.
 
 Each suffix declares what it expects and what it produces:
 
-| Suffix | Expects | Produces | Arg type |
-|---|---|---|---|
-| `-felett` | `Szám` | `Logikai` | `Szám` |
-| `-alatt` | `Szám` | `Logikai` | `Szám` |
-| `-rendezve` | `Lista-T` | `Lista-T` | — |
-| `-szűrve` | `Lista-T` | `Lista-T` | condition |
-| `-fordítva` | `Lista-T` | `Lista-T` | — |
-| `-hossz` | `Lista-T` or `Szöveg` | `Szám` | — |
-| `-szöveggé` | `Szám` | `Szöveg` | — *(bridge)* |
-| `-számmá` | `Szöveg` | `vagy-Szám-vagy-Hiba` | — *(bridge, fallible)* |
+| Hungarian | English | Expects | Produces | Arg type |
+|---|---|---|---|---|
+| `-felett` | `-above` | `Szám` | `Logikai` | `Szám` |
+| `-alatt` | `-below` | `Szám` | `Logikai` | `Szám` |
+| `-rendezve` | `-sorted` | `Lista-T` | `Lista-T` | — |
+| `-szűrve` | `-filter` | `Lista-T` | `Lista-T` | condition |
+| `-fordítva` | `-reversed` | `Lista-T` | `Lista-T` | — |
+| `-hossz` | `-len` | `Lista-T` or `Szöveg` | `Szám` | — |
+| `-szöteggé` | `-tostr` | `Szám` | `Szöveg` | — *(bridge)* |
+| `-számmá` | `-tonum` | `Szöveg` | `vagy-Szám-vagy-Hiba` | — *(bridge, fallible)* |
 
 **Bridge suffixes** explicitly convert between types and must be used when chaining across type boundaries.
 
 ---
 
-## Type Annotations with `-ként`
+## Type Annotations with `-ként` / `-as`
 
-The `-ként` suffix (meaning *acting as / in the role of*) provides optional type annotations on scope parameters and return values:
+The `-ként` / `-as` suffix (meaning *acting as / in the role of*) provides optional type annotations on scope parameters and return values:
 
-```ragul
-kétszeres-unk
-    szám-d  Szám-ként.
-    szám-szám-össze-t  Szám-ként.
-```
+=== "Hungarian"
+    ```ragul
+    kétszeres-unk
+        szám-d  Szám-ként.
+        szám-szám-össze-t  Szám-ként.
+    ```
 
-Reading naturally: *"szám, passed in, acting as a Szám"* — and the return *"acting as a Szám"*. No new syntax — `-ként` already exists.
+=== "English aliases"
+    ```ragul
+    kétszeres-ours
+        szám-yours  Szám-as.
+        szám-szám-add-obj  Szám-as.
+    ```
+
+Reading naturally: *"szám, passed in, acting as a Szám"* — and the return *"acting as a Szám"*.
 
 A fallible suffix return type:
 
-```ragul
-fájlolvasó-unk
-    útvonal-d  Szöveg-ként.
-    útvonal-fájlról-ből  olvas-va-t  vagy-Szöveg-vagy-Hiba-ként.
-```
+=== "Hungarian"
+    ```ragul
+    fájlolvasó-unk
+        útvonal-d  Szöveg-ként.
+        útvonal-fájlról-ből  olvas-va-t  vagy-Szöveg-vagy-Hiba-ként.
+    ```
+
+=== "English aliases"
+    ```ragul
+    fájlolvasó-ours
+        path-yours  Szöveg-as.
+        path-fájlról-from  read-doing-obj  vagy-Szöveg-vagy-Hiba-as.
+    ```
 
 Annotations are **optional** — unannotated scopes still work via inference. They are most useful for:
 

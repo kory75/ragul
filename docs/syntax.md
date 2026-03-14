@@ -10,11 +10,19 @@ root₁-suffixes  root₂-suffixes  root₃-suffixes.
 
 Because every root's role is encoded in its suffix chain, **word order is free**. These sentences are identical:
 
-```ragul
-x-ból  kimenet-ba  másol-va.
-kimenet-ba  másol-va  x-ból.
-másol-va  x-ból  kimenet-ba.
-```
+=== "Hungarian"
+    ```ragul
+    x-ból  kimenet-ba  másol-va.
+    kimenet-ba  másol-va  x-ból.
+    másol-va  x-ból  kimenet-ba.
+    ```
+
+=== "English aliases"
+    ```ragul
+    x-from  output->  copy-doing.
+    output->  copy-doing  x-from.
+    copy-doing  x-from  output->.
+    ```
 
 ---
 
@@ -31,8 +39,8 @@ root - [possession] - [aspect]* - [action] - [error] - case
 | Root | Base | The thing being described |
 | Possession | Innermost suffix | Ownership / scope / lifetime |
 | Aspect(s) | Middle (repeatable) | Transformations applied to the root |
-| Action | After aspects | Executes the operation (`-va` / `-ve`) |
-| Error | After action | Propagates failure upward (`-e`) |
+| Action | After aspects | Executes the operation (`-va` / `-doing`) |
+| Error | After action | Propagates failure upward (`-e` / `-?`) |
 | Case | Outermost suffix | The role this word plays in the sentence |
 
 ---
@@ -41,17 +49,31 @@ root - [possession] - [aspect]* - [action] - [error] - case
 
 Aspect suffixes stack left to right, each operating on the result of the previous. This encodes a mini-pipeline inside a single word:
 
-```ragul
-data-szűrve-szűrve-rendezve-ból
-// data → filter → filter → sort → FROM
-```
+=== "Hungarian"
+    ```ragul
+    data-szűrve-szűrve-rendezve-ból
+    // data → filter → filter → sort → FROM
+    ```
 
-Multiple `-val` (with/instrument) arguments bind to aspects in left-to-right order:
+=== "English aliases"
+    ```ragul
+    data-filter-filter-sorted-from
+    // data → filter → filter → sort → FROM
+    ```
 
-```ragul
-data-szűrve-szűrve-rendezve-ból  3-felett-val  10-alatt-val  kimenet-ba  másol-va.
-// FROM data→filter(>3)→filter(<10)→sort,  INTO output,  AS copy
-```
+Multiple `-val` / `-with` arguments bind to aspects in left-to-right order:
+
+=== "Hungarian"
+    ```ragul
+    data-szűrve-szűrve-rendezve-ból  3-felett-val  10-alatt-val  kimenet-ba  másol-va.
+    // FROM data→filter(>3)→filter(<10)→sort,  INTO output,  AS copy
+    ```
+
+=== "English aliases"
+    ```ragul
+    data-filter-filter-sorted-from  3-above-with  10-below-with  output->  copy-doing.
+    // FROM data→filter(>3)→filter(<10)→sort,  INTO output,  AS copy
+    ```
 
 ---
 
@@ -76,13 +98,21 @@ Mixed alias usage within the same file is permitted — the parser does not enfo
 
 ## Assignment
 
-Assignment is not special syntax — it is an ordinary sentence. The target carries `-be` (into) and the value carries `-t` (accusative):
+Assignment is not special syntax — it is an ordinary sentence. The target carries `-be` / `->` (into) and the value carries `-t` / `-obj` (accusative):
 
-```ragul
-x-be  3-t.
-lista-be  [1, 2, 3]-t.
-üdvözlet-be  "hello"-t.
-```
+=== "Hungarian"
+    ```ragul
+    x-be  3-t.
+    lista-be  [1, 2, 3]-t.
+    üdvözlet-be  "hello"-t.
+    ```
+
+=== "English aliases"
+    ```ragul
+    x->  3-obj.
+    lista->  [1, 2, 3]-obj.
+    greeting->  "hello"-obj.
+    ```
 
 `-be` is the front-vowel harmonic variant of `-ba`. Both mean *into* — the choice follows vowel harmony with the root. No type annotation is required — the compiler infers types from the value.
 
@@ -105,11 +135,19 @@ x-be  3-t.   // inline comment
 
 List literals use square brackets with comma-separated elements:
 
-```ragul
-lista-be  [1, 2, 3]-t.
-szavak-be  ["alma", "körte", "szilva"]-t.
-mátrix-be  [[1,2], [3,4]]-t.
-```
+=== "Hungarian"
+    ```ragul
+    lista-be  [1, 2, 3]-t.
+    szavak-be  ["alma", "körte", "szilva"]-t.
+    mátrix-be  [[1,2], [3,4]]-t.
+    ```
+
+=== "English aliases"
+    ```ragul
+    lista->  [1, 2, 3]-obj.
+    words->  ["alma", "körte", "szilva"]-obj.
+    matrix->  [[1,2], [3,4]]-obj.
+    ```
 
 ---
 
@@ -117,14 +155,26 @@ mátrix-be  [[1,2], [3,4]]-t.
 
 Ragul uses **indentation** (tabs) to define scope boundaries. A new indent level opens a new scope; dedenting closes it.
 
-```ragul
-számítás-unk
-    x-be  3-t.
-    y-be  10-t.
-    eredmény-be  x-y-össze-t.
-    eredmény-ből  kimenet-be  ír-va.
+=== "Hungarian"
+    ```ragul
+    számítás-unk
+        x-be  3-t.
+        y-be  10-t.
+        eredmény-be  x-y-össze-t.
+        eredmény-ből  kimenet-be  ír-va.
 
-// x, y, eredmény do not exist here
-```
+    // x, y, eredmény do not exist here
+    ```
+
+=== "English aliases"
+    ```ragul
+    számítás-ours
+        x->  3-obj.
+        y->  10-obj.
+        result->  x-y-add-obj.
+        result-from  output->  write-doing.
+
+    // x, y, result do not exist here
+    ```
 
 See [Functions & Scopes](functions.md) for the full scoping model.
