@@ -144,6 +144,17 @@ def _scope_from_word(word: Word, token: Token) -> Scope:
 
     possession = word.possession
 
+    # Build condition_word for -ha scopes: the scope opener's root+aspects
+    # encode the condition expression (e.g. "szám-0-felett" from szám-0-felett-ha).
+    condition_word = None
+    if is_conditional:
+        condition_word = Word(
+            root=word.root,
+            aspects=list(word.aspects),
+            source_text=token.value,
+            line=token.line,
+        )
+
     return Scope(
         name=name,
         possession=possession,
@@ -153,6 +164,8 @@ def _scope_from_word(word: Word, token: Token) -> Scope:
         is_loop=is_loop,
         loop_kind=loop_kind,
         is_contract=is_contract,
+        condition_word=condition_word,
+        line=token.line,
     )
 
 
@@ -250,7 +263,7 @@ class Parser:
                 child = _scope_from_word(word, tok)
                 scope.add_child(child)
                 current_words = []  # scope opener is not part of a sentence
-                current_line  = tok.line
+                current_line  = 0   # reset so next sentence picks up its own line
                 # Do NOT consume INDENT here — the main loop will see it
                 continue
 
@@ -313,7 +326,9 @@ class Parser:
             # ---- NUMBER / STRING literals → synthesise Words, absorb trailing suffix ----
             if tok.type in (TT.NUMBER, TT.STRING):
                 self._advance()
-                root_val = tok.value
+                # STRING tokens have quotes stripped by the lexer; re-add them
+                # so _resolve_root can distinguish "42" (str) from 42 (num).
+                root_val = f'"{tok.value}"' if tok.type == TT.STRING else tok.value
                 # Peek: if next token is a bare suffix word (empty root + case),
                 # absorb it so "hello"-t becomes one Word, not two.
                 nxt = self._peek()

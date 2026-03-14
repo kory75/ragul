@@ -18,6 +18,19 @@ from ragul.stdlib.modules import RagulHiba  # runtime error value
 from ragul.errors import DiagnosticBag
 
 
+def _interleave(scope: Scope) -> list:
+    """
+    Return scope's sentences and executable child scopes interleaved
+    in source order, sorted by line number.
+    """
+    items: list = list(scope.sentences)
+    for child in scope.children:
+        if child.is_effect or child.is_conditional or child.is_loop:
+            items.append(child)
+    items.sort(key=lambda x: x.line if isinstance(x, Sentence) else x.line)
+    return items
+
+
 # ---------------------------------------------------------------------------
 # Runtime error types
 # ---------------------------------------------------------------------------
@@ -207,11 +220,12 @@ class Interpreter:
         # --- Effect scope: -hatás ---
         if scope.is_effect:
             try:
-                for sentence in scope.sentences:
-                    last_value = self._exec_sentence(sentence, local_env, scope)
-                for child in scope.children:
-                    if child.is_effect or child.is_conditional or child.is_loop:
-                        last_value = self._exec_scope(child, local_env)
+                for item in _interleave(scope):
+                    if isinstance(item, Sentence):
+                        last_value = self._exec_sentence(item, local_env, scope)
+                    else:  # Scope child
+                        if item.is_effect or item.is_conditional or item.is_loop:
+                            last_value = self._exec_scope(item, local_env)
             except PropagateError as e:
                 if scope.error_handler:
                     handler_env = Environment(parent=local_env)
@@ -224,12 +238,11 @@ class Interpreter:
 
         # --- Pure / function scope ---
         try:
-            for sentence in scope.sentences:
-                last_value = self._exec_sentence(sentence, local_env, scope)
-            # Execute child conditional/loop scopes (they run inline)
-            for child in scope.children:
-                if child.is_conditional or child.is_loop:
-                    last_value = self._exec_scope(child, local_env)
+            for item in _interleave(scope):
+                if isinstance(item, Sentence):
+                    last_value = self._exec_sentence(item, local_env, scope)
+                elif item.is_conditional or item.is_loop:
+                    last_value = self._exec_scope(item, local_env)
         except PropagateError as e:
             if scope.error_handler:
                 handler_env = Environment(parent=local_env)
@@ -247,34 +260,36 @@ class Interpreter:
     def _exec_conditional(self, scope: Scope, env: Environment) -> Any:
         """
         Execute a -ha scope.
-        Convention: the FIRST sentence is the condition expression.
-        Remaining sentences are the body (executed when condition is truthy).
-        The -hanem sibling (scope.else_branch) runs when condition is falsy.
-        -különben branches are chained as elif_branches.
+
+        The condition is stored in scope.condition_word (the scope opener's
+        root + aspects, e.g. Word(root="szám", aspects=["-0", "-felett"])).
+        All scope.sentences are the body.
+
+        Legacy fallback: if condition_word is None, treat sentences[0] as
+        the condition and sentences[1:] as the body.
         """
-        if not scope.sentences:
+        if scope.condition_word is not None:
+            cond_val = self._eval_word(scope.condition_word, env)
+            condition_value = bool(cond_val) if cond_val is not None else False
+            body_sentences = scope.sentences
+        elif scope.sentences:
+            condition_value = self._eval_condition_sentence(scope.sentences[0], env)
+            body_sentences = scope.sentences[1:]
+        else:
             return None
 
-        # Evaluate condition (first sentence — the expression that returns Logikai)
-        condition_sentence = scope.sentences[0]
-        condition_value = self._eval_condition_sentence(condition_sentence, env)
-
         if condition_value:
-            # Run the body (sentences 1..n)
             last_value: Any = None
-            for sentence in scope.sentences[1:]:
+            for sentence in body_sentences:
                 last_value = self._exec_sentence(sentence, env, scope)
-            # Run nested child scopes
             for child in scope.children:
                 last_value = self._exec_scope(child, env)
             return last_value
         else:
-            # Check elif branches
             for elif_branch in scope.elif_branches:
                 result = self._exec_conditional(elif_branch, env)
                 if result is not None:
                     return result
-            # Run -hanem branch
             if scope.else_branch:
                 return self._exec_scope(scope.else_branch, env)
         return None
@@ -401,6 +416,7 @@ class Interpreter:
                 break
 
         last_value: Any = None
+        loop_env = Environment(parent=env)   # default for empty iterable
         for element in iterable:
             loop_env = Environment(parent=env)
             loop_env.set(param_name, element)
@@ -594,8 +610,8 @@ class Interpreter:
                     value = fn(value, *args)
                 except Exception as e:
                     value = RagulHiba(str(e))
-            elif aspect in self._user_scopes:
-                us = self._user_scopes[aspect]
+            elif bare in self._user_scopes:
+                us = self._user_scopes[bare]
                 value = self._call_user_scope(us, value, val_arg_iter, env)
             elif aspect.lstrip("-") in EFFECT_CHANNELS:
                 EFFECT_CHANNELS[aspect.lstrip("-")](value)

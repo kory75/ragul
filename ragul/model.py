@@ -327,6 +327,7 @@ class Scope:
     is_conditional:  bool              = False   # -ha
     is_loop:         bool              = False   # -míg / -ig / -mindegyik / -gyűjt
     loop_kind:       str | None        = None    # "míg" | "ig" | "mindegyik" | "gyűjt"
+    condition_word:  "Word | None"     = None        # -ha condition expression (root+aspects of scope opener)
     is_contract:     bool              = False   # -szerződés
     sentences:       list[Sentence]    = field(default_factory=list)
     children:        list["Scope"]     = field(default_factory=list)
@@ -339,6 +340,8 @@ class Scope:
     return_type:     RagulType | None  = None
     # Resolved inferred types for roots defined in this scope
     root_types:      dict[str, RagulType] = field(default_factory=dict)
+    # Source line of the scope opener (SCOPE_OPEN token line)
+    line:            int                  = 0
 
     def add_child(self, child: "Scope") -> None:
         child.parent = self
