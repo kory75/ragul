@@ -172,4 +172,40 @@ Ordered by impact:
 
 ---
 
+## Planned Initiative — Bilingual Documentation (2026-03-14)
+
+### Approach
+
+Docs stay in **English prose** throughout. Code examples get **two tabs** (Hungarian / English aliases) using the `pymdownx.tabbed` extension already configured in `mkdocs.yml`. No separate site, no i18n plugin, no duplicate pages.
+
+Example of what tabbed blocks look like in MkDocs Material:
+
+```
+=== "Hungarian"
+    x-ba  3-t.
+    y-ba  x-3-össze-t.
+
+=== "English aliases"
+    x->  3-obj.
+    y->  x-3-add-obj.
+```
+
+### Implementation order
+
+1. **Audit the alias table** — identify which suffixes have no English alias (e.g. `-össze` → `-add`, `-felett` → `-above`). Some stdlib suffixes may need new aliases added to the ALIAS_TABLE and registered in the stdlib.
+2. **Add missing English aliases** — update `ragul/model.py` ALIAS_TABLE and `ragul/stdlib/` so every suffix is callable by its English name.
+3. **Add a glossary page** (`docs/glossary.md`) — single reference mapping every Hungarian suffix and keyword to its English alias, with a pronunciation guide. Add to MkDocs nav.
+4. **Retrofit the 7 example pages** — replace bare code blocks with tabbed blocks. Highest traffic, biggest reader impact.
+5. **Retrofit the language reference pages** — syntax, types, functions, control, effects, errors, modules. Work through gradually.
+
+### Gate
+
+Do not start this initiative until the 4 interpreter bugs (conditionals, custom scopes, for-each loops, string coercion) are fixed — the English-alias examples need to actually run correctly, and they exercise the same code paths.
+
+### PyPI readiness note
+
+Fix the 4 interpreter bugs → then publish to PyPI. The package infrastructure (`pyproject.toml`, entry point, README) is already correct. Only remaining PyPI prep work: add classifiers (`Development Status :: 3 - Alpha`, `Programming Language :: Python`, `Topic :: Software Development :: Compilers`) to `pyproject.toml`.
+
+---
+
 *End of report.*
