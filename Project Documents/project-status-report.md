@@ -163,12 +163,17 @@ Root causes of the conditional bug (two intertwined parser issues):
 
 ## Recommended Next Steps
 
-Ordered by impact:
+### v0.1.1 — Patch + First New Feature
 
-1. **Publish to PyPI** — add classifiers to `pyproject.toml` (`Development Status :: 3 - Alpha`, `Programming Language :: Python`, `Topic :: Software Development :: Compilers`), then `pip publish`. Infrastructure already correct.
-2. **Resolve `-val` binding** — fully implement `_resolve_val_args()` in the parser for correct multi-argument suffix calls
-3. **Implement topological sort** in the interpreter for correct pure-scope evaluation order
-4. **Implement E006/E007** in the type checker for scope-leak and module-resolution errors
+- [x] Publish to PyPI as `ragul-lang` (done 2026-03-15)
+- [x] Fix pygls 2.0 compatibility in LSP server (done 2026-03-15)
+- [ ] **`ragul új projekt <name>` / `ragul new project <name>`** — scaffold a new project folder (`ragul.config`, `main.ragul`, `.gitignore`, `README.md`)
+- [ ] **`ragul új modul <name>` / `ragul new module <name>`** — scaffold a new module file inside an existing project
+- [ ] Publish v0.1.1 to PyPI via GitHub Release
+
+### v0.2.0 — To Be Planned
+
+*(Candidates: `ragul formáz`, `ragul teszt`, E006/E007 type checker errors, `-val` binding, topological sort. Scope to be decided.)*
 
 ---
 
