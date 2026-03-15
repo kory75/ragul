@@ -504,7 +504,58 @@ The docs site can be started as soon as the type system is stable (Phase 3) beca
 
 ---
 
-## 8. First Milestone Checklist
+## 9. Future CLI Commands
+
+### `ragul új` / `ragul new` — Project & Module Scaffolding
+
+Subcommand structure mirrors `git new` / `cargo new`:
+
+```bash
+ragul új projekt <name>   # scaffold a new project
+ragul új modul  <name>    # scaffold a new module inside an existing project
+```
+
+**`ragul új projekt <name>`** creates:
+```
+<name>/
+├── ragul.config       # project config with name, version, entry point
+├── main.ragul         # hello-world entry point
+├── .gitignore         # ignores build artefacts
+└── README.md
+```
+
+**`ragul új modul <name>`** (run inside an existing project) creates:
+```
+<name>.ragul           # module scaffold with a -modul scope
+```
+
+### `ragul formáz` / `ragul fmt` — Formatter
+
+Auto-format `.ragul` files in place:
+- Normalise indentation to 4 spaces
+- One space between words in a sentence
+- Canonical suffix forms (resolves any aliases left in source)
+- Consistent blank lines between scopes
+
+```bash
+ragul formáz hello.ragul        # format single file
+ragul formáz                    # format all .ragul files in project
+ragul formáz --ellenőriz        # check only, exit 1 if changes needed (CI mode)
+```
+
+### Other Planned CLI Commands
+
+| Command | Alias | Description |
+|---|---|---|
+| `ragul teszt` | `ragul test` | Run `.ragul` test files |
+| `ragul doc` | | Generate docs from inline comments |
+| `ragul info` | | Show version, config values, detected entry point |
+| `ragul tisztít` | `ragul clean` | Remove build artefacts and caches |
+| `ragul frissít` | `ragul upgrade` | Self-update the toolchain |
+
+---
+
+## 10. First Milestone Checklist
 
 This is the target for a first usable `v0.1.0` tag:
 

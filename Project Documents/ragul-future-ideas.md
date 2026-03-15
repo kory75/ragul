@@ -13,7 +13,8 @@
 
 ## CLI (`ragul` command)
 
-- **`ragul új` / `ragul new`** — scaffold a new project: creates folder, `ragul.config`, `main.ragul`, `.gitignore`
+- **`ragul új projekt <name>` / `ragul new project <name>`** — scaffold a new project folder with `ragul.config`, `main.ragul`, `.gitignore`, `README.md`
+- **`ragul új modul <name>` / `ragul new module <name>`** — scaffold a new module file inside an existing project
 - **`ragul formáz` / `ragul fmt`** — auto-formatter: normalise indentation, suffix spacing, and line endings
 - **`ragul csomag` / `ragul pkg`** — package manager: install/publish Ragul modules from a registry
 - **`ragul teszt` / `ragul test`** — built-in test runner for `.ragul` test files
