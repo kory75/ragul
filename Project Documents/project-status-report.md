@@ -169,13 +169,11 @@ Root causes of the conditional bug (two intertwined parser issues):
 - [x] Fix pygls 2.0 compatibility in LSP server (done 2026-03-15)
 - [x] **`ragul új projekt <name>` / `ragul new project <name>`** — scaffold a new project folder (`ragul.config`, `main.ragul`, `.gitignore`, `README.md`) (done 2026-03-15)
 - [x] **`ragul új modul <name>` / `ragul new module <name>`** — scaffold a new module file inside an existing project (done 2026-03-15)
-- [ ] Publish v0.1.1 to PyPI via GitHub Release
-- [ ] Create VS Code Marketplace publisher account
-- [ ] Publish `ragul-lang` VS Code extension to Marketplace
+- [x] Publish v0.1.1 to PyPI via GitHub Release (done 2026-03-15)
 
 ### v0.2.0 — To Be Planned
 
-*(Candidates: `ragul formáz`, `ragul teszt`, E006/E007 type checker errors, `-val` binding, topological sort. Scope to be decided.)*
+*(Candidates: `ragul formáz`, `ragul teszt`, E006/E007 type checker errors, `-val` binding, topological sort, VS Code Marketplace publish. Scope to be decided.)*
 
 ---
 
