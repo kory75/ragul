@@ -13,7 +13,7 @@ Lazy evaluation means sentences only execute when their result is needed. A sent
 === "English aliases"
     ```ragul
     program-ours-effect
-        x->  "hello world"-it.
+        x-into  "hello world"-it.
         x-print-doing.
     ```
 
@@ -32,7 +32,7 @@ Two rules enforced by the compiler:
 === "English aliases"
     ```ragul
     tiszta-számítás-ours
-        x->  3-it.
+        x-into  3-it.
         x-print-doing.      // ERROR E004: effectful suffix called from pure scope
     ```
 
@@ -64,7 +64,7 @@ All channels work identically — same suffix mechanism, different target. Swapp
 === "English aliases"
     ```ragul
     program-ours-effect
-        x->  "hello"-it.
+        x-into  "hello"-it.
         x-print-doing.      // write to console
         x-fájlra-doing.     // write to file — same sentence structure
         x-stderr-doing.     // write to stderr — same sentence structure
@@ -88,7 +88,7 @@ Reading is also an effect operation. The pattern uses the read channel as a sour
 === "English aliases"
     ```ragul
     program-ours-effect
-        input->  bemenetről-from  read-doing-it.
+        input-into  bemenetről-from  read-doing-it.
         input-print-doing.
     ```
 
@@ -124,7 +124,7 @@ Once defined, `adatbázisba` becomes a suffix usable anywhere — identically to
 === "English aliases"
     ```ragul
     program-ours-effect
-        sql->  "SELECT * FROM users"-it.
+        sql-into  "SELECT * FROM users"-it.
         sql-adatbázisba-doing.
     ```
 

@@ -16,9 +16,9 @@ The standard library is loaded automatically — no import needed. All suffixes 
 
 === "English aliases"
     ```ragul
-    x->  10-it.
-    y->  x-3-add-it.            // 13
-    z->  x-3-mul-2-add-it.      // 32
+    x-into  10-it.
+    y-into  x-3-add-it.            // 13
+    z-into  x-3-mul-2-add-it.      // 32
     ```
 
 === "Hungarian"
@@ -77,9 +77,9 @@ The standard library is loaded automatically — no import needed. All suffixes 
 
 === "English aliases"
     ```ragul
-    x->  16-it.
-    y->  x-sqrt-it.           // 4.0
-    z->  x-pow-it  2-with.    // 256
+    x-into  16-it.
+    y-into  x-sqrt-it.           // 4.0
+    z-into  x-pow-it  2-with.    // 256
     ```
 
 === "Hungarian"
@@ -109,10 +109,10 @@ The standard library is loaded automatically — no import needed. All suffixes 
 
 === "English aliases"
     ```ragul
-    s->  "helló világ"-it.
-    n->  s-len-it.             // 11
-    u->  s-upper-it.           // "HELLÓ VILÁG"
-    r->  s-replace-it  "világ"-with  "Ragul"-with.  // "helló Ragul"
+    s-into  "helló világ"-it.
+    n-into  s-len-it.             // 11
+    u-into  s-upper-it.           // "HELLÓ VILÁG"
+    r-into  s-replace-it  "világ"-with  "Ragul"-with.  // "helló Ragul"
     ```
 
 === "Hungarian"
@@ -143,9 +143,9 @@ The standard library is loaded automatically — no import needed. All suffixes 
 
 === "English aliases"
     ```ragul
-    lista->  [3, 1, 4, 1, 5, 9, 2, 6]-it.
-    sorted->  lista-sorted-unique-it.          // [1, 2, 3, 4, 5, 6, 9]
-    large->  lista-filter-from  5-above-with  obj. // [9, 6]
+    lista-into  [3, 1, 4, 1, 5, 9, 2, 6]-it.
+    sorted-into  lista-sorted-unique-it.          // [1, 2, 3, 4, 5, 6, 9]
+    large-into  lista-filter-from  5-above-with  obj. // [9, 6]
     ```
 
 === "Hungarian"
@@ -168,10 +168,10 @@ Bridge suffixes convert between types and must be used when chaining across type
 
 === "English aliases"
     ```ragul
-    x->  42-it.
-    s->  x-tostr-it.           // "42"
+    x-into  42-it.
+    s-into  x-tostr-it.           // "42"
 
-    n->  "123"-tonum-doing-?.   // 123, or propagate error
+    n-into  "123"-tonum-doing-?.   // 123, or propagate error
     ```
 
 === "Hungarian"

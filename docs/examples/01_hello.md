@@ -5,7 +5,7 @@ The simplest Ragul program — assign a string and print it.
 === "English aliases"
     ```ragul
     program-ours-effect
-        greeting->  "Hello, World!"-it.
+        greeting-into  "Hello, World!"-it.
         greeting-print-doing.
     ```
 
@@ -35,7 +35,7 @@ Hello, World!
 ## What's happening
 
 - `program-ours-effect` (`program-nk-hatás`) — declares an effect scope named `program`. The `-effect` / `-hatás` suffix marks it as eager: everything inside executes in order, top to bottom.
-- `greeting->  "Hello, World!"-it.` — assigns the string into the root `greeting`. The compiler infers type `Szöveg` (string).
+- `greeting-into  "Hello, World!"-it.` — assigns the string into the root `greeting`. The compiler infers type `Szöveg` (string).
 - `greeting-print-doing.` — pipes `greeting` to the `-print` (`képernyőre`) channel and executes it with `-doing` (`-va`).
 
 ---
@@ -45,9 +45,9 @@ Hello, World!
 === "English aliases"
     ```ragul
     program-ours-effect
-        name->     "Ragul"-it.
-        greeting-> "Hello, "-it.
-        output->   greeting-name-concat-it.
+        name-into     "Ragul"-it.
+        greeting-into "Hello, "-it.
+        output-into   greeting-name-concat-it.
         output-print-doing.
     ```
 

@@ -5,37 +5,37 @@ Demonstrates the string suffix library. String arguments are passed **inline in 
 === "English aliases"
     ```ragul
     program-ours-effect
-        s->  "Hello, Ragul!"-it.
+        s-into  "Hello, Ragul!"-it.
 
         // Length
-        n->  s-len-it.
+        n-into  s-len-it.
         n-print-doing.                 // 13
 
         // Case conversion
-        upper->  s-upper-it.
-        lower->  s-lower-it.
+        upper-into  s-upper-it.
+        lower-into  s-lower-it.
         upper-print-doing.             // HELLO, RAGUL!
         lower-print-doing.             // hello, ragul!
 
         // Contains / starts / ends — needle inline in the chain
-        has->    s-"Ragul"-contains-it.
-        starts-> s-"Hello"-startswith-it.
-        ends->   s-"!"-endswith-it.
+        has-into    s-"Ragul"-contains-it.
+        starts-into s-"Hello"-startswith-it.
+        ends-into   s-"!"-endswith-it.
         has-print-doing.               // True
         starts-print-doing.            // True
         ends-print-doing.              // True
 
         // Replace
-        new_str->  s-"Ragul"-"world"-replace-it.
+        new_str-into  s-"Ragul"-"world"-replace-it.
         new_str-print-doing.           // Hello, world!
 
         // Split
-        words->  s-", "-split-it.
+        words-into  s-", "-split-it.
         words-print-doing.             // ['Hello', 'Ragul!']
 
         // Concatenation
-        a->  "Ragul"-it.
-        b->  a-" rocks"-concat-it.
+        a-into  "Ragul"-it.
+        b-into  a-" rocks"-concat-it.
         b-print-doing.                 // Ragul rocks
     ```
 

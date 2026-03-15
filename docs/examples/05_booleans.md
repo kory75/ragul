@@ -5,14 +5,14 @@ Demonstrates comparison operators and logical combinators. Comparisons produce `
 === "English aliases"
     ```ragul
     program-ours-effect
-        x->  10-it.
-        y->  3-it.
+        x-into  10-it.
+        y-into  3-it.
 
         // Comparisons — produce Logikai values
-        greater->  x-y-above-it.        // 10 > 3   = True
-        lesser->   x-y-below-it.        // 10 < 3   = False
-        at_least-> x-10-atleast-it.     // 10 >= 10 = True
-        equal->    x-10-eq-it.          // 10 == 10 = True
+        greater-into  x-y-above-it.        // 10 > 3   = True
+        lesser-into   x-y-below-it.        // 10 < 3   = False
+        at_least-into x-10-atleast-it.     // 10 >= 10 = True
+        equal-into    x-10-eq-it.          // 10 == 10 = True
 
         greater-print-doing.             // True
         lesser-print-doing.              // False
@@ -20,21 +20,21 @@ Demonstrates comparison operators and logical combinators. Comparisons produce `
         equal-print-doing.               // True
 
         // Logical operators
-        p->  igaz-it.
-        q->  hamis-it.
+        p-into  igaz-it.
+        q-into  hamis-it.
 
-        and_res->  p-q-and-it.          // True AND False = False
-        or_res->   p-q-or-it.           // True OR False  = True
-        not_res->  p-not-it.            // NOT True       = False
+        and_res-into  p-q-and-it.          // True AND False = False
+        or_res-into   p-q-or-it.           // True OR False  = True
+        not_res-into  p-not-it.            // NOT True       = False
 
         and_res-print-doing.             // False
         or_res-print-doing.              // True
         not_res-print-doing.             // False
 
         // Combining two comparisons
-        cmp1->  x-y-above-it.           // 10 > 3   = True
-        cmp2->  x-10-atleast-it.        // 10 >= 10 = True
-        both->  cmp1-cmp2-and-it.       // True AND True = True
+        cmp1-into  x-y-above-it.           // 10 > 3   = True
+        cmp2-into  x-10-atleast-it.        // 10 >= 10 = True
+        both-into  cmp1-cmp2-and-it.       // True AND True = True
         both-print-doing.                // True
     ```
 

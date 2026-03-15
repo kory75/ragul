@@ -12,9 +12,9 @@ Because every root's role is encoded in its suffix chain, **word order is free**
 
 === "English aliases"
     ```ragul
-    x-from  output->  copy-doing.
-    output->  copy-doing  x-from.
-    copy-doing  x-from  output->.
+    x-from  output-into  copy-doing.
+    output-into  copy-doing  x-from.
+    copy-doing  x-from  output-into.
     ```
 
 === "Hungarian"
@@ -65,7 +65,7 @@ Multiple `-val` / `-with` arguments bind to aspects in left-to-right order:
 
 === "English aliases"
     ```ragul
-    data-filter-filter-sorted-from  3-above-with  10-below-with  output->  copy-doing.
+    data-filter-filter-sorted-from  3-above-with  10-below-with  output-into  copy-doing.
     // FROM data→filter(>3)→filter(<10)→sort,  INTO output,  AS copy
     ```
 
@@ -102,9 +102,9 @@ Assignment is not special syntax — it is an ordinary sentence. The target carr
 
 === "English aliases"
     ```ragul
-    x->  3-it.
-    lista->  [1, 2, 3]-it.
-    greeting->  "hello"-it.
+    x-into  3-it.
+    lista-into  [1, 2, 3]-it.
+    greeting-into  "hello"-it.
     ```
 
 === "Hungarian"
@@ -137,9 +137,9 @@ List literals use square brackets with comma-separated elements:
 
 === "English aliases"
     ```ragul
-    lista->  [1, 2, 3]-it.
-    words->  ["alma", "körte", "szilva"]-it.
-    matrix->  [[1,2], [3,4]]-it.
+    lista-into  [1, 2, 3]-it.
+    words-into  ["alma", "körte", "szilva"]-it.
+    matrix-into  [[1,2], [3,4]]-it.
     ```
 
 === "Hungarian"
@@ -158,10 +158,10 @@ Ragul uses **indentation** (tabs) to define scope boundaries. A new indent level
 === "English aliases"
     ```ragul
     számítás-ours
-        x->  3-it.
-        y->  10-it.
-        result->  x-y-add-it.
-        result-from  output->  write-doing.
+        x-into  3-it.
+        y-into  10-it.
+        result-into  x-y-add-it.
+        result-from  output-into  write-doing.
 
     // x, y, result do not exist here
     ```

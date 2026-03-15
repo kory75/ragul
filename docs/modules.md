@@ -52,8 +52,8 @@ Modules are imported using a `-t` / `-it` sentence at the top of the file:
     matematika-it.
 
     program-ours-effect
-        x->  9-it.
-        y->  x-gyök-it.
+        x-into  9-it.
+        y-into  x-gyök-it.
         y-print-doing.
     // prints: 3.0
     ```

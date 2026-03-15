@@ -22,11 +22,11 @@ This definition makes `-kétszeres` immediately available as an aspect suffix:
 
 === "English aliases"
     ```ragul
-    x->  3-it.
-    y->  x-kétszeres-it.                    // y = 6
+    x-into  3-it.
+    y-into  x-kétszeres-it.                    // y = 6
 
-    lista->  [1,2,3]-it.
-    lista-kétszeres-from  output->  write-doing.  // [2,4,6]
+    lista-into  [1,2,3]-it.
+    lista-kétszeres-from  output-into  write-doing.  // [2,4,6]
     ```
 
 === "Hungarian"
@@ -52,7 +52,7 @@ Parameters are roots marked with `-d` / `-yours` (passed in). They receive value
         lista-threshold-above-filter-it  List-as.
 
     // Called as:
-    output->  adatok-szűrőhatár-it  5-with.
+    output-into  adatok-szűrőhatár-it  5-with.
     // adatok → lista-yours, 5 → threshold-yours
     ```
 
@@ -117,9 +117,9 @@ Ragul uses indentation (tabs) to define scope boundaries. Roots defined within a
 === "English aliases"
     ```ragul
     számítás-ours
-        x->  3-it.
-        y->  10-it.
-        result->  x-y-add-it.
+        x-into  3-it.
+        y-into  10-it.
+        result-into  x-y-add-it.
 
     // x, y, result do not exist here
     ```
@@ -141,14 +141,14 @@ Scopes nest freely. Inner scopes can reference roots from outer scopes, but not 
 === "English aliases"
     ```ragul
     feldolgozás-ours
-        lista->  [1,2,3,4,5]-it.
+        lista-into  [1,2,3,4,5]-it.
 
         szűrés-ours
-            smaller->  lista-filter-from  3-below-with  obj.
-            smaller-from  output->  write-doing.
+            smaller-into  lista-filter-from  3-below-with  obj.
+            smaller-from  output-into  write-doing.
 
         // smaller does not exist here
-        lista-from  output->  write-doing.
+        lista-from  output-into  write-doing.
     ```
 
 === "Hungarian"
@@ -183,9 +183,9 @@ Usage mirrors `this.` in languages like C# — available when needed, not requir
 === "English aliases"
     ```ragul
     feldolgozás-ours
-        x-mine->  3-it.                      // immutable
+        x-mine-into  3-it.                      // immutable
         input-yours.                          // parameter — passed in from outside
-        result-ours->  input-filter-it.      // explicitly scoped result
+        result-ours-into  input-filter-it.      // explicitly scoped result
     ```
 
 === "Hungarian"
@@ -266,12 +266,12 @@ Calling these is unchanged — annotations are invisible at the call site:
 
 === "English aliases"
     ```ragul
-    x->  3-it.
-    y->  x-kétszeres-it.                    // y = 6
+    x-into  3-it.
+    y-into  x-kétszeres-it.                    // y = 6
 
-    output->  adatok-szűrőhatár-it  5-with. // filter list above 5
+    output-into  adatok-szűrőhatár-it  5-with. // filter list above 5
 
-    content->  "adat.txt"-fájlolvasó-doing-?. // fallible — propagate error
+    content-into  "adat.txt"-fájlolvasó-doing-?. // fallible — propagate error
     ```
 
 === "Hungarian"

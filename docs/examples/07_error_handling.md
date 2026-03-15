@@ -8,7 +8,7 @@ Demonstrates Ragul's error model: operations that can fail return a `vagy` (or) 
         // -tonum tries to parse a string as a number — it fails on non-numeric strings.
         // -? propagates the error upward; -catch catches it.
 
-        n->  "not-a-number"-tonum-doing-?.
+        n-into  "not-a-number"-tonum-doing-?.
         n-print-doing.
         -catch
             "Error caught: could not parse string as number"-print-doing.
@@ -87,8 +87,8 @@ If no `-hibára` / `-catch` is present and an error reaches the top of the progr
 === "English aliases"
     ```ragul
     program-ours-effect
-        content->  "data.txt"-readfile-doing-?.  // fails if file missing
-        data->     content-parse-doing-?.         // fails if content invalid
+        content-into  "data.txt"-readfile-doing-?.  // fails if file missing
+        data-into     content-parse-doing-?.         // fails if content invalid
         data-print-doing.
         -catch
             "Pipeline failed: "-hiba-concat-doing  print-doing.

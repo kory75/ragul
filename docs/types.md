@@ -6,9 +6,9 @@ Ragul is **inferred typed**. Types are never declared explicitly — the compile
 
 === "English aliases"
     ```ragul
-    x->  3-it.           // compiler: x is Num
-    y->  "hello"-it.     // compiler: y is Str
-    lista->  [1,2,3]-it. // compiler: lista is List-Num
+    x-into  3-it.           // compiler: x is Num
+    y-into  "hello"-it.     // compiler: y is Str
+    lista-into  [1,2,3]-it. // compiler: lista is List-Num
     ```
 
 === "Hungarian"
@@ -60,7 +60,7 @@ This notation is consistent with the rest of Ragul — types are built by suffix
 === "English aliases"
     ```ragul
     // or-Str-or-Err = either a Str OR an Err
-    result->  "adat.txt"-fájlolvasó-doing.
+    result-into  "adat.txt"-fájlolvasó-doing.
     // result is or-Str-or-Err
     ```
 
@@ -91,7 +91,7 @@ Suffix type checking has two levels:
 
 === "English aliases"
     ```ragul
-    words->  ["a","b","c"]-it.        // Lista-Szöveg
+    words-into  ["a","b","c"]-it.        // Lista-Szöveg
     words-3-above-filter-it.
     // ERROR: -above expects Szám element — got Szöveg
     ```

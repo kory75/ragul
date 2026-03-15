@@ -5,15 +5,15 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
 === "English aliases"
     ```ragul
     program-ours-effect
-        x->  10-it.
-        y->  3-it.
+        x-into  10-it.
+        y-into  3-it.
 
         // Basic operations
-        sum->      x-y-add-it.       // 10 + 3  = 13
-        diff->     x-y-sub-it.       // 10 - 3  = 7
-        product->  x-y-mul-it.       // 10 * 3  = 30
-        quotient-> x-y-div-it.       // 10 / 3  = 3.33
-        rem->      x-y-rem-it.       // 10 mod 3 = 1
+        sum-into      x-y-add-it.       // 10 + 3  = 13
+        diff-into     x-y-sub-it.       // 10 - 3  = 7
+        product-into  x-y-mul-it.       // 10 * 3  = 30
+        quotient-into x-y-div-it.       // 10 / 3  = 3.33
+        rem-into      x-y-rem-it.       // 10 mod 3 = 1
 
         sum-print-doing.
         diff-print-doing.
@@ -22,16 +22,16 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
         rem-print-doing.
 
         // Chained pipeline: (10 + 3) * 2 = 26
-        chain->  x-3-add-2-mul-it.
+        chain-into  x-3-add-2-mul-it.
         chain-print-doing.
 
         // Math suffixes
-        root->   16-sqrt-it.         // sqrt(16) = 4.0
-        power->  2-10-pow-it.        // 2^10 = 1024
+        root-into   16-sqrt-it.         // sqrt(16) = 4.0
+        power-into  2-10-pow-it.        // 2^10 = 1024
 
         // Absolute value via subtraction then abs
-        negative->  0-7-sub-it.      // 0 - 7 = -7
-        absval->    negative-abs-it. // |-7| = 7
+        negative-into  0-7-sub-it.      // 0 - 7 = -7
+        absval-into    negative-abs-it. // |-7| = 7
 
         root-print-doing.
         power-print-doing.

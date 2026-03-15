@@ -44,8 +44,8 @@ Key properties that follow from this design:
 
     // Use it
     program-ours-effect
-        x->  3-it.
-        y->  x-double-it.
+        x-into  3-it.
+        y-into  x-double-it.
         y-print-doing.
     // prints: 6
     ```

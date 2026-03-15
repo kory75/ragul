@@ -18,7 +18,7 @@ Any operation that can fail returns a `vagy` — a value that is either a succes
 === "English aliases"
     ```ragul
     // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
-    result->  "adat.txt"-fájlolvasó-doing.
+    result-into  "adat.txt"-fájlolvasó-doing.
     // result is vagy-Szöveg-vagy-Hiba
     ```
 
@@ -43,7 +43,7 @@ root - [possession] - [aspect]* - action(-va) - [error(-e)] - case
 
 === "English aliases"
     ```ragul
-    content->  "adat.txt"-fájlolvasó-doing-?.
+    content-into  "adat.txt"-fájlolvasó-doing-?.
     // call fájlolvasó — if error, propagate up immediately
     // if success, bind result to content
     ```
@@ -66,8 +66,8 @@ Without `-e` / `-?`, the caller must handle the `vagy` type manually. With it, e
 === "English aliases"
     ```ragul
     program-ours-effect
-        content->  "adat.txt"-fájlolvasó-doing-?.
-        data->  content-elemző-doing-?.
+        content-into  "adat.txt"-fájlolvasó-doing-?.
+        data-into  content-elemző-doing-?.
         data-print-doing.
         -catch
             "feldolgozási hiba"-print-doing.
@@ -93,7 +93,7 @@ Errors carry a message. A named error is just a root assigned an error value:
 
 === "English aliases"
     ```ragul
-    hiba->  "file not found"-it.
+    hiba-into  "file not found"-it.
     ```
 
 === "Hungarian"
@@ -106,7 +106,7 @@ Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
 === "English aliases"
     ```ragul
     program-ours-effect
-        content->  "adat.txt"-fájlolvasó-doing-?.
+        content-into  "adat.txt"-fájlolvasó-doing-?.
         content-print-doing.
         -catch
             hiba-print-doing.      // print the error message
@@ -142,8 +142,8 @@ Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
 
     // Program — handles errors at the boundary
     program-ours-effect
-        content->  "adat.txt"-fájlolvasó-doing-?.
-        data->  content-elemző-doing-?.
+        content-into  "adat.txt"-fájlolvasó-doing-?.
+        data-into  content-elemző-doing-?.
         data-print-doing.
         -catch
             "hiba: "-hiba-concat-doing  print-doing.

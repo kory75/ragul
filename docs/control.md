@@ -88,8 +88,8 @@ Exactly like any other named scope:
 
 === "English aliases"
     ```ragul
-    x->  75-it.
-    category->  x-besoroló-if-it.
+    x-into  75-it.
+    category-into  x-besoroló-if-it.
     // category = "közepes"
     ```
 
@@ -125,8 +125,8 @@ Repeats the scope while the condition holds:
         határ-yours.
         szám-kétszeres-it  szám-határ-below-if.
 
-    x->  3-it.
-    x->  x-duplázó-while-it  100-with.
+    x-into  3-it.
+    x-into  x-duplázó-while-it  100-with.
     // x doubles repeatedly until x >= 100 → result: 192
     ```
 
@@ -148,7 +148,7 @@ Repeats until the condition becomes true:
 
 === "English aliases"
     ```ragul
-    x->  x-növel-until-it  x-100-above-if.
+    x-into  x-növel-until-it  x-100-above-if.
     // increment x UNTIL x is above 100
     ```
 
@@ -168,8 +168,8 @@ Applies a scope to every element of a collection:
         elem-yours.
         elem-kétszeres-it.
 
-    lista->  [1,2,3,4,5]-it.
-    output->  lista-elemfeldolgozó-each-it.
+    lista-into  [1,2,3,4,5]-it.
+    output-into  lista-elemfeldolgozó-each-it.
     // [2,4,6,8,10]
     ```
 
@@ -195,7 +195,7 @@ Folds a collection into a single value. The accumulator is supplied via `-val` /
         total-yours.         // accumulator
         total-elem-add-it.  // add element to accumulator
 
-    output->  lista-összesítő-fold-it  0-with.
+    output-into  lista-összesítő-fold-it  0-with.
     // sums the list starting from 0
     ```
 
@@ -219,7 +219,7 @@ Folds a collection into a single value. The accumulator is supplied via `-val` /
     kereső-ours-while
         lista-yours.
         target-yours.
-        elem->  lista-következő-it.
+        elem-into  lista-következő-it.
         elem-target-eq-if
             elem-break-it.
     ```
