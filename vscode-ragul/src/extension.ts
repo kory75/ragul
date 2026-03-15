@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as cp from "child_process";
 import {
   LanguageClient,
   LanguageClientOptions,
@@ -8,9 +9,39 @@ import {
 
 let client: LanguageClient | undefined;
 let terminal: vscode.Terminal | undefined;
+let resolvedExecutable: string = "ragul";
 
-function getExecutable(): string {
-  return vscode.workspace.getConfiguration("ragul").get("executablePath") ?? "ragul";
+/** Try to find the ragul executable via Python's scripts directory. */
+function detectRagulExecutable(): string {
+  const configured = vscode.workspace
+    .getConfiguration("ragul")
+    .get<string>("executablePath");
+  if (configured && configured !== "ragul") {
+    return configured;
+  }
+
+  // Ask Python where its Scripts folder is and look for ragul[.exe/.cmd] there.
+  const script = [
+    "import sys, pathlib",
+    "scripts = pathlib.Path(sys.executable).parent",
+    "found = next((str(scripts / f'ragul{e}') for e in ['', '.exe', '.cmd'] if (scripts / f'ragul{e}').exists()), '')",
+    "print(found)",
+  ].join("; ");
+
+  for (const py of ["python", "python3", "py"]) {
+    try {
+      const result = cp
+        .execSync(`${py} -c "${script}"`, { encoding: "utf8", timeout: 3000 })
+        .trim();
+      if (result) {
+        return result;
+      }
+    } catch {
+      // try next
+    }
+  }
+
+  return "ragul";
 }
 
 function getOrCreateTerminal(): vscode.Terminal {
@@ -22,7 +53,7 @@ function getOrCreateTerminal(): vscode.Terminal {
 
 function startLspClient(context: vscode.ExtensionContext): void {
   const serverExecutable: Executable = {
-    command: getExecutable(),
+    command: resolvedExecutable,
     args: ["lsp"],
   };
 
@@ -40,8 +71,6 @@ function startLspClient(context: vscode.ExtensionContext): void {
     clientOptions
   );
 
-  // Start in the background — a missing/broken ragul binary must not
-  // prevent the run/check commands from working.
   client.start().catch((err) => {
     console.warn("[ragul] LSP failed to start:", err);
   });
@@ -50,8 +79,6 @@ function startLspClient(context: vscode.ExtensionContext): void {
 }
 
 function disableSpellCheckerForRagul(): void {
-  // Code Spell Checker reads cSpell.languageSettings — add ragul: disabled
-  // if not already present. We write to Global so it applies everywhere.
   const config = vscode.workspace.getConfiguration("cSpell");
   const settings: { languageId: string; enabled: boolean }[] =
     config.get("languageSettings") ?? [];
@@ -63,14 +90,14 @@ function disableSpellCheckerForRagul(): void {
         [...settings, { languageId: "ragul", enabled: false }],
         vscode.ConfigurationTarget.Global
       )
-      .then(undefined, () => {
-        // cSpell not installed — ignore silently
-      });
+      .then(undefined, () => {});
   }
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-  // --- Commands (registered first — independent of LSP) ---
+  resolvedExecutable = detectRagulExecutable();
+
+  // --- Commands ---
   context.subscriptions.push(
     vscode.commands.registerCommand("ragul.runFile", async () => {
       const editor = vscode.window.activeTextEditor;
@@ -87,7 +114,7 @@ export function activate(context: vscode.ExtensionContext): void {
       await editor?.document.save();
       const term = getOrCreateTerminal();
       term.show(true);
-      term.sendText(`${getExecutable()} futtat "${file}"`);
+      term.sendText(`& "${resolvedExecutable}" futtat "${file}"`);
     })
   );
 
@@ -102,7 +129,9 @@ export function activate(context: vscode.ExtensionContext): void {
       await editor.document.save();
       const term = getOrCreateTerminal();
       term.show(true);
-      term.sendText(`${getExecutable()} ellenőriz "${editor.document.fileName}"`);
+      term.sendText(
+        `& "${resolvedExecutable}" ellenőriz "${editor.document.fileName}"`
+      );
     })
   );
 
@@ -118,10 +147,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push({ dispose: () => terminal?.dispose() });
 
-  // --- LSP (started after commands — failures are non-fatal) ---
   startLspClient(context);
-
-  // --- Suppress spell checker for .ragul files ---
   disableSpellCheckerForRagul();
 }
 
