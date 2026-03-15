@@ -1,0 +1,69 @@
+{
+  "name": "ragul-lang",
+  "displayName": "Ragul",
+  "description": "Ragul language support — syntax highlighting, diagnostics, hover, completion, and go-to-definition.",
+  "version": "0.1.0",
+  "publisher": "kory75",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kory75/ragul"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "ragul",
+    "agglutinative",
+    "hungarian",
+    "programming language"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "ragul",
+        "aliases": ["Ragul", "ragul"],
+        "extensions": [".ragul"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ragul",
+        "scopeName": "source.ragul",
+        "path": "./syntaxes/ragul.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Ragul",
+      "properties": {
+        "ragul.executablePath": {
+          "type": "string",
+          "default": "ragul",
+          "description": "Path to the ragul executable. Defaults to 'ragul' on PATH."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^2.24.0"
+  }
+}

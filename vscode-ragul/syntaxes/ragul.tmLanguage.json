@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Ragul",
+  "scopeName": "source.ragul",
+  "fileTypes": ["ragul"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#string" },
+    { "include": "#number" },
+    { "include": "#list" },
+    { "include": "#scope-suffix" },
+    { "include": "#control-suffix" },
+    { "include": "#case-suffix" },
+    { "include": "#possession-suffix" },
+    { "include": "#stdlib-suffix" },
+    { "include": "#fullstop" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.double-slash.ragul",
+      "match": "//.*$"
+    },
+    "string": {
+      "name": "string.quoted.double.ragul",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "name": "constant.character.escape.ragul", "match": "\\\\." }
+      ]
+    },
+    "number": {
+      "name": "constant.numeric.ragul",
+      "match": "-?\\b\\d+(\\.\\d+)?\\b"
+    },
+    "list": {
+      "name": "punctuation.definition.list.ragul",
+      "match": "[\\[\\]]"
+    },
+    "fullstop": {
+      "name": "punctuation.terminator.ragul",
+      "match": "\\.$"
+    },
+    "scope-suffix": {
+      "comment": "Scope-defining suffixes — control structure",
+      "name": "keyword.control.scope.ragul",
+      "match": "-(unk|nk|hatás|effect|modul|module)(?=-|\\s|$)"
+    },
+    "control-suffix": {
+      "comment": "Control flow suffixes",
+      "name": "keyword.control.ragul",
+      "match": "-(ha|if|hanem|else|különben|elif|hibára|catch|míg|while|ig|until|mindegyik|each|every|gyűjt|fold|reduce|megszakít|break|va-e|try|e\\b)"
+    },
+    "case-suffix": {
+      "comment": "Case / role suffixes (outermost layer)",
+      "name": "keyword.operator.case.ragul",
+      "match": "-(ba|be|ból|ből|val|vel|nál|nél|ként|t|ra|re|ról|ről|va|ve|->|<-|\\*|!|\\?)"
+    },
+    "possession-suffix": {
+      "comment": "Possession / scope membership suffixes",
+      "name": "storage.modifier.ragul",
+      "match": "-(m|d|ja|je|ours|mine|yours|its|into|from|with|at|as|obj|doing)"
+    },
+    "stdlib-suffix": {
+      "comment": "Standard library suffixes",
+      "name": "support.function.ragul",
+      "match": "-(össze|add|kivon|sub|szoroz|mul|oszt|div|maradék|rem|felett|above|alatt|below|legalább|atleast|legfeljebb|atmost|egyenlő|eq|nemegyenlő|neq|nem|not|és|and|vagy|or|összefűz|concat|hossz|len|nagybetűs|upper|kisbetűs|lower|tartalmaz|contains|kezdődik|startswith|végződik|endswith|feloszt|split|formáz|format|szelet|slice|csere|replace|számmá|tonum|négyzetgyök|sqrt|hatvány|pow|abszolút|abs|kerekítve|round|padló|floor|plafon|ceil|rendezve|sorted|fordítva|reversed|első|first|utolsó|last|egyedi|unique|lapítva|flat|szűrve|filter|hozzáad|append|eltávolít|remove|képernyőre|print)(?=-|\\s|\\.|$)"
+    }
+  }
+}
