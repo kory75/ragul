@@ -40,12 +40,12 @@ Key properties that follow from this design:
     // Define a suffix that doubles a number
     double-ours
         num-yours.
-        num-num-add-obj.
+        num-num-add-it.
 
     // Use it
     program-ours-effect
-        x->  3-obj.
-        y->  x-double-obj.
+        x->  3-it.
+        y->  x-double-it.
         y-print-doing.
     // prints: 6
     ```

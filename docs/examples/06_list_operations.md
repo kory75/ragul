@@ -5,43 +5,43 @@ Demonstrates the full list suffix library — sorting, filtering, reversing, sli
 === "English aliases"
     ```ragul
     program-ours-effect
-        numbers->  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-obj.
+        numbers->  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-it.
 
         // Sort ascending
-        sorted->   numbers-sorted-obj.
+        sorted->   numbers-sorted-it.
         sorted-print-doing.            // [1, 2, 3, 3, 4, 7, 9, 9, 12, 15]
 
         // Remove duplicates
-        unique->   numbers-unique-obj.
+        unique->   numbers-unique-it.
         unique-print-doing.            // [7, 2, 15, 3, 9, 1, 12, 4]
 
         // Sort + deduplicate pipeline
-        clean->    numbers-unique-sorted-obj.
+        clean->    numbers-unique-sorted-it.
         clean-print-doing.             // [1, 2, 3, 4, 7, 9, 12, 15]
 
         // Reverse
-        flipped->  sorted-reversed-obj.
+        flipped->  sorted-reversed-it.
         flipped-print-doing.           // [15, 12, 9, 9, 7, 4, 3, 3, 2, 1]
 
         // Filter — condition inline in the chain
-        large->    sorted-3-above-obj.
+        large->    sorted-3-above-it.
         large-print-doing.             // [4, 7, 9, 9, 12, 15]
 
         // First and last
-        first_num->  sorted-first-obj.
-        last_num->   sorted-last-obj.
+        first_num->  sorted-first-it.
+        last_num->   sorted-last-it.
         first_num-print-doing.         // 1
         last_num-print-doing.          // 15
 
         // Length
-        count->  numbers-len-obj.
+        count->  numbers-len-it.
         count-print-doing.             // 10
 
         // Add and remove elements
-        extended->  sorted-append-obj  100-with.
+        extended->  sorted-append-it  100-with.
         extended-print-doing.          // [1, 2, 3, 3, 4, 7, 9, 9, 12, 15, 100]
 
-        reduced->   sorted-remove-obj  1-with.
+        reduced->   sorted-remove-it  1-with.
         reduced-print-doing.           // [2, 3, 3, 4, 7, 9, 9, 12, 15]
     ```
 
@@ -112,7 +112,7 @@ List suffixes can be stacked into arbitrarily long pipelines:
 === "English aliases"
     ```ragul
     // Remove duplicates, sort, keep > 5, reverse — all in one chain
-    result->  numbers-unique-sorted-5-above-reversed-obj.
+    result->  numbers-unique-sorted-5-above-reversed-it.
     ```
 
 === "Hungarian"

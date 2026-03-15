@@ -15,7 +15,7 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
     pozitív-e-ours-if
         szám-yours.
         szám-0-above-if
-            szám-kétszeres-obj.
+            szám-kétszeres-it.
     ```
 
 === "Hungarian"
@@ -35,9 +35,9 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
     előjelváltó-ours-if
         szám-yours.
         szám-0-above-if
-            szám-kétszeres-obj.
+            szám-kétszeres-it.
         -else
-            szám-felére-obj.
+            szám-felére-it.
     ```
 
 === "Hungarian"
@@ -59,13 +59,13 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
     besoroló-ours-if
         szám-yours.
         szám-100-above-if
-            "nagy"-obj.
+            "nagy"-it.
         -elif  szám-50-above-if
-            "közepes"-obj.
+            "közepes"-it.
         -elif  szám-10-above-if
-            "kicsi"-obj.
+            "kicsi"-it.
         -else
-            "apró"-obj.
+            "apró"-it.
     ```
 
 === "Hungarian"
@@ -88,8 +88,8 @@ Exactly like any other named scope:
 
 === "English aliases"
     ```ragul
-    x->  75-obj.
-    category->  x-besoroló-if-obj.
+    x->  75-it.
+    category->  x-besoroló-if-it.
     // category = "közepes"
     ```
 
@@ -123,10 +123,10 @@ Repeats the scope while the condition holds:
     duplázó-ours-while
         szám-yours.
         határ-yours.
-        szám-kétszeres-obj  szám-határ-below-if.
+        szám-kétszeres-it  szám-határ-below-if.
 
-    x->  3-obj.
-    x->  x-duplázó-while-obj  100-with.
+    x->  3-it.
+    x->  x-duplázó-while-it  100-with.
     // x doubles repeatedly until x >= 100 → result: 192
     ```
 
@@ -148,7 +148,7 @@ Repeats until the condition becomes true:
 
 === "English aliases"
     ```ragul
-    x->  x-növel-until-obj  x-100-above-if.
+    x->  x-növel-until-it  x-100-above-if.
     // increment x UNTIL x is above 100
     ```
 
@@ -166,10 +166,10 @@ Applies a scope to every element of a collection:
     ```ragul
     elemfeldolgozó-ours-each
         elem-yours.
-        elem-kétszeres-obj.
+        elem-kétszeres-it.
 
-    lista->  [1,2,3,4,5]-obj.
-    output->  lista-elemfeldolgozó-each-obj.
+    lista->  [1,2,3,4,5]-it.
+    output->  lista-elemfeldolgozó-each-it.
     // [2,4,6,8,10]
     ```
 
@@ -193,9 +193,9 @@ Folds a collection into a single value. The accumulator is supplied via `-val` /
     összesítő-ours-fold
         elem-yours.
         total-yours.         // accumulator
-        total-elem-add-obj.  // add element to accumulator
+        total-elem-add-it.  // add element to accumulator
 
-    output->  lista-összesítő-fold-obj  0-with.
+    output->  lista-összesítő-fold-it  0-with.
     // sums the list starting from 0
     ```
 
@@ -219,9 +219,9 @@ Folds a collection into a single value. The accumulator is supplied via `-val` /
     kereső-ours-while
         lista-yours.
         target-yours.
-        elem->  lista-következő-obj.
+        elem->  lista-következő-it.
         elem-target-eq-if
-            elem-break-obj.
+            elem-break-it.
     ```
 
 === "Hungarian"

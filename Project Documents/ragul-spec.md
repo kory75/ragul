@@ -83,7 +83,7 @@ Each suffix has a canonical form plus optional aliases. The parser treats all al
 | Instrument (with) | `-val` | `-val` | `-with` | `-&` |
 | Context (at/scope) | `-nál` | `-nál` | `-at` | `-@` |
 | Role (acting as) | `-ként` | `-ként` | `-as` | `-:` |
-| Object (acted on) | `-t` | `-t` | `-obj` | `-*` |
+| Object (acted on) | `-t` | `-t` | `-it` | `-*` |
 | Action (execute) | `-va` / `-ve` | `-va` / `-ve` | `-doing` | `-!` |
 | Error propagation | `-e` | `-e` | `-else-fail` | `-?` |
 

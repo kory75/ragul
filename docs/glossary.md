@@ -17,7 +17,7 @@ These encode the *grammatical role* of a word in the sentence.
 | `-val` / `-vel` | `-with` | `-&` | Instrument — argument passed *with* an operation |
 | `-nál` / `-nél` | `-at` | `-@` | Context — situational scope |
 | `-ként` | `-as` | `-:` | Role — acting *as* a type or alias |
-| `-t` | `-obj` | `-*` | Object — the direct object (accusative) |
+| `-t` | `-it` | `-*` | Object — the direct object (accusative) |
 | `-ra` / `-re` | — | — | Onto — write direction (embedded in channel names) |
 | `-ról` | — | — | From-surface — read direction |
 
@@ -204,12 +204,12 @@ Examples of mixed and all-English usage:
 // All-English annotation
 kétszeres-ours
     szám-yours  Num-as.
-    szám-szám-add-obj  Num-as.
+    szám-szám-add-it  Num-as.
 
 // Mixed (valid)
 fájlolvasó-ours
     path-yours  Str-as.
-    path-fájlról-from  read-doing-obj  or-Str-or-Err-as.
+    path-fájlról-from  read-doing-it  or-Str-or-Err-as.
 ```
 
 ---

@@ -93,7 +93,7 @@ Errors carry a message. A named error is just a root assigned an error value:
 
 === "English aliases"
     ```ragul
-    hiba->  "file not found"-obj.
+    hiba->  "file not found"-it.
     ```
 
 === "Hungarian"
@@ -133,12 +133,12 @@ Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
     // Fallible file reader
     fájlolvasó-ours
         path-yours  Szöveg-as.
-        path-fájlról-from  read-doing-obj  vagy-Szöveg-vagy-Hiba-as.
+        path-fájlról-from  read-doing-it  vagy-Szöveg-vagy-Hiba-as.
 
     // Fallible JSON parser
     elemző-ours
         text-yours  Szöveg-as.
-        text-json-doing-obj  vagy-Lista-vagy-Hiba-as.
+        text-json-doing-it  vagy-Lista-vagy-Hiba-as.
 
     // Program — handles errors at the boundary
     program-ours-effect

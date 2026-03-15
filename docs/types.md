@@ -6,9 +6,9 @@ Ragul is **inferred typed**. Types are never declared explicitly — the compile
 
 === "English aliases"
     ```ragul
-    x->  3-obj.           // compiler: x is Num
-    y->  "hello"-obj.     // compiler: y is Str
-    lista->  [1,2,3]-obj. // compiler: lista is List-Num
+    x->  3-it.           // compiler: x is Num
+    y->  "hello"-it.     // compiler: y is Str
+    lista->  [1,2,3]-it. // compiler: lista is List-Num
     ```
 
 === "Hungarian"
@@ -91,8 +91,8 @@ Suffix type checking has two levels:
 
 === "English aliases"
     ```ragul
-    words->  ["a","b","c"]-obj.        // Lista-Szöveg
-    words-3-above-filter-obj.
+    words->  ["a","b","c"]-it.        // Lista-Szöveg
+    words-3-above-filter-it.
     // ERROR: -above expects Szám element — got Szöveg
     ```
 
@@ -132,7 +132,7 @@ The `-ként` / `-as` suffix (meaning *acting as / in the role of*) provides opti
     ```ragul
     kétszeres-ours
         szám-yours  Num-as.
-        szám-szám-add-obj  Num-as.
+        szám-szám-add-it  Num-as.
     ```
 
 === "Hungarian"
@@ -150,7 +150,7 @@ A fallible suffix return type:
     ```ragul
     fájlolvasó-ours
         path-yours  Str-as.
-        path-fájlról-from  read-doing-obj  or-Str-or-Err-as.
+        path-fájlról-from  read-doing-it  or-Str-or-Err-as.
     ```
 
 === "Hungarian"

@@ -5,37 +5,37 @@ Demonstrates the string suffix library. String arguments are passed **inline in 
 === "English aliases"
     ```ragul
     program-ours-effect
-        s->  "Hello, Ragul!"-obj.
+        s->  "Hello, Ragul!"-it.
 
         // Length
-        n->  s-len-obj.
+        n->  s-len-it.
         n-print-doing.                 // 13
 
         // Case conversion
-        upper->  s-upper-obj.
-        lower->  s-lower-obj.
+        upper->  s-upper-it.
+        lower->  s-lower-it.
         upper-print-doing.             // HELLO, RAGUL!
         lower-print-doing.             // hello, ragul!
 
         // Contains / starts / ends — needle inline in the chain
-        has->    s-"Ragul"-contains-obj.
-        starts-> s-"Hello"-startswith-obj.
-        ends->   s-"!"-endswith-obj.
+        has->    s-"Ragul"-contains-it.
+        starts-> s-"Hello"-startswith-it.
+        ends->   s-"!"-endswith-it.
         has-print-doing.               // True
         starts-print-doing.            // True
         ends-print-doing.              // True
 
         // Replace
-        new_str->  s-"Ragul"-"world"-replace-obj.
+        new_str->  s-"Ragul"-"world"-replace-it.
         new_str-print-doing.           // Hello, world!
 
         // Split
-        words->  s-", "-split-obj.
+        words->  s-", "-split-it.
         words-print-doing.             // ['Hello', 'Ragul!']
 
         // Concatenation
-        a->  "Ragul"-obj.
-        b->  a-" rocks"-concat-obj.
+        a->  "Ragul"-it.
+        b->  a-" rocks"-concat-it.
         b-print-doing.                 // Ragul rocks
     ```
 
@@ -98,9 +98,9 @@ String arguments are passed directly in the suffix chain, not as separate words:
 
 === "English aliases"
     ```ragul
-    s-"needle"-contains-obj    // does s contain "needle"?
-    s-"old"-"new"-replace-obj  // replace "old" with "new" in s
-    s-","-split-obj            // split s by ","
+    s-"needle"-contains-it    // does s contain "needle"?
+    s-"old"-"new"-replace-it  // replace "old" with "new" in s
+    s-","-split-it            // split s by ","
     ```
 
 === "Hungarian"
@@ -110,7 +110,7 @@ String arguments are passed directly in the suffix chain, not as separate words:
     s-","-feloszt-t           // split s by ","
     ```
 
-This is consistent with how numeric arguments work (`x-3-add-obj` = add 3).
+This is consistent with how numeric arguments work (`x-3-add-it` = add 3).
 
 ---
 

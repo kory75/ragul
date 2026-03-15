@@ -5,14 +5,14 @@ Demonstrates comparison operators and logical combinators. Comparisons produce `
 === "English aliases"
     ```ragul
     program-ours-effect
-        x->  10-obj.
-        y->  3-obj.
+        x->  10-it.
+        y->  3-it.
 
         // Comparisons — produce Logikai values
-        greater->  x-y-above-obj.        // 10 > 3   = True
-        lesser->   x-y-below-obj.        // 10 < 3   = False
-        at_least-> x-10-atleast-obj.     // 10 >= 10 = True
-        equal->    x-10-eq-obj.          // 10 == 10 = True
+        greater->  x-y-above-it.        // 10 > 3   = True
+        lesser->   x-y-below-it.        // 10 < 3   = False
+        at_least-> x-10-atleast-it.     // 10 >= 10 = True
+        equal->    x-10-eq-it.          // 10 == 10 = True
 
         greater-print-doing.             // True
         lesser-print-doing.              // False
@@ -20,21 +20,21 @@ Demonstrates comparison operators and logical combinators. Comparisons produce `
         equal-print-doing.               // True
 
         // Logical operators
-        p->  igaz-obj.
-        q->  hamis-obj.
+        p->  igaz-it.
+        q->  hamis-it.
 
-        and_res->  p-q-and-obj.          // True AND False = False
-        or_res->   p-q-or-obj.           // True OR False  = True
-        not_res->  p-not-obj.            // NOT True       = False
+        and_res->  p-q-and-it.          // True AND False = False
+        or_res->   p-q-or-it.           // True OR False  = True
+        not_res->  p-not-it.            // NOT True       = False
 
         and_res-print-doing.             // False
         or_res-print-doing.              // True
         not_res-print-doing.             // False
 
         // Combining two comparisons
-        cmp1->  x-y-above-obj.           // 10 > 3   = True
-        cmp2->  x-10-atleast-obj.        // 10 >= 10 = True
-        both->  cmp1-cmp2-and-obj.       // True AND True = True
+        cmp1->  x-y-above-it.           // 10 > 3   = True
+        cmp2->  x-10-atleast-it.        // 10 >= 10 = True
+        both->  cmp1-cmp2-and-it.       // True AND True = True
         both-print-doing.                // True
     ```
 
@@ -95,11 +95,11 @@ Comparison suffixes take an inline argument and return a `Logikai`:
 
 === "English aliases"
     ```ragul
-    x-5-above-obj    // is x > 5?
-    x-5-below-obj    // is x < 5?
-    x-5-atleast-obj  // is x >= 5?
-    x-5-atmost-obj   // is x <= 5?
-    x-5-eq-obj       // is x == 5?
+    x-5-above-it    // is x > 5?
+    x-5-below-it    // is x < 5?
+    x-5-atleast-it  // is x >= 5?
+    x-5-atmost-it   // is x <= 5?
+    x-5-eq-it       // is x == 5?
     ```
 
 === "Hungarian"
@@ -111,7 +111,7 @@ Comparison suffixes take an inline argument and return a `Logikai`:
     x-5-egyenlő-t    // is x == 5?
     ```
 
-The argument can also be a variable: `x-y-above-obj` means "is x > y?".
+The argument can also be a variable: `x-y-above-it` means "is x > y?".
 
 !!! note "Boolean literals"
     `igaz` (true) and `hamis` (false) are language keywords — they do not have English aliases.

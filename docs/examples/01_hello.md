@@ -5,7 +5,7 @@ The simplest Ragul program — assign a string and print it.
 === "English aliases"
     ```ragul
     program-ours-effect
-        greeting->  "Hello, World!"-obj.
+        greeting->  "Hello, World!"-it.
         greeting-print-doing.
     ```
 
@@ -35,7 +35,7 @@ Hello, World!
 ## What's happening
 
 - `program-ours-effect` (`program-nk-hatás`) — declares an effect scope named `program`. The `-effect` / `-hatás` suffix marks it as eager: everything inside executes in order, top to bottom.
-- `greeting->  "Hello, World!"-obj.` — assigns the string into the root `greeting`. The compiler infers type `Szöveg` (string).
+- `greeting->  "Hello, World!"-it.` — assigns the string into the root `greeting`. The compiler infers type `Szöveg` (string).
 - `greeting-print-doing.` — pipes `greeting` to the `-print` (`képernyőre`) channel and executes it with `-doing` (`-va`).
 
 ---
@@ -45,9 +45,9 @@ Hello, World!
 === "English aliases"
     ```ragul
     program-ours-effect
-        name->     "Ragul"-obj.
-        greeting-> "Hello, "-obj.
-        output->   greeting-name-concat-obj.
+        name->     "Ragul"-it.
+        greeting-> "Hello, "-it.
+        output->   greeting-name-concat-it.
         output-print-doing.
     ```
 
@@ -66,7 +66,7 @@ Hello, World!
 Hello, Ragul
 ```
 
-The `-concat` / `-összefűz` suffix concatenates two strings. The second string is passed inline in the chain: `greeting-name-concat-obj` reads as *"greeting, concatenated with name"*.
+The `-concat` / `-összefűz` suffix concatenates two strings. The second string is passed inline in the chain: `greeting-name-concat-it` reads as *"greeting, concatenated with name"*.
 
 ---
 

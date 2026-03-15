@@ -207,7 +207,7 @@ Each suffix has a canonical Hungarian form plus English and symbolic aliases:
 | Source (from) | `-ból` / `-ből` | `-from` | `-<` |
 | Target (into) | `-ba` / `-be` | `-into` | `->` |
 | Instrument (with) | `-val` / `-vel` | `-with` | `-&` |
-| Object (acted on) | `-t` | `-obj` | `-*` |
+| Object (acted on) | `-t` | `-it` | `-*` |
 | Action (execute) | `-va` / `-ve` | `-doing` | `-!` |
 | Error propagation | `-e` | `-else-fail` | `-?` |
 

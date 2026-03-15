@@ -20,11 +20,11 @@ A module is declared at the top level of a file using `-nk-modul` / `-ours-modul
     matematika-ours-module
         kétszeres-ours
             szám-yours  Szám-as.
-            szám-szám-add-obj  Szám-as.
+            szám-szám-add-it  Szám-as.
 
         gyök-ours
             szám-yours  Szám-as.
-            szám-sqrt-obj  Szám-as.
+            szám-sqrt-it  Szám-as.
     ```
 
 === "Hungarian"
@@ -45,15 +45,15 @@ This file defines the `matematika` module. Its public suffixes (`-kétszeres`, `
 
 ## Importing a Module
 
-Modules are imported using a `-t` / `-obj` sentence at the top of the file:
+Modules are imported using a `-t` / `-it` sentence at the top of the file:
 
 === "English aliases"
     ```ragul
-    matematika-obj.
+    matematika-it.
 
     program-ours-effect
-        x->  9-obj.
-        y->  x-gyök-obj.
+        x->  9-it.
+        y->  x-gyök-it.
         y-print-doing.
     // prints: 3.0
     ```

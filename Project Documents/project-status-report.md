@@ -193,8 +193,8 @@ Example of what tabbed blocks look like in MkDocs Material:
     y-ba  x-3-össze-t.
 
 === "English aliases"
-    x->  3-obj.
-    y->  x-3-add-obj.
+    x->  3-it.
+    y->  x-3-add-it.
 ```
 
 ### Implementation order

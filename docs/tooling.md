@@ -55,7 +55,7 @@ ragul repl
 
 === "English aliases"
     ```
-    >>> x->  3-obj.
+    >>> x->  3-it.
     >>> x-kétszeres-from  output->  write-doing.
     6
     >>>

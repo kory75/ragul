@@ -5,16 +5,16 @@ Demonstrates list pipelines — stacking suffixes to filter, deduplicate, sort, 
 === "English aliases"
     ```ragul
     program-ours-effect
-        numbers->  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-obj.
+        numbers->  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-it.
 
         // Remove duplicates, then sort ascending
-        sorted->   numbers-unique-sorted-obj.
+        sorted->   numbers-unique-sorted-it.
 
         // Keep only numbers greater than 3
-        large->    sorted-3-above-obj.
+        large->    sorted-3-above-it.
 
         // Reverse the result
-        flipped->  large-reversed-obj.
+        flipped->  large-reversed-it.
 
         numbers-print-doing.
         sorted-print-doing.
@@ -58,7 +58,7 @@ Demonstrates list pipelines — stacking suffixes to filter, deduplicate, sort, 
 Each suffix in the chain transforms the result of the previous:
 
 ```
-numbers-unique-sorted-obj
+numbers-unique-sorted-it
 │        │       │
 │        │       └── sort the deduplicated list
 │        └── remove duplicates from numbers
@@ -69,7 +69,7 @@ The filter uses an inline literal argument — `3-above` / `3-felett` means "gre
 
 === "English aliases"
     ```ragul
-    sorted-3-above-obj
+    sorted-3-above-it
     //     ^^^^ inline arg passed to -above
     ```
 
@@ -85,7 +85,7 @@ The filter uses an inline literal argument — `3-above` / `3-felett` means "gre
 
 === "English aliases"
     ```ragul
-    result->  numbers-unique-sorted-3-above-reversed-obj.
+    result->  numbers-unique-sorted-3-above-reversed-it.
     // [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]
     // → unique → sort → filter(>3) → reverse
     // = [15, 12, 9, 7, 4]

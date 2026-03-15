@@ -5,15 +5,15 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
 === "English aliases"
     ```ragul
     program-ours-effect
-        x->  10-obj.
-        y->  3-obj.
+        x->  10-it.
+        y->  3-it.
 
         // Basic operations
-        sum->      x-y-add-obj.       // 10 + 3  = 13
-        diff->     x-y-sub-obj.       // 10 - 3  = 7
-        product->  x-y-mul-obj.       // 10 * 3  = 30
-        quotient-> x-y-div-obj.       // 10 / 3  = 3.33
-        rem->      x-y-rem-obj.       // 10 mod 3 = 1
+        sum->      x-y-add-it.       // 10 + 3  = 13
+        diff->     x-y-sub-it.       // 10 - 3  = 7
+        product->  x-y-mul-it.       // 10 * 3  = 30
+        quotient-> x-y-div-it.       // 10 / 3  = 3.33
+        rem->      x-y-rem-it.       // 10 mod 3 = 1
 
         sum-print-doing.
         diff-print-doing.
@@ -22,16 +22,16 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
         rem-print-doing.
 
         // Chained pipeline: (10 + 3) * 2 = 26
-        chain->  x-3-add-2-mul-obj.
+        chain->  x-3-add-2-mul-it.
         chain-print-doing.
 
         // Math suffixes
-        root->   16-sqrt-obj.         // sqrt(16) = 4.0
-        power->  2-10-pow-obj.        // 2^10 = 1024
+        root->   16-sqrt-it.         // sqrt(16) = 4.0
+        power->  2-10-pow-it.        // 2^10 = 1024
 
         // Absolute value via subtraction then abs
-        negative->  0-7-sub-obj.      // 0 - 7 = -7
-        absval->    negative-abs-obj. // |-7| = 7
+        negative->  0-7-sub-it.      // 0 - 7 = -7
+        absval->    negative-abs-it. // |-7| = 7
 
         root-print-doing.
         power-print-doing.
@@ -96,8 +96,8 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
 
 === "English aliases"
     ```ragul
-    x-3-add-obj          // x + 3
-    x-3-add-2-mul-obj    // (x + 3) × 2
+    x-3-add-it          // x + 3
+    x-3-add-2-mul-it    // (x + 3) × 2
     ```
 
 === "Hungarian"
@@ -110,8 +110,8 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
 
 === "English aliases"
     ```ragul
-    x-y-add-obj  // x + y
-    x-y-sub-obj  // x - y
+    x-y-add-it  // x + y
+    x-y-sub-it  // x - y
     ```
 
 === "Hungarian"

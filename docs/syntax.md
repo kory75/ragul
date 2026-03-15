@@ -88,7 +88,7 @@ Each suffix has a canonical Hungarian form plus optional aliases. The parser tre
 | Instrument (with) | `-val` / `-vel` | `-with` | `-&` |
 | Context (at/scope) | `-nál` / `-nél` | `-at` | `-@` |
 | Role (acting as) | `-ként` | `-as` | `-:` |
-| Object (acted on) | `-t` | `-obj` | `-*` |
+| Object (acted on) | `-t` | `-it` | `-*` |
 | Action (execute) | `-va` / `-ve` | `-doing` | `-!` |
 | Error propagation | `-e` | `-else-fail` | `-?` |
 
@@ -98,13 +98,13 @@ Mixed alias usage within the same file is permitted — the parser does not enfo
 
 ## Assignment
 
-Assignment is not special syntax — it is an ordinary sentence. The target carries `-be` / `->` (into) and the value carries `-t` / `-obj` (accusative):
+Assignment is not special syntax — it is an ordinary sentence. The target carries `-be` / `->` (into) and the value carries `-t` / `-it` (accusative):
 
 === "English aliases"
     ```ragul
-    x->  3-obj.
-    lista->  [1, 2, 3]-obj.
-    greeting->  "hello"-obj.
+    x->  3-it.
+    lista->  [1, 2, 3]-it.
+    greeting->  "hello"-it.
     ```
 
 === "Hungarian"
@@ -137,9 +137,9 @@ List literals use square brackets with comma-separated elements:
 
 === "English aliases"
     ```ragul
-    lista->  [1, 2, 3]-obj.
-    words->  ["alma", "körte", "szilva"]-obj.
-    matrix->  [[1,2], [3,4]]-obj.
+    lista->  [1, 2, 3]-it.
+    words->  ["alma", "körte", "szilva"]-it.
+    matrix->  [[1,2], [3,4]]-it.
     ```
 
 === "Hungarian"
@@ -158,9 +158,9 @@ Ragul uses **indentation** (tabs) to define scope boundaries. A new indent level
 === "English aliases"
     ```ragul
     számítás-ours
-        x->  3-obj.
-        y->  10-obj.
-        result->  x-y-add-obj.
+        x->  3-it.
+        y->  10-it.
+        result->  x-y-add-it.
         result-from  output->  write-doing.
 
     // x, y, result do not exist here

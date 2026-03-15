@@ -8,7 +8,7 @@
     ```ragul
     kétszeres-ours
         szám-yours.
-        szám-szám-add-obj  Szám-as.
+        szám-szám-add-it  Szám-as.
     ```
 
 === "Hungarian"
@@ -22,10 +22,10 @@ This definition makes `-kétszeres` immediately available as an aspect suffix:
 
 === "English aliases"
     ```ragul
-    x->  3-obj.
-    y->  x-kétszeres-obj.                    // y = 6
+    x->  3-it.
+    y->  x-kétszeres-it.                    // y = 6
 
-    lista->  [1,2,3]-obj.
+    lista->  [1,2,3]-it.
     lista-kétszeres-from  output->  write-doing.  // [2,4,6]
     ```
 
@@ -49,10 +49,10 @@ Parameters are roots marked with `-d` / `-yours` (passed in). They receive value
     szűrőhatár-ours
         lista-yours.       // receives the root (first argument)
         threshold-yours.   // receives the first -with argument
-        lista-threshold-above-filter-obj  List-as.
+        lista-threshold-above-filter-it  List-as.
 
     // Called as:
-    output->  adatok-szűrőhatár-obj  5-with.
+    output->  adatok-szűrőhatár-it  5-with.
     // adatok → lista-yours, 5 → threshold-yours
     ```
 
@@ -75,7 +75,7 @@ With type annotations:
     felett-ours
         value-yours  Num-as.
         threshold-yours  Num-as.
-        value-threshold-above-obj  Bool-as.
+        value-threshold-above-it  Bool-as.
     ```
 
 === "Hungarian"
@@ -96,7 +96,7 @@ The final unnamed result root of a scope is its return value — no explicit ret
     ```ragul
     kétszeres-ours
         szám-yours.
-        szám-szám-add-obj.  // this is the return value
+        szám-szám-add-it.  // this is the return value
     ```
 
 === "Hungarian"
@@ -117,9 +117,9 @@ Ragul uses indentation (tabs) to define scope boundaries. Roots defined within a
 === "English aliases"
     ```ragul
     számítás-ours
-        x->  3-obj.
-        y->  10-obj.
-        result->  x-y-add-obj.
+        x->  3-it.
+        y->  10-it.
+        result->  x-y-add-it.
 
     // x, y, result do not exist here
     ```
@@ -141,7 +141,7 @@ Scopes nest freely. Inner scopes can reference roots from outer scopes, but not 
 === "English aliases"
     ```ragul
     feldolgozás-ours
-        lista->  [1,2,3,4,5]-obj.
+        lista->  [1,2,3,4,5]-it.
 
         szűrés-ours
             smaller->  lista-filter-from  3-below-with  obj.
@@ -183,9 +183,9 @@ Usage mirrors `this.` in languages like C# — available when needed, not requir
 === "English aliases"
     ```ragul
     feldolgozás-ours
-        x-mine->  3-obj.                      // immutable
+        x-mine->  3-it.                      // immutable
         input-yours.                          // parameter — passed in from outside
-        result-ours->  input-filter-obj.      // explicitly scoped result
+        result-ours->  input-filter-it.      // explicitly scoped result
     ```
 
 === "Hungarian"
@@ -221,11 +221,11 @@ A small library of annotated suffixes:
     // Numeric operations
     kétszeres-ours
         szám-yours  Num-as.
-        szám-szám-add-obj  Num-as.
+        szám-szám-add-it  Num-as.
 
     felére-ours
         szám-yours  Num-as.
-        szám-2-div-obj  Num-as.
+        szám-2-div-it  Num-as.
 
     // Threshold filter
     szűrőhatár-ours
@@ -236,7 +236,7 @@ A small library of annotated suffixes:
     // Fallible file reader
     fájlolvasó-ours
         path-yours  Str-as.
-        path-fájlról-from  read-doing-obj  or-Str-or-Err-as.
+        path-fájlról-from  read-doing-it  or-Str-or-Err-as.
     ```
 
 === "Hungarian"
@@ -266,10 +266,10 @@ Calling these is unchanged — annotations are invisible at the call site:
 
 === "English aliases"
     ```ragul
-    x->  3-obj.
-    y->  x-kétszeres-obj.                    // y = 6
+    x->  3-it.
+    y->  x-kétszeres-it.                    // y = 6
 
-    output->  adatok-szűrőhatár-obj  5-with. // filter list above 5
+    output->  adatok-szűrőhatár-it  5-with. // filter list above 5
 
     content->  "adat.txt"-fájlolvasó-doing-?. // fallible — propagate error
     ```

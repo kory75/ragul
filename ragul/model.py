@@ -28,7 +28,7 @@ ALIAS_TABLE: dict[str, str] = {
     "-@":           "-nál",
     "-as":          "-ként",
     "-:":           "-ként",
-    "-obj":         "-t",
+    "-it":          "-t",
     "-*":           "-t",
     "-doing":       "-va",
     "-!":           "-va",
