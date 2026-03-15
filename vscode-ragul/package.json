@@ -40,6 +40,50 @@
         "path": "./syntaxes/ragul.tmLanguage.json"
       }
     ],
+    "commands": [
+      {
+        "command": "ragul.runFile",
+        "title": "Ragul: Run File",
+        "icon": "$(play)"
+      },
+      {
+        "command": "ragul.checkFile",
+        "title": "Ragul: Check File",
+        "icon": "$(check)"
+      },
+      {
+        "command": "ragul.restartServer",
+        "title": "Ragul: Restart Language Server"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "ragul.runFile",
+          "when": "resourceLangId == ragul",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "ragul.runFile",
+          "when": "resourceLangId == ragul",
+          "group": "ragul@1"
+        },
+        {
+          "command": "ragul.checkFile",
+          "when": "resourceLangId == ragul",
+          "group": "ragul@2"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "ragul.runFile",
+          "when": "resourceExtname == .ragul",
+          "group": "ragul@1"
+        }
+      ]
+    },
     "configuration": {
       "title": "Ragul",
       "properties": {
@@ -48,6 +92,11 @@
           "default": "ragul",
           "description": "Path to the ragul executable. Defaults to 'ragul' on PATH."
         }
+      }
+    },
+    "configurationDefaults": {
+      "[ragul]": {
+        "cSpell.enabled": false
       }
     }
   },

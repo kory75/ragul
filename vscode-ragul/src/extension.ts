@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as path from "path";
 import {
   LanguageClient,
   LanguageClientOptions,
@@ -8,13 +7,23 @@ import {
 } from "vscode-languageclient/node";
 
 let client: LanguageClient | undefined;
+let terminal: vscode.Terminal | undefined;
+
+function getExecutable(): string {
+  return vscode.workspace.getConfiguration("ragul").get("executablePath") ?? "ragul";
+}
+
+function getOrCreateTerminal(): vscode.Terminal {
+  if (!terminal || terminal.exitStatus !== undefined) {
+    terminal = vscode.window.createTerminal("Ragul");
+  }
+  return terminal;
+}
 
 export function activate(context: vscode.ExtensionContext): void {
-  const config = vscode.workspace.getConfiguration("ragul");
-  const executablePath: string = config.get("executablePath") ?? "ragul";
-
+  // --- LSP client ---
   const serverExecutable: Executable = {
-    command: executablePath,
+    command: getExecutable(),
     args: ["lsp"],
   };
 
@@ -30,14 +39,49 @@ export function activate(context: vscode.ExtensionContext): void {
     },
   };
 
-  client = new LanguageClient(
-    "ragul",
-    "Ragul Language Server",
-    serverOptions,
-    clientOptions
+  client = new LanguageClient("ragul", "Ragul Language Server", serverOptions, clientOptions);
+  client.start();
+
+  // --- Commands ---
+  context.subscriptions.push(
+    vscode.commands.registerCommand("ragul.runFile", async () => {
+      const editor = vscode.window.activeTextEditor;
+
+      // If called from explorer context menu, use that file instead
+      const file =
+        editor?.document.languageId === "ragul"
+          ? editor.document.fileName
+          : undefined;
+
+      if (!file) {
+        vscode.window.showErrorMessage("Open a .ragul file to run it.");
+        return;
+      }
+
+      // Save before running
+      await editor?.document.save();
+
+      const term = getOrCreateTerminal();
+      term.show(true);
+      term.sendText(`${getExecutable()} futtat "${file}"`);
+    })
   );
 
-  client.start();
+  context.subscriptions.push(
+    vscode.commands.registerCommand("ragul.checkFile", async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor || editor.document.languageId !== "ragul") {
+        vscode.window.showErrorMessage("Open a .ragul file to check it.");
+        return;
+      }
+
+      await editor.document.save();
+
+      const term = getOrCreateTerminal();
+      term.show(true);
+      term.sendText(`${getExecutable()} ellenőriz "${editor.document.fileName}"`);
+    })
+  );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("ragul.restartServer", async () => {
@@ -48,6 +92,9 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     })
   );
+
+  // Dispose terminal on deactivate
+  context.subscriptions.push({ dispose: () => terminal?.dispose() });
 }
 
 export function deactivate(): Thenable<void> | undefined {
