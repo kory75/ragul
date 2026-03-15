@@ -189,15 +189,20 @@ class Lexer:
                 pos = end + 1
                 continue
 
-            # Standalone branch openers: -hanem, -hibára (line-leading -)
+            # Standalone branch openers: -hanem/-else, -hibára/-catch (line-leading -)
             if line[pos] == '-' and line[:pos].strip() == '':
-                branch_m = re.match(r'(-hanem|-hibára|-különben-ha|-különben)\b', line[pos:])
+                branch_m = re.match(
+                    r'(-hanem|-hibára|-catch|-else|-különben-ha|-különben|-elif)\b',
+                    line[pos:],
+                )
                 if branch_m:
                     raw = branch_m.group(0)
-                    if raw == "-hanem":
+                    canonical = normalise_suffix(raw)
+                    if canonical in ("-hanem",):
                         self._tokens.append(Token(TT.MINUS_HANEM, raw, lineno, pos))
-                    elif raw == "-hibára":
+                    elif canonical in ("-hibára",):
                         self._tokens.append(Token(TT.MINUS_HIBARA, raw, lineno, pos))
+                    # -különben / -különben-ha fall through to word handler
                     pos += len(raw)
                     continue
 
@@ -242,6 +247,15 @@ class Lexer:
     def _make_word_token(self, raw: str, line: int, col: int) -> Token:
         """Build a WORD (or SCOPE_OPEN) token, applying alias normalisation."""
         root, suffixes = _split_and_normalise(raw)
+        # Standalone suffix-chain token with no root (e.g. "-it", "-contains-it"
+        # after a string or number literal).  _split_and_normalise returns
+        # (raw, []) because the regex requires a non-dash root.  Detect this
+        # case: split the token into individual suffixes and normalise each.
+        if not suffixes and root.startswith("-"):
+            parts = re.findall(r'-[^-]+', root)
+            if parts:
+                suffixes = [normalise_suffix(p) for p in parts]
+                root = ""
         normalised_value = root + "".join(suffixes)
 
         # Determine if this is a scope-opening word
