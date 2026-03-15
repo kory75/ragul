@@ -56,10 +56,44 @@ def _build_word(token: Token, bag: DiagnosticBag) -> Word:
     """
     value = token.value
 
-    # Split into root + suffix list
-    parts = re.split(r'(?=-)', value)   # split before each '-'
-    root = parts[0]
-    raw_suffixes = [p for p in parts[1:] if p]
+    # Split into root + suffix list.
+    #
+    # Special cases:
+    #   • A negative-number root (e.g. '-7', '-3.14') starts with '-\d',
+    #     so we peel it off first before splitting the suffix chain.
+    #   • A double-dash negative inline arg (e.g. '--3' inside 'x--3-össze')
+    #     must be kept as one chunk: '--3', not split into '-' and '-3'.
+    #
+    # Algorithm:
+    #   1. Extract root (may be a negative number like '-7').
+    #   2. Split the remaining suffix string, keeping '--digit' chunks intact.
+    _root_m = re.match(r'^(-\d+(?:\.\d+)?)(.*)', value)
+    if _root_m:
+        # Token starts with a negative number root: '-7-t', '-3.14-t'
+        root = _root_m.group(1)
+        rest = _root_m.group(2)
+    else:
+        # Normal word: root is everything before the first '-'
+        dash_pos = value.find('-')
+        if dash_pos < 0:
+            root = value
+            rest = ''
+        else:
+            root = value[:dash_pos]
+            rest = value[dash_pos:]
+
+    # Split rest into individual suffixes before each '-' that is NOT the
+    # second dash of a '--digit' negative inline arg.
+    # Pattern: split before '-' when NOT preceded by '-' AND NOT followed
+    # by another '-' (to keep '--3' together) ... but we also need the
+    # standard '-3' (positive inline arg) to remain as one chunk.
+    # Simplest safe rule: split before '-' when the preceding char is not '-'.
+    # This preserves '--3' as one chunk and keeps '-3' as one chunk.
+    raw_suffixes: list[str] = []
+    if rest:
+        # re.split on positions where we have '-' not preceded by '-'
+        parts = re.split(r'(?<!-)(?=-)', rest)
+        raw_suffixes = [p for p in parts if p]
 
     # Collect layers
     possession: str | None  = None
@@ -337,12 +371,28 @@ class Parser:
                 absorbed_action = None
                 absorbed_error = False
                 if nxt.type == TT.WORD:
-                    # Build a trial word to see if it has an empty root
+                    # Build a trial word to see if it has an empty root, or a
+                    # numeric root that acts as an inline arg (e.g. '-5-felett-t'
+                    # after a STRING token: -5 is the arg to -felett).
                     trial = _build_word(nxt, DiagnosticBag(self.filename))
-                    if trial.root == "" and (trial.case or trial.aspects or trial.action):
+                    _trial_num_root = False
+                    try:
+                        float(trial.root); _trial_num_root = bool(trial.root)
+                    except (ValueError, TypeError):
+                        pass
+                    _trial_absorb = (
+                        trial.root == "" and (trial.case or trial.aspects or trial.action)
+                    ) or (
+                        _trial_num_root and (trial.case or trial.aspects or trial.action)
+                    )
+                    if _trial_absorb:
                         self._advance()  # consume the suffix token
+                        # If numeric root, prepend it as an inline aspect arg
+                        if _trial_num_root and trial.root:
+                            absorbed_aspects = [trial.root] + trial.aspects
+                        else:
+                            absorbed_aspects = trial.aspects
                         absorbed_case    = trial.case
-                        absorbed_aspects = trial.aspects
                         absorbed_action  = trial.action
                         absorbed_error   = trial.error
                 lit_word = Word(

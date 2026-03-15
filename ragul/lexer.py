@@ -50,7 +50,7 @@ _ALL_ALIAS_KEYS: frozenset[str] = frozenset(ALIAS_TABLE.keys())
 
 # Regex to split a raw word into root + suffix chain
 # Suffixes begin with a '-' followed by non-'-' characters
-_WORD_RE = re.compile(r'^([^-]+)((?:-[^-]+)*)$')
+_WORD_RE = re.compile(r'^(-?\d+(?:\.\d+)?|[^-]+)((?:-[^-]+)*)$')
 
 
 def _split_and_normalise(raw_word: str) -> tuple[str, list[str]]:
@@ -67,7 +67,7 @@ def _split_and_normalise(raw_word: str) -> tuple[str, list[str]]:
     if not suf_str:
         return root, []
     # split on '-' keeping the dash
-    parts = re.split(r'(?=-)', suf_str)  # split before each '-'
+    parts = re.split(r'(?=-[A-Za-z\u0080-\uFFFF])', suf_str)  # split only before letter suffixes
     parts = [p for p in parts if p]
     normalised = [normalise_suffix(p) for p in parts]
     return root, normalised
@@ -199,6 +199,25 @@ class Lexer:
                     elif raw == "-hibára":
                         self._tokens.append(Token(TT.MINUS_HIBARA, raw, lineno, pos))
                     pos += len(raw)
+                    continue
+
+            # Float literal (e.g. "3.14-t") — must precede word_m because
+            # '.' in a float would otherwise be consumed as FULLSTOP.
+            if line[pos].isdigit() or (
+                    line[pos] == '-' and pos + 1 < n and line[pos + 1].isdigit()):
+                float_m = re.match(r'-?\d+\.\d+', line[pos:])
+                if float_m:
+                    num_str = float_m.group(0)
+                    rest = pos + len(num_str)
+                    if rest < n and line[rest] == '-':
+                        suf_m = re.match(r'[^\s.\[\]",]+', line[rest:])
+                        if suf_m:
+                            raw = num_str + suf_m.group(0)
+                            self._tokens.append(self._make_word_token(raw, lineno, pos))
+                            pos = rest + len(suf_m.group(0))
+                            continue
+                    self._tokens.append(Token(TT.NUMBER, num_str, lineno, pos, num_str))
+                    pos += len(num_str)
                     continue
 
             # Word token — MUST come before pure-number check.

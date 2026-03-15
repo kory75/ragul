@@ -567,6 +567,18 @@ class Interpreter:
                 inline_args.append(aspect[len("__str__:"):])
                 continue
 
+            # --- Double-dash negative inline number: '--3' or '--3.14' ---
+            # Inside a suffix chain, -(-3) is written as '--3'. The lexer
+            # preserves the double-dash; we detect it here.
+            if aspect.startswith('--') and len(aspect) > 2:
+                neg_part = aspect[1:]   # '-3' or '-3.14'
+                try:
+                    inline_args.append(
+                        float(neg_part) if '.' in neg_part else int(neg_part))
+                    continue
+                except (ValueError, TypeError):
+                    pass
+
             # --- Inline numeric literal (e.g. -3, -10, -3.14) ---
             is_num = False
             try:

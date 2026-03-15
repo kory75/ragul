@@ -19,7 +19,7 @@ Usage:
 
 from __future__ import annotations
 import re
-from ragul.model import Word, Sentence, Scope, RagulType
+from ragul.model import Word, Sentence, Scope, RagulType, TYPE_ALIAS_TABLE, normalise_type_name
 from ragul.errors import DiagnosticBag, E001, E003, E004, E005, E009, W001
 from ragul.config import RagulConfig
 from ragul.stdlib.core import SUFFIX_REGISTRY
@@ -82,6 +82,17 @@ def _infer_literal(root: str) -> RagulType:
         return RagulType.szam()
     except (ValueError, TypeError):
         pass
+    # Type name literal (used in type annotations: 'Szám-ként', 'Num-ként', etc.)
+    _TYPE_NAME_MAP = {
+        "Szám": RagulType.szam(),
+        "Szöveg": RagulType.szoveg(),
+        "Logikai": RagulType.logikai(),
+        "Hiba": RagulType.hiba(),
+        "Lista": RagulType.lista(RagulType.unknown()),
+    }
+    canonical = normalise_type_name(root)
+    if canonical in _TYPE_NAME_MAP:
+        return _TYPE_NAME_MAP[canonical]
     # Treat anything else as Szöveg (string or variable — resolved at runtime)
     return RagulType.szoveg()
 
@@ -96,6 +107,14 @@ def _infer_suffix_output(input_type: RagulType, aspect: str) -> RagulType:
     # Inline literal argument — not a real suffix
     if aspect.startswith("__str__:"):
         return input_type  # passes through
+
+    # Double-dash negative number inline arg ('--3' → -3)
+    if aspect.startswith('--') and len(aspect) > 2:
+        try:
+            float(aspect[1:])
+            return input_type
+        except (ValueError, TypeError):
+            pass
 
     # Numeric inline arg
     try:

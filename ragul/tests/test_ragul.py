@@ -149,6 +149,25 @@ class TestParser:
 
 class TestInterpreter:
 
+    def _run(self, src: str):
+        """Run source and return the last value produced by the interpreter.
+
+        Captures the last value returned by executing the top-level effect
+        scope (program-nk-hatás), which is the last sentence's evaluated value.
+        """
+        tokens, _ = lex(src, "<test>")
+        tree, _ = parse(tokens, "<test>")
+        interp = Interpreter(tree, "<test>")
+        # Track last value by executing top-level scopes manually
+        last_value = None
+        # Execute root sentences first
+        interp._exec_scope(interp.root_scope, interp.global_env)
+        # Execute top-level effect/conditional/loop scopes and capture result
+        for child in interp.root_scope.children:
+            if child.is_effect or child.is_conditional or child.is_loop:
+                last_value = interp._exec_scope(child, interp.global_env)
+        return last_value
+
     def test_integer_assignment(self):
         bindings = eval_expr("x-ba  3-t.")
         assert bindings.get("x") == 3
@@ -214,6 +233,32 @@ class TestInterpreter:
         source = 'program-nk-hatás\n\tx-ba  "helló világ"-t.\n\tx-képernyőre-va.\n'
         interp, code = run_source(source)
         assert code == 0
+
+    def test_float_literal(self):
+        src = 'program-nk-hatás\n\tx-be\t3.14-t.\n'
+        result = self._run(src)
+        assert abs(result - 3.14) < 1e-5
+
+    def test_negative_integer(self):
+        src = 'program-nk-hatás\n\tx-be\t-7-t.\n'
+        result = self._run(src)
+        assert result == -7
+
+    def test_negative_float(self):
+        src = 'program-nk-hatás\n\tx-be\t-3.14-t.\n'
+        result = self._run(src)
+        assert abs(result - (-3.14)) < 1e-5
+
+    def test_inline_negative_arg(self):
+        # 10 + (-3) should give 7
+        src = 'program-nk-hatás\n\tx-be\t10-t.\n\ty-be\tx--3-össze-t.\n'
+        result = self._run(src)
+        assert result == 7
+
+    def test_negative_in_list(self):
+        src = 'program-nk-hatás\n\tx-be\t[1, -2, 3]-t.\n'
+        result = self._run(src)
+        assert result == [1, -2, 3]
 
 
 # ---------------------------------------------------------------------------

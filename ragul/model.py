@@ -165,6 +165,26 @@ def normalise_suffix(suffix: str) -> str:
     return ALIAS_TABLE.get(suffix, suffix)
 
 
+# Type name alias table — English → canonical Hungarian type names
+TYPE_ALIAS_TABLE: dict[str, str] = {
+    "Num":    "Szám",
+    "Number": "Szám",
+    "Str":    "Szöveg",
+    "Text":   "Szöveg",
+    "String": "Szöveg",
+    "List":   "Lista",
+    "Bool":   "Logikai",
+    "Err":    "Hiba",
+    "Error":  "Hiba",
+    "or":     "vagy",
+}
+
+
+def normalise_type_name(name: str) -> str:
+    """Return the canonical Hungarian type name, applying the alias table."""
+    return TYPE_ALIAS_TABLE.get(name, name)
+
+
 # ---------------------------------------------------------------------------
 # Word — the fundamental unit
 # ---------------------------------------------------------------------------
