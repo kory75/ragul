@@ -15,7 +15,10 @@ Editor setup:
 
 from __future__ import annotations
 import logging
-from pygls.server import LanguageServer  # type: ignore[attr-defined]
+try:
+    from pygls.lsp.server import LanguageServer  # pygls >= 2.0
+except ImportError:
+    from pygls.server import LanguageServer  # type: ignore[attr-defined]  # pygls 1.x
 from lsprotocol.types import (
     TEXT_DOCUMENT_DID_OPEN,
     TEXT_DOCUMENT_DID_CHANGE,
