@@ -71,7 +71,13 @@ Key properties that follow from this design:
 
 ## Getting Started
 
-Ragul is not yet on PyPI. Install from source:
+### Install from PyPI (recommended)
+
+```bash
+pip install ragul-lang
+```
+
+### Install from source
 
 ```bash
 git clone https://github.com/kory75/ragul.git
