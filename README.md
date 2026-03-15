@@ -251,4 +251,4 @@ tipus    = "warn"   # "warn" | "strict" | "off"
 
 ## License
 
-MIT
+Apache 2.0 — see [LICENSE](LICENSE) for the full text.
