@@ -170,6 +170,8 @@ Root causes of the conditional bug (two intertwined parser issues):
 - [ ] **`ragul új projekt <name>` / `ragul new project <name>`** — scaffold a new project folder (`ragul.config`, `main.ragul`, `.gitignore`, `README.md`)
 - [ ] **`ragul új modul <name>` / `ragul new module <name>`** — scaffold a new module file inside an existing project
 - [ ] Publish v0.1.1 to PyPI via GitHub Release
+- [ ] Create VS Code Marketplace publisher account
+- [ ] Publish `ragul-lang` VS Code extension to Marketplace
 
 ### v0.2.0 — To Be Planned
 
