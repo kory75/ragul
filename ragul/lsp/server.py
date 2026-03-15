@@ -17,8 +17,10 @@ from __future__ import annotations
 import logging
 try:
     from pygls.lsp.server import LanguageServer  # pygls >= 2.0
+    _PYGLS2 = True
 except ImportError:
     from pygls.server import LanguageServer  # type: ignore[attr-defined]  # pygls 1.x
+    _PYGLS2 = False
 from lsprotocol.types import (
     TEXT_DOCUMENT_DID_OPEN,
     TEXT_DOCUMENT_DID_CHANGE,
@@ -34,6 +36,7 @@ from lsprotocol.types import (
     DefinitionParams,
     Location,
     Position,
+    PublishDiagnosticsParams,
     Range,
     CompletionOptions,
 )
@@ -58,7 +61,12 @@ def _publish_diagnostics(ls: LanguageServer, uri: str, source: str) -> None:
     from ragul.lsp.diagnostics import build_diagnostics
     filename = uri.replace("file://", "")
     diags = build_diagnostics(source, filename)
-    ls.publish_diagnostics(uri, diags)
+    if _PYGLS2:
+        ls.text_document_publish_diagnostics(
+            PublishDiagnosticsParams(uri=uri, diagnostics=diags)
+        )
+    else:
+        ls.publish_diagnostics(uri, diags)  # type: ignore[attr-defined]
 
 
 # ---------------------------------------------------------------------------
