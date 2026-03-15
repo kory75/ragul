@@ -61,7 +61,7 @@ Parameters are roots marked with `-d` / `-yours` (passed in). They receive value
     szűrőhatár-ours
         lista-yours.       // receives the root (first argument)
         threshold-yours.   // receives the first -with argument
-        lista-threshold-above-filter-obj  Lista-as.
+        lista-threshold-above-filter-obj  List-as.
 
     // Called as:
     output->  adatok-szűrőhatár-obj  5-with.
@@ -81,9 +81,9 @@ With type annotations:
 === "English aliases"
     ```ragul
     felett-ours
-        value-yours  Szám-as.
-        threshold-yours  Szám-as.
-        value-threshold-above-obj  Logikai-as.
+        value-yours  Num-as.
+        threshold-yours  Num-as.
+        value-threshold-above-obj  Bool-as.
     ```
 
 ---
@@ -243,23 +243,23 @@ A small library of annotated suffixes:
     ```ragul
     // Numeric operations
     kétszeres-ours
-        szám-yours  Szám-as.
-        szám-szám-add-obj  Szám-as.
+        szám-yours  Num-as.
+        szám-szám-add-obj  Num-as.
 
     felére-ours
-        szám-yours  Szám-as.
-        szám-2-div-obj  Szám-as.
+        szám-yours  Num-as.
+        szám-2-div-obj  Num-as.
 
     // Threshold filter
     szűrőhatár-ours
-        lista-yours  Lista-as.
-        threshold-yours  Szám-as.
-        lista-filter-from  threshold-above-with  obj  Lista-as.
+        lista-yours  List-as.
+        threshold-yours  Num-as.
+        lista-filter-from  threshold-above-with  obj  List-as.
 
     // Fallible file reader
     fájlolvasó-ours
-        path-yours  Szöveg-as.
-        path-fájlról-from  read-doing-obj  vagy-Szöveg-vagy-Hiba-as.
+        path-yours  Str-as.
+        path-fájlról-from  read-doing-obj  or-Str-or-Err-as.
     ```
 
 Calling these is unchanged — annotations are invisible at the call site:

@@ -185,18 +185,32 @@ Operate on `Logikai` (boolean) values.
 
 ---
 
-## Type Keywords
+## Type Names
 
-These appear in type annotations and `vagy` expressions. They are not suffixes — they cannot be aliased.
+Type names appear in type annotations (`-ként` / `-as`) and `vagy` / `or` expressions. Hungarian names are canonical; English aliases are resolved at parse time — both forms are identical to the compiler.
 
-| Hungarian | Meaning |
-|---|---|
-| `Szám` | Number (integer or float) |
-| `Szöveg` | String |
-| `Logikai` | Boolean |
-| `Lista` | List (parameterised: `Lista-Szám`) |
-| `Hiba` | Error value |
-| `vagy` | Union type (`vagy-Szám-vagy-Hiba`) |
+| Hungarian | English aliases | Meaning |
+|---|---|---|
+| `Szám` | `Num` / `Number` | Number (integer or float) |
+| `Szöveg` | `Str` / `Text` / `String` | String |
+| `Logikai` | `Bool` | Boolean |
+| `Lista` | `List` | List (parameterised: `Lista-Szám` / `List-Num`) |
+| `Hiba` | `Err` / `Error` | Error value |
+| `vagy` | `or` | Union type (`vagy-Szám-vagy-Hiba` / `or-Num-or-Err`) |
+
+Examples of mixed and all-English usage:
+
+```ragul
+// All-English annotation
+kétszeres-ours
+    szám-yours  Num-as.
+    szám-szám-add-obj  Num-as.
+
+// Mixed (valid)
+fájlolvasó-ours
+    path-yours  Str-as.
+    path-fájlról-from  read-doing-obj  or-Str-or-Err-as.
+```
 
 ---
 

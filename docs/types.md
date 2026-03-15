@@ -13,45 +13,49 @@ Ragul is **inferred typed**. Types are never declared explicitly — the compile
 
 === "English aliases"
     ```ragul
-    x->  3-obj.           // compiler: x is Szám
-    y->  "hello"-obj.     // compiler: y is Szöveg
-    lista->  [1,2,3]-obj. // compiler: lista is Lista-Szám
+    x->  3-obj.           // compiler: x is Num
+    y->  "hello"-obj.     // compiler: y is Str
+    lista->  [1,2,3]-obj. // compiler: lista is List-Num
     ```
 
 ---
 
 ## Core Types
 
-| Type | Meaning | Examples |
-|---|---|---|
-| `Szám` | Numbers, measurements | `3`, `3.14`, `-7` |
-| `Szöveg` | Strings, text | `"hello"`, `"adat.txt"` |
-| `Lista` | Collections | `[1,2,3]`, `["a","b"]` |
-| `Logikai` | Booleans | `igaz`, `hamis` |
-| `Hiba` | Error values | propagated via `-e` / `-?` |
+| Hungarian | English aliases | Meaning | Examples |
+|---|---|---|---|
+| `Szám` | `Num` / `Number` | Numbers, measurements | `3`, `3.14`, `-7` |
+| `Szöveg` | `Str` / `Text` / `String` | Strings, text | `"hello"`, `"adat.txt"` |
+| `Lista` | `List` | Collections | `[1,2,3]`, `["a","b"]` |
+| `Logikai` | `Bool` | Booleans | `igaz`, `hamis` |
+| `Hiba` | `Err` / `Error` | Error values | propagated via `-e` / `-?` |
 
 Types are capitalised to distinguish them from variable roots, which are lowercase.
 
+English aliases are resolved at parse time — `Num` and `Szám` are identical to the compiler. Mixed usage within a file is permitted.
+
 ---
 
-## Generic Types — `Lista-T`
+## Generic Types — `Lista-T` / `List-T`
 
-`Lista` is a generic type — it always carries an element type, written as a suffix chain:
+`Lista` / `List` is a generic type — it always carries an element type, written as a suffix chain:
 
 ```
-Lista-Szám        // a list of numbers
+Lista-Szám        // a list of numbers      (Hungarian)
+List-Num          // a list of numbers      (English aliases)
 Lista-Szöveg      // a list of strings
-Lista-Logikai     // a list of booleans
+List-Str          // a list of strings
 Lista-Lista-Szám  // a list of lists of numbers
+List-List-Num     // a list of lists of numbers
 ```
 
 This notation is consistent with the rest of Ragul — types are built by suffixing, exactly as words are. `Lista` is the root, the element type is its suffix. Nesting composes naturally by continuing the chain.
 
 ---
 
-## Or-Types — `vagy`
+## Or-Types — `vagy` / `or`
 
-`vagy` (meaning *or*) creates a union type. It is used when an operation may succeed or fail:
+`vagy` / `or` (meaning *or*) creates a union type. It is used when an operation may succeed or fail:
 
 === "Hungarian"
     ```ragul
@@ -62,17 +66,18 @@ This notation is consistent with the rest of Ragul — types are built by suffix
 
 === "English aliases"
     ```ragul
-    // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
+    // or-Str-or-Err = either a Str OR an Err
     result->  "adat.txt"-fájlolvasó-doing.
-    // result is vagy-Szöveg-vagy-Hiba
+    // result is or-Str-or-Err
     ```
 
-The compiler enforces that both branches of a `vagy` type are handled before the value is used. See [Error Handling](errors.md) for the full model.
+The compiler enforces that both branches of a `vagy` / `or` type are handled before the value is used. See [Error Handling](errors.md) for the full model.
 
 Three-way compounds are legal when needed:
 
 ```
-vagy-Szám-vagy-Szöveg-vagy-Hiba
+vagy-Szám-vagy-Szöveg-vagy-Hiba   // Hungarian
+or-Num-or-Str-or-Err              // English aliases
 ```
 
 ---
@@ -133,11 +138,11 @@ The `-ként` / `-as` suffix (meaning *acting as / in the role of*) provides opti
 === "English aliases"
     ```ragul
     kétszeres-ours
-        szám-yours  Szám-as.
-        szám-szám-add-obj  Szám-as.
+        szám-yours  Num-as.
+        szám-szám-add-obj  Num-as.
     ```
 
-Reading naturally: *"szám, passed in, acting as a Szám"* — and the return *"acting as a Szám"*.
+Reading naturally: *"szám, passed in, acting as a Num"* — and the return *"acting as a Num"*.
 
 A fallible suffix return type:
 
@@ -151,8 +156,8 @@ A fallible suffix return type:
 === "English aliases"
     ```ragul
     fájlolvasó-ours
-        path-yours  Szöveg-as.
-        path-fájlról-from  read-doing-obj  vagy-Szöveg-vagy-Hiba-as.
+        path-yours  Str-as.
+        path-fájlról-from  read-doing-obj  or-Str-or-Err-as.
     ```
 
 Annotations are **optional** — unannotated scopes still work via inference. They are most useful for:
