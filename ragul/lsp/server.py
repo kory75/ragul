@@ -19,7 +19,7 @@ try:
     from pygls.lsp.server import LanguageServer  # pygls >= 2.0
     _PYGLS2 = True
 except ImportError:
-    from pygls.server import LanguageServer  # type: ignore[attr-defined]  # pygls 1.x
+    from pygls.server import LanguageServer  # type: ignore[attr-defined, no-redef]  # pygls 1.x
     _PYGLS2 = False
 from lsprotocol.types import (
     TEXT_DOCUMENT_DID_OPEN,
