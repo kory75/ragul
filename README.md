@@ -1,13 +1,14 @@
 # Ragul
 
-> *Ragul* — from Hungarian *rag* (suffix/affix) + *-ul* (in the manner of a language).
-> An experimental programming language whose core logic is modelled on agglutinative grammar.
-
-**Meaning is built by stacking suffixes onto a root — a suffix chain is a pipeline.**
+> A pipeline scripting language where **transformation is built into the syntax itself**.
+> Each word is a suffix chain — a left-to-right pipeline stacked onto a root value.
+> Inspired by the structural principles of agglutinative grammar (Hungarian).
 
 ```ragul
-adatok-szűrve-rendezve-ból  5-felett-val  kimenet-ba  másol-va.
-// FROM data→filter(>5)→sort,  INTO output,  AS copy
+data-into  [7, 2, 15, 3, 9, 1, 12, 4]-it.
+result-into  data-unique-sorted-5-above-it.
+result-print-doing.
+// [7, 9, 12, 15]
 ```
 
 📖 **[Full documentation →](https://kory75.github.io/ragul/)**
@@ -16,7 +17,13 @@ adatok-szűrve-rendezve-ból  5-felett-val  kimenet-ba  másol-va.
 
 ## Install
 
-Ragul is not yet on PyPI. Install from source:
+```bash
+pip install ragul-lang
+```
+
+Requires **Python 3.11+**.
+
+Or install from source:
 
 ```bash
 git clone https://github.com/kory75/ragul.git
@@ -24,25 +31,28 @@ cd ragul
 pip install -e ".[dev]"
 ```
 
-Requires **Python 3.11+**.
-
 ---
 
 ## Quick Start
 
 ```bash
 # Run a program
-ragul futtat hello.ragul
+ragul run hello.ragul
 
 # Type-check without running
-ragul ellenőriz hello.ragul
+ragul check hello.ragul
 
 # Interactive REPL
 ragul repl
 
 # Start the LSP server (for editor integration)
 ragul lsp
+
+# Scaffold a new project
+ragul new project myapp
 ```
+
+Hungarian primary names (`futtat`, `ellenőriz`, `repl`, `új`) are also accepted.
 
 ---
 
@@ -51,91 +61,91 @@ ragul lsp
 ### Hello World
 
 ```ragul
-program-nk-hatás
-    üdvözlet-be  "helló világ"-t.
-    üdvözlet-képernyőre-va.
+program-ours-effect
+    greeting-into  "Hello, World!"-it.
+    greeting-print-doing.
 ```
 
 ### Arithmetic pipeline
 
 ```ragul
-program-nk-hatás
-    x-be  10-t.
-    y-be  x-3-össze-2-szoroz-t.   // (10 + 3) × 2 = 26
-    y-képernyőre-va.
+program-ours-effect
+    x-into  10-it.
+    y-into  x-3-add-2-mul-it.   // (10 + 3) × 2 = 26
+    y-print-doing.
 ```
 
 ### Filter and sort a list
 
 ```ragul
-program-nk-hatás
-    adatok-be  [7, 2, 15, 3, 9, 1, 12, 4]-t.
-    eredmény-be  adatok-szűrve-rendezve-ból  5-felett-val  t.
-    eredmény-képernyőre-va.
+program-ours-effect
+    data-into    [7, 2, 15, 3, 9, 1, 12, 4]-it.
+    result-into  data-unique-sorted-5-above-it.
+    result-print-doing.
 // [7, 9, 12, 15]
 ```
 
 ### Define and call a custom suffix
 
 ```ragul
-// Define -kétszeres as a reusable suffix
-kétszeres-unk
-    szám-d.
-    szám-szám-össze-t.
+// Define -double as a reusable suffix
+double-ours
+    num-yours.
+    num-num-add-it.
 
-program-nk-hatás
-    x-be  7-t.
-    y-be  x-kétszeres-t.    // 14
-    y-képernyőre-va.
+program-ours-effect
+    x-into  7-it.
+    y-into  x-double-it.    // 14
+    y-print-doing.
 ```
 
 ### Conditionals
 
 ```ragul
-besoroló-nk-ha
-    szám-d.
-    szám-100-felett-ha
-        "nagy"-t.
-    -különben-ha  szám-50-felett-ha
-        "közepes"-t.
-    -hanem
-        "kicsi"-t.
+classify-ours-if
+    num-yours.
+    num-100-above-if
+        "large"-it.
+    -else-if  num-50-above-if
+        "medium"-it.
+    -else
+        "small"-it.
 
-program-nk-hatás
-    kategória-be  75-besoroló-ha-t.
-    kategória-képernyőre-va.
-// közepes
+program-ours-effect
+    category-into  75-classify-if-it.
+    category-print-doing.
+// medium
 ```
 
 ### Loops
 
 ```ragul
 // Sum a list using fold
-összesítő-nk-gyűjt
-    elem-d.
-    összeg-d.
-    összeg-elem-össze-t.
+summer-ours-fold
+    item-yours.
+    total-yours.
+    total-item-add-it.
 
-program-nk-hatás
-    lista-be  [1, 2, 3, 4, 5]-t.
-    összeg-be  lista-összesítő-gyűjt-t  0-val.
-    összeg-képernyőre-va.
+program-ours-effect
+    list-into    [1, 2, 3, 4, 5]-it.
+    result-into  list-summer-fold-it  0-with.
+    result-print-doing.
 // 15
 ```
 
 ### Error handling
 
 ```ragul
-program-nk-hatás
-    tartalom-be  "adat.txt"-fájlolvasó-va-e.
-    tartalom-képernyőre-va.
-    -hibára
-        hiba-képernyőre-va.
+program-ours-effect
+    content-into  "data.txt"-readfile-doing-?.
+    content-print-doing.
+    -catch
+        hiba-print-doing.
 ```
 
 ---
 
-## What's in v0.1.0
+## What's in v0.1.1
 
 | Feature | Status |
 |---|---|
@@ -143,17 +153,19 @@ program-nk-hatás
 | Parser → Scope tree (indentation-based) | ✅ |
 | Static type checker (E001–E009, W001) | ✅ |
 | Interpreter — assignment, arithmetic, pipelines | ✅ |
-| All loop kinds: `-míg`, `-ig`, `-mindegyik`, `-gyűjt` | ✅ |
-| Conditionals: `-ha` / `-hanem` / `-különben-ha` | ✅ |
-| Error propagation: `-e` and `-hibára` | ✅ |
-| Effect scopes (`-nk-hatás`) + I/O channels | ✅ |
+| All loop kinds: `-while`, `-until`, `-each`, `-fold` | ✅ |
+| Conditionals: `-if` / `-else` / `-else-if` | ✅ |
+| Error propagation: `-?` and `-catch` | ✅ |
+| Effect scopes (`-ours-effect`) + I/O channels | ✅ |
 | Stdlib: arithmetic, comparison, logical, string, list, math | ✅ |
-| CLI: `futtat`, `ellenőriz`, `fordít`, `repl`, `lsp` | ✅ |
+| CLI: `run`, `check`, `compile`, `repl`, `lsp`, `new` | ✅ |
+| `ragul new project` / `ragul new module` scaffolding | ✅ |
 | Interactive REPL with persistent environment | ✅ |
 | LSP server: diagnostics, hover, completion, go-to-def | ✅ |
 | Agent architecture with Claude AI error analysis | ✅ |
 | GitHub Actions CI (pytest + mypy on every push) | ✅ |
 | Documentation site (GitHub Pages) | ✅ |
+| Published on PyPI as `ragul-lang` | ✅ |
 
 ---
 
@@ -220,14 +232,14 @@ ragul repl
 ```
 
 ```
->>> x-be  3-t.
->>> y-be  x-kétszeres-t.
->>> y-képernyőre-va.
+>>> x-into  3-it.
+>>> y-into  x-double-it.
+>>> y-print-doing.
 6
->>> :mutat
+>>> :show
 x = 3  (Szám)
 y = 6  (Szám)
->>> :kilep
+>>> :exit
 ```
 
 ---
