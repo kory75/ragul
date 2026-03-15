@@ -93,11 +93,6 @@
           "description": "Path to the ragul executable. Defaults to 'ragul' on PATH."
         }
       }
-    },
-    "configurationDefaults": {
-      "[ragul]": {
-        "cSpell.enabled": false
-      }
     }
   },
   "scripts": {
