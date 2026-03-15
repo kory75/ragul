@@ -3,7 +3,7 @@ requires = ["setuptools>=45"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ragul"
+name = "ragul-lang"
 version = "0.1.0"
 description = "Ragul — an agglutinative programming language"
 readme = "README.md"
