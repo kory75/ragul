@@ -260,13 +260,16 @@ Solidifies the primary sweet spot.
 
 | Module / Tool | What it adds |
 |---|---|
-| `fájl` module | File read/write, line iteration, directory listing, path operations |
-| `adatok` module | JSON parse/emit, CSV parse/emit, basic tabular field access |
+| `true`/`false` aliases | Root-level boolean aliases alongside `igaz`/`hamis`; implemented via a `ROOT_ALIASES` table in the lexer |
+| I/O channels | English aliases for all channels: `stdout`/`stdin`/`stderr` (existing channels); `filein`/`fileout` (new, v0.2.0); `netin`/`netout` (stubs, completed in v0.4.0). Hungarian canonical names unchanged. Both string literals and variables work as filename arguments. |
+| `adatok` module | JSON parse/emit, CSV parse/emit, field access suffixes. No XML (separate module later if demand exists). |
 | `minta` module | Regex match, capture groups, replace, split |
 | `dátum` module | Date/time parse, format, arithmetic |
 | `ragul formáz` / `fmt` | Auto-formatter: canonical suffixes, consistent indentation, blank lines between scopes |
 | `ragul teszt` / `test` | Test runner: `.ragul` test files with assertion suffixes |
 | Error message quality pass | Every E00x error gets a message, type context, and a hint line |
+
+**Module naming convention:** Hungarian is canonical, English is a fully supported alias — the same pattern as suffixes and CLI commands. Both `file` and `fájl` work in code; docs show English first.
 
 ### Tier 2 — Web / API scripting (v0.4.0)
 
@@ -297,7 +300,8 @@ Needed for community adoption.
 | Jupyter kernel | Wrap the REPL session in the `ipykernel` ZeroMQ protocol; low implementation cost, high audience reach |
 | HTTP server (`végpont` module) | Minimal stateless route handler; needs async foundations first |
 | Implicit parallelism | Implement topological sort in interpreter; pure scopes become automatically parallel |
-| VS Code extension (Marketplace) | Already in v0.1.1 plan |
+| VS Code Marketplace | Publish `ragul-lang` extension; requires publisher account setup first |
+| `xml` module | XML parse/emit, XPath; separate from `adatok` due to complexity and `lxml` dependency; add when demand exists |
 | Concurrency primitives | Required before any real-time or server use case |
 
 ---
@@ -351,13 +355,13 @@ Three issues were identified that affect how accessible the docs are to internat
 
 | Version | Theme | Key deliverables |
 |---|---|---|
-| **v0.2.0** | Unblock | `fájl` + `adatok` modules; real file and JSON tasks now possible |
-| **v0.2.x** | Polish | Error message quality pass; every error gets a hint line |
+| **v0.2.0** | Unblock | `true`/`false` aliases; I/O channels (`stdout`,`stdin`,`stderr`,`filein`,`fileout`); `adatok` module (JSON + CSV) |
+| **v0.2.x** | Polish | Error message quality pass; every error gets a hint line; `-val` binding resolution |
 | **v0.3.0** | Extend | `minta` + `dátum`; log processing and timestamped data work |
 | **v0.3.x** | Demo + formatter | 5–10 real worked examples published; `ragul formáz` implemented |
-| **v0.4.0** | Web | `háló` + `kódolás` + `napló`; API scripting use case complete |
-| **v0.5.0** | Ecosystem | Test runner, doc generator, package registry foundations |
-| **v1.0.0** | Platform | Transpiler, Jupyter kernel, Marketplace extension, implicit parallelism |
+| **v0.4.0** | Web | `háló` + `kódolás` + `napló`; `netin`/`netout` channels; API scripting use case complete |
+| **v0.5.0** | Ecosystem | Test runner, doc generator, package registry foundations; `xml` module if demand exists |
+| **v1.0.0** | Platform | Transpiler, Jupyter kernel, VS Code Marketplace, implicit parallelism |
 
 ---
 

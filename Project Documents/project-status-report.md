@@ -171,9 +171,13 @@ Root causes of the conditional bug (two intertwined parser issues):
 - [x] **`ragul új modul <name>` / `ragul new module <name>`** — scaffold a new module file inside an existing project (done 2026-03-15)
 - [x] Publish v0.1.1 to PyPI via GitHub Release (done 2026-03-15)
 
-### v0.2.0 — To Be Planned
+### v0.2.0 — Planned
 
-*(Candidates: `ragul formáz`, `ragul teszt`, E006/E007 type checker errors, `-val` binding, topological sort, VS Code Marketplace publish. Scope to be decided.)*
+- [ ] `true` / `false` root-level boolean aliases (via `ROOT_ALIASES` table in lexer, alongside `igaz`/`hamis`)
+- [ ] English I/O channel aliases: `stdout`, `stdin`, `stderr` (existing channels); `filein`, `fileout` (new file channels). Hungarian canonical names unchanged. Both string literal and variable filename arguments supported.
+- [ ] `netin` / `netout` channel stubs (wired up in v0.4.0)
+- [ ] `adatok` module — JSON + CSV parse/emit, field access suffixes (no XML — separate module later if demand exists)
+- [ ] E006/E007 type checker errors (scope leak, module resolution)
 
 ---
 
