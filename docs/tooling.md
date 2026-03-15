@@ -53,18 +53,18 @@ Start the interactive REPL:
 ragul repl
 ```
 
-=== "Hungarian"
-    ```
-    >>> x-be  3-t.
-    >>> x-kétszeres-ból  kimenet-be  ír-va.
-    6
-    >>>
-    ```
-
 === "English aliases"
     ```
     >>> x->  3-obj.
     >>> x-kétszeres-from  output->  write-doing.
+    6
+    >>>
+    ```
+
+=== "Hungarian"
+    ```
+    >>> x-be  3-t.
+    >>> x-kétszeres-ból  kimenet-be  ír-va.
     6
     >>>
     ```
@@ -77,6 +77,65 @@ REPL special commands:
 | `:töröl` / `:clear` | Reset the environment |
 | `:mutat` / `:show` | Print all bound roots and their types |
 | `:help` / `:súgó` | Show help |
+
+### `ragul új` / `ragul new`
+
+Scaffold a new project folder or module file.
+
+#### New project
+
+```bash
+ragul új projekt myapp
+ragul new project myapp
+```
+
+Creates `myapp/` containing:
+
+| File | Contents |
+|---|---|
+| `ragul.config` | Project config pre-filled with the project name |
+| `main.ragul` | Hello-world entry point |
+| `.gitignore` | Standard Ragul ignores |
+| `README.md` | Minimal README with run instructions |
+
+Then run it immediately:
+
+```bash
+cd myapp
+ragul futtat main.ragul
+```
+
+#### New module
+
+```bash
+ragul új modul utils
+ragul new module utils
+```
+
+Creates `utils.ragul` in the current directory with a minimal scope stub:
+
+=== "English aliases"
+    ```
+    ragul new module utils
+    ```
+
+=== "Hungarian"
+    ```
+    ragul új modul utils
+    ```
+
+The generated file:
+
+```ragul
+// utils.ragul — utils module
+
+utils-nk-hatás
+    // Add your code here.
+```
+
+> **Note:** If you accidentally include the extension (`ragul new module utils.ragul`), it is stripped automatically.
+
+---
 
 ### `ragul lsp`
 

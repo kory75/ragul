@@ -15,18 +15,6 @@ Everything that applies to scopes applies to modules: their suffixes compose fre
 
 A module is declared at the top level of a file using `-nk-modul` / `-ours-module`:
 
-=== "Hungarian"
-    ```ragul
-    matematika-nk-modul
-        kétszeres-unk
-            szám-d  Szám-ként.
-            szám-szám-össze-t  Szám-ként.
-
-        gyök-unk
-            szám-d  Szám-ként.
-            szám-négyzetgyök-t  Szám-ként.
-    ```
-
 === "English aliases"
     ```ragul
     matematika-ours-module
@@ -39,6 +27,18 @@ A module is declared at the top level of a file using `-nk-modul` / `-ours-modul
             szám-sqrt-obj  Szám-as.
     ```
 
+=== "Hungarian"
+    ```ragul
+    matematika-nk-modul
+        kétszeres-unk
+            szám-d  Szám-ként.
+            szám-szám-össze-t  Szám-ként.
+
+        gyök-unk
+            szám-d  Szám-ként.
+            szám-négyzetgyök-t  Szám-ként.
+    ```
+
 This file defines the `matematika` module. Its public suffixes (`-kétszeres`, `-gyök`) are immediately available to any file that imports it.
 
 ---
@@ -46,17 +46,6 @@ This file defines the `matematika` module. Its public suffixes (`-kétszeres`, `
 ## Importing a Module
 
 Modules are imported using a `-t` / `-obj` sentence at the top of the file:
-
-=== "Hungarian"
-    ```ragul
-    matematika-t.
-
-    program-nk-hatás
-        x-be  9-t.
-        y-be  x-gyök-t.
-        y-képernyőre-va.
-    // prints: 3.0
-    ```
 
 === "English aliases"
     ```ragul
@@ -66,6 +55,17 @@ Modules are imported using a `-t` / `-obj` sentence at the top of the file:
         x->  9-obj.
         y->  x-gyök-obj.
         y-print-doing.
+    // prints: 3.0
+    ```
+
+=== "Hungarian"
+    ```ragul
+    matematika-t.
+
+    program-nk-hatás
+        x-be  9-t.
+        y-be  x-gyök-t.
+        y-képernyőre-va.
     // prints: 3.0
     ```
 

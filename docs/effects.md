@@ -10,13 +10,6 @@ I/O in Ragul is not special-cased by the compiler. Every I/O channel is a named 
 
 Lazy evaluation means sentences only execute when their result is needed. A sentence that writes to screen has no result — so the lazy evaluator would never run it. The `-hatás` / `-effect` suffix solves this by marking a scope as **eager**: everything inside executes in order, top to bottom, unconditionally.
 
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        x-be  "helló világ"-t.
-        x-képernyőre-va.
-    ```
-
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -24,23 +17,30 @@ Lazy evaluation means sentences only execute when their result is needed. A sent
         x-print-doing.
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        x-be  "helló világ"-t.
+        x-képernyőre-va.
+    ```
+
 Two rules enforced by the compiler:
 
 - Inside a `-hatás` / `-effect` scope, all sentences execute **eagerly in order**
 - A **pure scope** (without `-hatás`) **cannot call an effectful scope** — compile error E004
-
-=== "Hungarian"
-    ```ragul
-    tiszta-számítás-unk
-        x-be  3-t.
-        x-képernyőre-va.    // ERROR E004: effectful suffix called from pure scope
-    ```
 
 === "English aliases"
     ```ragul
     tiszta-számítás-ours
         x->  3-obj.
         x-print-doing.      // ERROR E004: effectful suffix called from pure scope
+    ```
+
+=== "Hungarian"
+    ```ragul
+    tiszta-számítás-unk
+        x-be  3-t.
+        x-képernyőre-va.    // ERROR E004: effectful suffix called from pure scope
     ```
 
 ---
@@ -61,15 +61,6 @@ Every channel is a built-in scope defined with `-nk-hatás` / `-ours-effect`. Th
 
 All channels work identically — same suffix mechanism, different target. Swapping the channel root is the only change:
 
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        x-be  "helló"-t.
-        x-képernyőre-va.    // write to console
-        x-fájlra-va.        // write to file — same sentence structure
-        x-stderr-va.        // write to stderr — same sentence structure
-    ```
-
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -79,18 +70,20 @@ All channels work identically — same suffix mechanism, different target. Swapp
         x-stderr-doing.     // write to stderr — same sentence structure
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        x-be  "helló"-t.
+        x-képernyőre-va.    // write to console
+        x-fájlra-va.        // write to file — same sentence structure
+        x-stderr-va.        // write to stderr — same sentence structure
+    ```
+
 ---
 
 ## Reading Input
 
 Reading is also an effect operation. The pattern uses the read channel as a source with `-ből` / `-from`:
-
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        input-be  bemenetről-ből  olvas-va-t.
-        input-képernyőre-va.
-    ```
 
 === "English aliases"
     ```ragul
@@ -99,18 +92,18 @@ Reading is also an effect operation. The pattern uses the read channel as a sour
         input-print-doing.
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        input-be  bemenetről-ből  olvas-va-t.
+        input-képernyőre-va.
+    ```
+
 ---
 
 ## Defining Custom Channels
 
 Channels are not compiler magic — they are Ragul scopes, defined exactly like any other scope with `-nk-hatás` / `-ours-effect`. The standard library provides the built-in channels, but you can define your own:
-
-=== "Hungarian"
-    ```ragul
-    adatbázisba-nk-hatás
-        lekérdezés-d.
-        // implementation: execute lekérdezés against database
-    ```
 
 === "English aliases"
     ```ragul
@@ -119,20 +112,27 @@ Channels are not compiler magic — they are Ragul scopes, defined exactly like 
         // implementation: execute query against database
     ```
 
-Once defined, `adatbázisba` becomes a suffix usable anywhere — identically to built-in channels:
-
 === "Hungarian"
     ```ragul
-    program-nk-hatás
-        sql-be  "SELECT * FROM users"-t.
-        sql-adatbázisba-va.
+    adatbázisba-nk-hatás
+        lekérdezés-d.
+        // implementation: execute lekérdezés against database
     ```
+
+Once defined, `adatbázisba` becomes a suffix usable anywhere — identically to built-in channels:
 
 === "English aliases"
     ```ragul
     program-ours-effect
         sql->  "SELECT * FROM users"-obj.
         sql-adatbázisba-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        sql-be  "SELECT * FROM users"-t.
+        sql-adatbázisba-va.
     ```
 
 ---

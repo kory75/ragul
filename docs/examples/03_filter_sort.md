@@ -2,26 +2,6 @@
 
 Demonstrates list pipelines — stacking suffixes to filter, deduplicate, sort, and reverse a list in a single chain.
 
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        számok-be  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-t.
-
-        // Remove duplicates, then sort ascending
-        rendezett-be  számok-egyedi-rendezve-t.
-
-        // Keep only numbers greater than 3
-        nagyok-be  rendezett-3-felett-t.
-
-        // Reverse the result
-        fordított-be  nagyok-fordítva-t.
-
-        számok-képernyőre-va.
-        rendezett-képernyőre-va.
-        nagyok-képernyőre-va.
-        fordított-képernyőre-va.
-    ```
-
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -42,6 +22,26 @@ Demonstrates list pipelines — stacking suffixes to filter, deduplicate, sort, 
         flipped-print-doing.
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        számok-be  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-t.
+
+        // Remove duplicates, then sort ascending
+        rendezett-be  számok-egyedi-rendezve-t.
+
+        // Keep only numbers greater than 3
+        nagyok-be  rendezett-3-felett-t.
+
+        // Reverse the result
+        fordított-be  nagyok-fordítva-t.
+
+        számok-képernyőre-va.
+        rendezett-képernyőre-va.
+        nagyok-képernyőre-va.
+        fordított-képernyőre-va.
+    ```
+
 **Output:**
 
 ```
@@ -58,20 +58,14 @@ Demonstrates list pipelines — stacking suffixes to filter, deduplicate, sort, 
 Each suffix in the chain transforms the result of the previous:
 
 ```
-számok-egyedi-rendezve-t
+numbers-unique-sorted-obj
 │        │       │
 │        │       └── sort the deduplicated list
-│        └── remove duplicates from számok
+│        └── remove duplicates from numbers
 └── the source list
 ```
 
-The filter uses an inline literal argument — `3-felett` / `3-above` means "greater than 3":
-
-=== "Hungarian"
-    ```ragul
-    rendezett-3-felett-t
-    //         ^^^^ inline arg passed to -felett
-    ```
+The filter uses an inline literal argument — `3-above` / `3-felett` means "greater than 3":
 
 === "English aliases"
     ```ragul
@@ -79,21 +73,27 @@ The filter uses an inline literal argument — `3-felett` / `3-above` means "gre
     //     ^^^^ inline arg passed to -above
     ```
 
+=== "Hungarian"
+    ```ragul
+    rendezett-3-felett-t
+    //         ^^^^ inline arg passed to -felett
+    ```
+
 ---
 
 ## One-liner version
 
-=== "Hungarian"
+=== "English aliases"
     ```ragul
-    eredmény-be  számok-egyedi-rendezve-3-felett-fordítva-t.
+    result->  numbers-unique-sorted-3-above-reversed-obj.
     // [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]
     // → unique → sort → filter(>3) → reverse
     // = [15, 12, 9, 7, 4]
     ```
 
-=== "English aliases"
+=== "Hungarian"
     ```ragul
-    result->  numbers-unique-sorted-3-above-reversed-obj.
+    eredmény-be  számok-egyedi-rendezve-3-felett-fordítva-t.
     // [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]
     // → unique → sort → filter(>3) → reverse
     // = [15, 12, 9, 7, 4]

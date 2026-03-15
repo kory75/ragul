@@ -15,18 +15,18 @@ There are no exceptions, no `try`/`catch` keywords. Error handling follows the s
 
 Any operation that can fail returns a `vagy` — a value that is either a success result or an error:
 
-=== "Hungarian"
-    ```ragul
-    // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
-    eredmény-be  "adat.txt"-fájlolvasó-va.
-    // eredmény is vagy-Szöveg-vagy-Hiba
-    ```
-
 === "English aliases"
     ```ragul
     // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
     result->  "adat.txt"-fájlolvasó-doing.
     // result is vagy-Szöveg-vagy-Hiba
+    ```
+
+=== "Hungarian"
+    ```ragul
+    // vagy-Szöveg-vagy-Hiba = either a Szöveg OR a Hiba
+    eredmény-be  "adat.txt"-fájlolvasó-va.
+    // eredmény is vagy-Szöveg-vagy-Hiba
     ```
 
 The compiler knows `eredmény` is a `vagy` type and enforces that both cases are handled before the value is used. Skipping this produces error **E005**.
@@ -41,18 +41,18 @@ The `-e` / `-?` suffix sits after the action suffix `-va` / `-doing` in the chai
 root - [possession] - [aspect]* - action(-va) - [error(-e)] - case
 ```
 
-=== "Hungarian"
-    ```ragul
-    tartalom-be  "adat.txt"-fájlolvasó-va-e.
-    // call fájlolvasó — if error, propagate up immediately
-    // if success, bind result to tartalom
-    ```
-
 === "English aliases"
     ```ragul
     content->  "adat.txt"-fájlolvasó-doing-?.
     // call fájlolvasó — if error, propagate up immediately
     // if success, bind result to content
+    ```
+
+=== "Hungarian"
+    ```ragul
+    tartalom-be  "adat.txt"-fájlolvasó-va-e.
+    // call fájlolvasó — if error, propagate up immediately
+    // if success, bind result to tartalom
     ```
 
 Without `-e` / `-?`, the caller must handle the `vagy` type manually. With it, errors bubble up to the nearest `-hibára` / `-catch` boundary.
@@ -62,16 +62,6 @@ Without `-e` / `-?`, the caller must handle the `vagy` type manually. With it, e
 ## Error Handling Boundary — `-hibára` / `-catch`
 
 `-hibára` / `-catch` is a sibling block to the main scope body — exactly like `-hanem` / `-else` is to `-ha` / `-if`. It catches any error that propagates up from within the scope:
-
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        tartalom-be  "adat.txt"-fájlolvasó-va-e.
-        adat-be  tartalom-elemző-va-e.
-        adat-képernyőre-va.
-        -hibára
-            "feldolgozási hiba"-képernyőre-va.
-    ```
 
 === "English aliases"
     ```ragul
@@ -83,6 +73,16 @@ Without `-e` / `-?`, the caller must handle the `vagy` type manually. With it, e
             "feldolgozási hiba"-print-doing.
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        tartalom-be  "adat.txt"-fájlolvasó-va-e.
+        adat-be  tartalom-elemző-va-e.
+        adat-képernyőre-va.
+        -hibára
+            "feldolgozási hiba"-képernyőre-va.
+    ```
+
 If any `-va-e` / `-doing-?` sentence fails, execution jumps immediately to `-hibára` / `-catch`. If there is no `-hibára` and an error reaches the top of the program — fatal, program terminates.
 
 ---
@@ -91,26 +91,17 @@ If any `-va-e` / `-doing-?` sentence fails, execution jumps immediately to `-hib
 
 Errors carry a message. A named error is just a root assigned an error value:
 
-=== "Hungarian"
-    ```ragul
-    hiba-be  "fájl nem található"-t.
-    ```
-
 === "English aliases"
     ```ragul
     hiba->  "file not found"-obj.
     ```
 
-Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
-
 === "Hungarian"
     ```ragul
-    program-nk-hatás
-        tartalom-be  "adat.txt"-fájlolvasó-va-e.
-        tartalom-képernyőre-va.
-        -hibára
-            hiba-képernyőre-va.    // print the error message
+    hiba-be  "fájl nem található"-t.
     ```
+
+Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
 
 === "English aliases"
     ```ragul
@@ -121,33 +112,21 @@ Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
             hiba-print-doing.      // print the error message
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        tartalom-be  "adat.txt"-fájlolvasó-va-e.
+        tartalom-képernyőre-va.
+        -hibára
+            hiba-képernyőre-va.    // print the error message
+    ```
+
 !!! note
     `hiba` is the built-in binding name inside a catch block — it is a variable name, not a suffix, and does not have an English alias.
 
 ---
 
 ## A Complete Example
-
-=== "Hungarian"
-    ```ragul
-    // Fallible file reader
-    fájlolvasó-unk
-        útvonal-d  Szöveg-ként.
-        útvonal-fájlról-ből  olvas-va-t  vagy-Szöveg-vagy-Hiba-ként.
-
-    // Fallible JSON parser
-    elemző-unk
-        szöveg-d  Szöveg-ként.
-        szöveg-json-va-t  vagy-Lista-vagy-Hiba-ként.
-
-    // Program — handles errors at the boundary
-    program-nk-hatás
-        tartalom-be  "adat.txt"-fájlolvasó-va-e.
-        adat-be  tartalom-elemző-va-e.
-        adat-képernyőre-va.
-        -hibára
-            "hiba: "-hiba-összefűz-va  képernyőre-va.
-    ```
 
 === "English aliases"
     ```ragul
@@ -168,6 +147,27 @@ Inside a `-hibára` / `-catch` block, the error is accessible as `hiba`:
         data-print-doing.
         -catch
             "hiba: "-hiba-concat-doing  print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    // Fallible file reader
+    fájlolvasó-unk
+        útvonal-d  Szöveg-ként.
+        útvonal-fájlról-ből  olvas-va-t  vagy-Szöveg-vagy-Hiba-ként.
+
+    // Fallible JSON parser
+    elemző-unk
+        szöveg-d  Szöveg-ként.
+        szöveg-json-va-t  vagy-Lista-vagy-Hiba-ként.
+
+    // Program — handles errors at the boundary
+    program-nk-hatás
+        tartalom-be  "adat.txt"-fájlolvasó-va-e.
+        adat-be  tartalom-elemző-va-e.
+        adat-képernyőre-va.
+        -hibára
+            "hiba: "-hiba-összefűz-va  képernyőre-va.
     ```
 
 ---

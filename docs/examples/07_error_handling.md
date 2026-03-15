@@ -2,18 +2,6 @@
 
 Demonstrates Ragul's error model: operations that can fail return a `vagy` (or) type, `-e` / `-?` propagates errors upward automatically, and `-hibára` / `-catch` catches them at the boundary.
 
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        // -számmá tries to parse a string as a number — it fails on non-numeric strings.
-        // -e propagates the error upward; -hibára catches it.
-
-        n-be  "not-a-number"-számmá-va-e.
-        n-képernyőre-va.
-        -hibára
-            "Error caught: could not parse string as number"-képernyőre-va.
-    ```
-
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -24,6 +12,18 @@ Demonstrates Ragul's error model: operations that can fail return a `vagy` (or) 
         n-print-doing.
         -catch
             "Error caught: could not parse string as number"-print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        // -számmá tries to parse a string as a number — it fails on non-numeric strings.
+        // -e propagates the error upward; -hibára catches it.
+
+        n-be  "not-a-number"-számmá-va-e.
+        n-képernyőre-va.
+        -hibára
+            "Error caught: could not parse string as number"-képernyőre-va.
     ```
 
 **Output:**
@@ -54,15 +54,6 @@ When the error propagates, execution jumps directly to the `-hibára` / `-catch`
 
 `-hibára` is a sibling block to the scope body — structurally identical to `-hanem` / `-else` for conditionals:
 
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        // ... sentences that might fail with -e ...
-        -hibára
-            // ... runs only if an error propagated up ...
-            hiba-képernyőre-va.   // 'hiba' is bound to the error value
-    ```
-
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -70,6 +61,15 @@ When the error propagates, execution jumps directly to the `-hibára` / `-catch`
         -catch
             // ... runs only if an error propagated up ...
             hiba-print-doing.     // 'hiba' is bound to the error value
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        // ... sentences that might fail with -e ...
+        -hibára
+            // ... runs only if an error propagated up ...
+            hiba-képernyőre-va.   // 'hiba' is bound to the error value
     ```
 
 !!! note
@@ -84,6 +84,16 @@ If no `-hibára` / `-catch` is present and an error reaches the top of the progr
 
 `-e` / `-?` can appear anywhere in a chain. Multiple fallible operations in sequence will each propagate to the same `-hibára` / `-catch`:
 
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        content->  "data.txt"-readfile-doing-?.  // fails if file missing
+        data->     content-parse-doing-?.         // fails if content invalid
+        data-print-doing.
+        -catch
+            "Pipeline failed: "-hiba-concat-doing  print-doing.
+    ```
+
 === "Hungarian"
     ```ragul
     program-nk-hatás
@@ -92,16 +102,6 @@ If no `-hibára` / `-catch` is present and an error reaches the top of the progr
         adat-képernyőre-va.
         -hibára
             "Pipeline failed: "-hiba-összefűz-va  képernyőre-va.
-    ```
-
-=== "English aliases"
-    ```ragul
-    program-ours-effect
-        content->  "adat.txt"-fájlolvasó-doing-?.  // fails if file missing
-        data->     content-elemző-doing-?.           // fails if content invalid
-        data-print-doing.
-        -catch
-            "Pipeline failed: "-hiba-concat-doing  print-doing.
     ```
 
 ---

@@ -14,18 +14,18 @@ The standard library is loaded automatically — no import needed. All suffixes 
 | `-oszt` | `-div` | `Szám` | `Szám` | `Szám` | Divide |
 | `-maradék` | `-rem` | `Szám` | `Szám` | `Szám` | Modulo (remainder) |
 
-=== "Hungarian"
-    ```ragul
-    x-be  10-t.
-    y-be  x-3-össze-t.           // 13
-    z-be  x-3-szoroz-2-össze-t.  // 32
-    ```
-
 === "English aliases"
     ```ragul
     x->  10-obj.
     y->  x-3-add-obj.            // 13
     z->  x-3-mul-2-add-obj.      // 32
+    ```
+
+=== "Hungarian"
+    ```ragul
+    x-be  10-t.
+    y-be  x-3-össze-t.           // 13
+    z-be  x-3-szoroz-2-össze-t.  // 32
     ```
 
 ---
@@ -75,18 +75,18 @@ The standard library is loaded automatically — no import needed. All suffixes 
 | `-sin` | `-sin` | `Szám` | `Szám` | Sine (radians) |
 | `-cos` | `-cos` | `Szám` | `Szám` | Cosine (radians) |
 
-=== "Hungarian"
-    ```ragul
-    x-be  16-t.
-    y-be  x-négyzetgyök-t.     // 4.0
-    z-be  x-hatvány-t  2-val.  // 256
-    ```
-
 === "English aliases"
     ```ragul
     x->  16-obj.
     y->  x-sqrt-obj.           // 4.0
     z->  x-pow-obj  2-with.    // 256
+    ```
+
+=== "Hungarian"
+    ```ragul
+    x-be  16-t.
+    y-be  x-négyzetgyök-t.     // 4.0
+    z-be  x-hatvány-t  2-val.  // 256
     ```
 
 ---
@@ -107,20 +107,20 @@ The standard library is loaded automatically — no import needed. All suffixes 
 | `-csere` | `-replace` | `Szöveg` | `Szöveg`, `Szöveg` | `Szöveg` | Replace all occurrences |
 | `-számmá` | `-tonum` | `Szöveg` | — | `vagy-Szám-vagy-Hiba` | Parse string as number |
 
-=== "Hungarian"
-    ```ragul
-    s-be  "helló világ"-t.
-    n-be  s-hossz-t.            // 11
-    u-be  s-nagybetűs-t.        // "HELLÓ VILÁG"
-    r-be  s-csere-t  "világ"-val  "Ragul"-val.  // "helló Ragul"
-    ```
-
 === "English aliases"
     ```ragul
     s->  "helló világ"-obj.
     n->  s-len-obj.             // 11
     u->  s-upper-obj.           // "HELLÓ VILÁG"
     r->  s-replace-obj  "világ"-with  "Ragul"-with.  // "helló Ragul"
+    ```
+
+=== "Hungarian"
+    ```ragul
+    s-be  "helló világ"-t.
+    n-be  s-hossz-t.            // 11
+    u-be  s-nagybetűs-t.        // "HELLÓ VILÁG"
+    r-be  s-csere-t  "világ"-val  "Ragul"-val.  // "helló Ragul"
     ```
 
 ---
@@ -141,18 +141,18 @@ The standard library is loaded automatically — no import needed. All suffixes 
 | `-hossz` | `-len` | `Lista-T` | `Szám` | Length |
 | `-tartalmaz` | `-contains` | `Lista-T` | `Logikai` | Contains element |
 
-=== "Hungarian"
-    ```ragul
-    lista-be  [3, 1, 4, 1, 5, 9, 2, 6]-t.
-    rendezett-be  lista-rendezve-egyedi-t.      // [1, 2, 3, 4, 5, 6, 9]
-    nagy-be  lista-szűrve-ből  5-felett-val  t. // [9, 6]
-    ```
-
 === "English aliases"
     ```ragul
     lista->  [3, 1, 4, 1, 5, 9, 2, 6]-obj.
     sorted->  lista-sorted-unique-obj.          // [1, 2, 3, 4, 5, 6, 9]
     large->  lista-filter-from  5-above-with  obj. // [9, 6]
+    ```
+
+=== "Hungarian"
+    ```ragul
+    lista-be  [3, 1, 4, 1, 5, 9, 2, 6]-t.
+    rendezett-be  lista-rendezve-egyedi-t.      // [1, 2, 3, 4, 5, 6, 9]
+    nagy-be  lista-szűrve-ből  5-felett-val  t. // [9, 6]
     ```
 
 ---
@@ -166,18 +166,18 @@ Bridge suffixes convert between types and must be used when chaining across type
 | `-szöteggé` | `-tostr` | `Szám` | `Szöveg` | No |
 | `-számmá` | `-tonum` | `Szöveg` | `vagy-Szám-vagy-Hiba` | Yes |
 
-=== "Hungarian"
-    ```ragul
-    x-be  42-t.
-    s-be  x-szöteggé-t.         // "42"
-
-    n-be  "123"-számmá-va-e.    // 123, or propagate error
-    ```
-
 === "English aliases"
     ```ragul
     x->  42-obj.
     s->  x-tostr-obj.           // "42"
 
     n->  "123"-tonum-doing-?.   // 123, or propagate error
+    ```
+
+=== "Hungarian"
+    ```ragul
+    x-be  42-t.
+    s-be  x-szöteggé-t.         // "42"
+
+    n-be  "123"-számmá-va-e.    // 123, or propagate error
     ```

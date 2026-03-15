@@ -1,6 +1,8 @@
 # Ragul
 
-**Ragul** is an experimental programming language whose core logic is modelled on **agglutinative grammar** — specifically the structural principles of Hungarian. Rather than using Hungarian words as commands, Ragul takes the *architecture* of the language as its computational model.
+**Ragul** is a pipeline scripting language where **transformation is built into the syntax itself**. Rather than a pipe operator or method chain, each word in a Ragul program is a suffix chain — a left-to-right pipeline of operations stacked onto a root value. The result is code that reads like a recipe: each step is named, each transformation is explicit, and the type checker verifies every stage before the program runs.
+
+The design is inspired by the structural principles of **agglutinative grammar** — specifically Hungarian, where meaning is built by attaching suffixes to roots. Ragul takes that architecture and applies it to computation.
 
 > *Ragul* — from Hungarian *rag* (suffix/affix) + *-ul* (the suffix meaning "in the manner of a language", as in *magyarul* = in Hungarian). A language named by applying a suffix to the word for suffix. Self-referential by design.
 
@@ -10,15 +12,15 @@
 
 **Meaning is built by stacking suffixes onto a root.** Each suffix adds exactly one layer of semantic transformation. A Ragul word is not just a name — it is a pipeline.
 
-=== "Hungarian"
-    ```ragul
-    data-szűrve-rendezve-ból
-    // data → filter → sort → FROM
-    ```
-
 === "English aliases"
     ```ragul
     data-filter-sorted-from
+    // data → filter → sort → FROM
+    ```
+
+=== "Hungarian"
+    ```ragul
+    data-szűrve-rendezve-ból
     // data → filter → sort → FROM
     ```
 
@@ -32,6 +34,21 @@ Key properties that follow from this design:
 ---
 
 ## Quick Example
+
+=== "English aliases"
+    ```ragul
+    // Define a suffix that doubles a number
+    double-ours
+        num-yours.
+        num-num-add-obj.
+
+    // Use it
+    program-ours-effect
+        x->  3-obj.
+        y->  x-double-obj.
+        y-print-doing.
+    // prints: 6
+    ```
 
 === "Hungarian"
     ```ragul
@@ -48,24 +65,10 @@ Key properties that follow from this design:
     // prints: 6
     ```
 
-=== "English aliases"
-    ```ragul
-    // Define a suffix that doubles a number
-    kétszeres-ours
-        szám-yours.
-        szám-szám-add-obj.
-
-    // Use it
-    program-ours-effect
-        x->  3-obj.
-        y->  x-kétszeres-obj.
-        y-print-doing.
-    // prints: 6
-    ```
-
 !!! note "Scope names are user-defined"
-    `kétszeres`, `szám`, `program`, `x`, `y` are root identifiers chosen by the programmer —
-    they can be any word in any language. Only the *suffixes* have English aliases.
+    `double`, `num`, `program`, `x`, `y` are root identifiers chosen by the programmer —
+    they can be any word in any language. Only the *suffixes* have fixed forms.
+    The Hungarian tab uses `kétszeres` (double) and `szám` (number) for the same roots.
 
 ---
 

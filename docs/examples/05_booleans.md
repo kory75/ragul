@@ -2,6 +2,42 @@
 
 Demonstrates comparison operators and logical combinators. Comparisons produce `Logikai` (boolean) values — `igaz` (true) or `hamis` (false) — which can be stored, printed, and combined.
 
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        x->  10-obj.
+        y->  3-obj.
+
+        // Comparisons — produce Logikai values
+        greater->  x-y-above-obj.        // 10 > 3   = True
+        lesser->   x-y-below-obj.        // 10 < 3   = False
+        at_least-> x-10-atleast-obj.     // 10 >= 10 = True
+        equal->    x-10-eq-obj.          // 10 == 10 = True
+
+        greater-print-doing.             // True
+        lesser-print-doing.              // False
+        at_least-print-doing.            // True
+        equal-print-doing.               // True
+
+        // Logical operators
+        p->  igaz-obj.
+        q->  hamis-obj.
+
+        and_res->  p-q-and-obj.          // True AND False = False
+        or_res->   p-q-or-obj.           // True OR False  = True
+        not_res->  p-not-obj.            // NOT True       = False
+
+        and_res-print-doing.             // False
+        or_res-print-doing.              // True
+        not_res-print-doing.             // False
+
+        // Combining two comparisons
+        cmp1->  x-y-above-obj.           // 10 > 3   = True
+        cmp2->  x-10-atleast-obj.        // 10 >= 10 = True
+        both->  cmp1-cmp2-and-obj.       // True AND True = True
+        both-print-doing.                // True
+    ```
+
 === "Hungarian"
     ```ragul
     program-nk-hatás
@@ -38,42 +74,6 @@ Demonstrates comparison operators and logical combinators. Comparisons produce `
         mindketto-képernyőre-va.         // True
     ```
 
-=== "English aliases"
-    ```ragul
-    program-ours-effect
-        x->  10-obj.
-        y->  3-obj.
-
-        // Comparisons — produce Logikai values
-        greater->  x-y-above-obj.        // 10 > 3   = igaz
-        lesser->   x-y-below-obj.        // 10 < 3   = hamis
-        at_least-> x-10-atleast-obj.     // 10 >= 10 = igaz
-        equal->    x-10-eq-obj.          // 10 == 10 = igaz
-
-        greater-print-doing.             // True
-        lesser-print-doing.              // False
-        at_least-print-doing.            // True
-        equal-print-doing.               // True
-
-        // Logical operators
-        p->  igaz-obj.
-        q->  hamis-obj.
-
-        and_res->  p-q-and-obj.          // True AND False = False
-        or_res->   p-q-or-obj.           // True OR False  = True
-        not_res->  p-not-obj.            // NOT True       = False
-
-        and_res-print-doing.             // False
-        or_res-print-doing.              // True
-        not_res-print-doing.             // False
-
-        // Combining two comparisons
-        cmp1->  x-y-above-obj.           // 10 > 3   = True
-        cmp2->  x-10-atleast-obj.        // 10 >= 10 = True
-        both->  cmp1-cmp2-and-obj.       // True AND True = True
-        both-print-doing.                // True
-    ```
-
 **Output:**
 
 ```
@@ -93,15 +93,6 @@ True
 
 Comparison suffixes take an inline argument and return a `Logikai`:
 
-=== "Hungarian"
-    ```ragul
-    x-5-felett-t     // is x > 5?
-    x-5-alatt-t      // is x < 5?
-    x-5-legalább-t   // is x >= 5?
-    x-5-legfeljebb-t // is x <= 5?
-    x-5-egyenlő-t    // is x == 5?
-    ```
-
 === "English aliases"
     ```ragul
     x-5-above-obj    // is x > 5?
@@ -109,6 +100,15 @@ Comparison suffixes take an inline argument and return a `Logikai`:
     x-5-atleast-obj  // is x >= 5?
     x-5-atmost-obj   // is x <= 5?
     x-5-eq-obj       // is x == 5?
+    ```
+
+=== "Hungarian"
+    ```ragul
+    x-5-felett-t     // is x > 5?
+    x-5-alatt-t      // is x < 5?
+    x-5-legalább-t   // is x >= 5?
+    x-5-legfeljebb-t // is x <= 5?
+    x-5-egyenlő-t    // is x == 5?
     ```
 
 The argument can also be a variable: `x-y-above-obj` means "is x > y?".

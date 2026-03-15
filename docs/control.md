@@ -10,14 +10,6 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
 
 ### Simple if
 
-=== "Hungarian"
-    ```ragul
-    pozitív-e-nk-ha
-        szám-d.
-        szám-0-felett-ha
-            szám-kétszeres-t.
-    ```
-
 === "English aliases"
     ```ragul
     pozitív-e-ours-if
@@ -26,19 +18,17 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
             szám-kétszeres-obj.
     ```
 
-### If / else
-
-`-hanem` / `-else` is the else branch — a sibling block at the same indent level as its `-ha` / `-if`:
-
 === "Hungarian"
     ```ragul
-    előjelváltó-nk-ha
+    pozitív-e-nk-ha
         szám-d.
         szám-0-felett-ha
             szám-kétszeres-t.
-        -hanem
-            szám-felére-t.
     ```
+
+### If / else
+
+`-hanem` / `-else` is the else branch — a sibling block at the same indent level as its `-ha` / `-if`:
 
 === "English aliases"
     ```ragul
@@ -50,23 +40,19 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
             szám-felére-obj.
     ```
 
+=== "Hungarian"
+    ```ragul
+    előjelváltó-nk-ha
+        szám-d.
+        szám-0-felett-ha
+            szám-kétszeres-t.
+        -hanem
+            szám-felére-t.
+    ```
+
 ### If / else-if / else chain
 
 `-különben-ha` / `-elif` extends the chain. Each link carries its own condition inline:
-
-=== "Hungarian"
-    ```ragul
-    besoroló-nk-ha
-        szám-d.
-        szám-100-felett-ha
-            "nagy"-t.
-        -különben-ha  szám-50-felett-ha
-            "közepes"-t.
-        -különben-ha  szám-10-felett-ha
-            "kicsi"-t.
-        -hanem
-            "apró"-t.
-    ```
 
 === "English aliases"
     ```ragul
@@ -82,22 +68,36 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
             "apró"-obj.
     ```
 
+=== "Hungarian"
+    ```ragul
+    besoroló-nk-ha
+        szám-d.
+        szám-100-felett-ha
+            "nagy"-t.
+        -különben-ha  szám-50-felett-ha
+            "közepes"-t.
+        -különben-ha  szám-10-felett-ha
+            "kicsi"-t.
+        -hanem
+            "apró"-t.
+    ```
+
 ### Calling a conditional scope as a suffix
 
 Exactly like any other named scope:
-
-=== "Hungarian"
-    ```ragul
-    x-be  75-t.
-    kategória-be  x-besoroló-ha-t.
-    // kategória = "közepes"
-    ```
 
 === "English aliases"
     ```ragul
     x->  75-obj.
     category->  x-besoroló-if-obj.
     // category = "közepes"
+    ```
+
+=== "Hungarian"
+    ```ragul
+    x-be  75-t.
+    kategória-be  x-besoroló-ha-t.
+    // kategória = "közepes"
     ```
 
 ### Conditional suffix reference
@@ -118,18 +118,6 @@ Loops are named scopes suffixed with a repetition marker. The condition that con
 
 Repeats the scope while the condition holds:
 
-=== "Hungarian"
-    ```ragul
-    duplázó-nk-míg
-        szám-d.
-        határ-d.
-        szám-kétszeres-t  szám-határ-alatt-ha.
-
-    x-be  3-t.
-    x-be  x-duplázó-míg-t  100-val.
-    // x doubles repeatedly until x >= 100 → result: 192
-    ```
-
 === "English aliases"
     ```ragul
     duplázó-ours-while
@@ -142,15 +130,21 @@ Repeats the scope while the condition holds:
     // x doubles repeatedly until x >= 100 → result: 192
     ```
 
+=== "Hungarian"
+    ```ragul
+    duplázó-nk-míg
+        szám-d.
+        határ-d.
+        szám-kétszeres-t  szám-határ-alatt-ha.
+
+    x-be  3-t.
+    x-be  x-duplázó-míg-t  100-val.
+    // x doubles repeatedly until x >= 100 → result: 192
+    ```
+
 ### Until loop — `-ig` / `-until`
 
 Repeats until the condition becomes true:
-
-=== "Hungarian"
-    ```ragul
-    x-be  x-növel-ig-t  x-100-felett-ha.
-    // increment x UNTIL x is above 100
-    ```
 
 === "English aliases"
     ```ragul
@@ -158,20 +152,15 @@ Repeats until the condition becomes true:
     // increment x UNTIL x is above 100
     ```
 
+=== "Hungarian"
+    ```ragul
+    x-be  x-növel-ig-t  x-100-felett-ha.
+    // increment x UNTIL x is above 100
+    ```
+
 ### For-each — `-mindegyik` / `-each`
 
 Applies a scope to every element of a collection:
-
-=== "Hungarian"
-    ```ragul
-    elemfeldolgozó-nk-mindegyik
-        elem-d.
-        elem-kétszeres-t.
-
-    lista-be  [1,2,3,4,5]-t.
-    kimenet-be  lista-elemfeldolgozó-mindegyik-t.
-    // [2,4,6,8,10]
-    ```
 
 === "English aliases"
     ```ragul
@@ -184,20 +173,20 @@ Applies a scope to every element of a collection:
     // [2,4,6,8,10]
     ```
 
+=== "Hungarian"
+    ```ragul
+    elemfeldolgozó-nk-mindegyik
+        elem-d.
+        elem-kétszeres-t.
+
+    lista-be  [1,2,3,4,5]-t.
+    kimenet-be  lista-elemfeldolgozó-mindegyik-t.
+    // [2,4,6,8,10]
+    ```
+
 ### Accumulate / fold — `-gyűjt` / `-fold`
 
 Folds a collection into a single value. The accumulator is supplied via `-val` / `-with`:
-
-=== "Hungarian"
-    ```ragul
-    összesítő-nk-gyűjt
-        elem-d.
-        összeg-d.            // accumulator
-        összeg-elem-össze-t. // add element to accumulator
-
-    kimenet-be  lista-összesítő-gyűjt-t  0-val.
-    // sums the list starting from 0
-    ```
 
 === "English aliases"
     ```ragul
@@ -210,19 +199,20 @@ Folds a collection into a single value. The accumulator is supplied via `-val` /
     // sums the list starting from 0
     ```
 
+=== "Hungarian"
+    ```ragul
+    összesítő-nk-gyűjt
+        elem-d.
+        összeg-d.            // accumulator
+        összeg-elem-össze-t. // add element to accumulator
+
+    kimenet-be  lista-összesítő-gyűjt-t  0-val.
+    // sums the list starting from 0
+    ```
+
 ### Early exit — `-megszakít` / `-break`
 
 `-megszakít` / `-break` terminates a loop immediately. It always composes with `-ha` / `-if` so the exit is conditional:
-
-=== "Hungarian"
-    ```ragul
-    kereső-nk-míg
-        lista-d.
-        cél-d.
-        elem-be  lista-következő-t.
-        elem-cél-egyenlő-ha
-            elem-megszakít-t.
-    ```
 
 === "English aliases"
     ```ragul
@@ -232,6 +222,16 @@ Folds a collection into a single value. The accumulator is supplied via `-val` /
         elem->  lista-következő-obj.
         elem-target-eq-if
             elem-break-obj.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    kereső-nk-míg
+        lista-d.
+        cél-d.
+        elem-be  lista-következő-t.
+        elem-cél-egyenlő-ha
+            elem-megszakít-t.
     ```
 
 ### Loop suffix reference

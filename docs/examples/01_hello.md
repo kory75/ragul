@@ -2,13 +2,6 @@
 
 The simplest Ragul program — assign a string and print it.
 
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        üdvözlet-be  "Helló, világ!"-t.
-        üdvözlet-képernyőre-va.
-    ```
-
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -16,38 +9,38 @@ The simplest Ragul program — assign a string and print it.
         greeting-print-doing.
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        üdvözlet-be  "Helló, világ!"-t.
+        üdvözlet-képernyőre-va.
+    ```
+
 **Run it:**
 
 ```bash
+ragul run examples/01_hello.ragul
+# or
 ragul futtat examples/01_hello.ragul
 ```
 
 **Output:**
 
 ```
-Helló, világ!
+Hello, World!
 ```
 
 ---
 
 ## What's happening
 
-- `program-nk-hatás` (`program-ours-effect`) — declares an effect scope named `program`. The `-hatás` / `-effect` suffix marks it as eager: everything inside executes in order, top to bottom.
-- `üdvözlet-be  "Helló, világ!"-t.` — assigns the string into the root `üdvözlet`. The compiler infers type `Szöveg`.
-- `üdvözlet-képernyőre-va.` — pipes `üdvözlet` to the `képernyőre` (`-print`) channel and executes it with `-va` (`-doing`).
+- `program-ours-effect` (`program-nk-hatás`) — declares an effect scope named `program`. The `-effect` / `-hatás` suffix marks it as eager: everything inside executes in order, top to bottom.
+- `greeting->  "Hello, World!"-obj.` — assigns the string into the root `greeting`. The compiler infers type `Szöveg` (string).
+- `greeting-print-doing.` — pipes `greeting` to the `-print` (`képernyőre`) channel and executes it with `-doing` (`-va`).
 
 ---
 
 ## Variation — with concatenation
-
-=== "Hungarian"
-    ```ragul
-    program-nk-hatás
-        név-be  "Ragul"-t.
-        üdvözlet-be  "Helló, "-t.
-        kimenet-be  üdvözlet-név-összefűz-t.
-        kimenet-képernyőre-va.
-    ```
 
 === "English aliases"
     ```ragul
@@ -58,13 +51,22 @@ Helló, világ!
         output-print-doing.
     ```
 
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        név-be  "Ragul"-t.
+        üdvözlet-be  "Helló, "-t.
+        kimenet-be  üdvözlet-név-összefűz-t.
+        kimenet-képernyőre-va.
+    ```
+
 **Output:**
 
 ```
-Helló, Ragul
+Hello, Ragul
 ```
 
-The `-összefűz` / `-concat` suffix concatenates two strings. The second string is passed inline in the chain: `üdvözlet-név-összefűz-t` reads as *"üdvözlet, concatenated with név"*.
+The `-concat` / `-összefűz` suffix concatenates two strings. The second string is passed inline in the chain: `greeting-name-concat-obj` reads as *"greeting, concatenated with name"*.
 
 ---
 

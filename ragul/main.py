@@ -6,8 +6,10 @@ Commands:
     ragul ellenőriz <file>   Type-check without running
     ragul fordít   <file>    Compile to bytecode (stub for v1)
     ragul repl               Start the interactive REPL
+    ragul új projekt <name>  Scaffold a new project folder
+    ragul új modul   <name>  Scaffold a new module file
 
-Hungarian commands are primary; English aliases (run, check, compile) accepted.
+Hungarian commands are primary; English aliases (run, check, compile, new, project, module) accepted.
 """
 
 from __future__ import annotations
@@ -75,6 +77,111 @@ def _check(source_path: Path, strict: bool = False) -> int:
     return result.exit_code
 
 
+def _new_project(name: str) -> int:
+    """Scaffold a new Ragul project folder."""
+    from rich.console import Console
+    console = Console()
+
+    target = Path.cwd() / name
+    if target.exists():
+        console.print(f"[bold red]Error:[/bold red] '{name}' already exists.")
+        return 1
+
+    target.mkdir(parents=True)
+
+    # ragul.config
+    (target / "ragul.config").write_text(
+        f'[projekt]\n'
+        f'nev     = "{name}"\n'
+        f'verzio  = "0.1.0"\n'
+        f'belepes = "main.ragul"\n'
+        f'\n'
+        f'[fordito]\n'
+        f'cel    = "interpret"\n'
+        f'python = "3.11"\n'
+        f'\n'
+        f'[modulok]\n'
+        f'utvonalak = []\n'
+        f'\n'
+        f'[ellenorzes]\n'
+        f'harmonia = "warn"\n'
+        f'tipus    = "warn"\n'
+        f'\n'
+        f'[hibak]\n'
+        f'nyelv = "en"\n',
+        encoding="utf-8",
+    )
+
+    # main.ragul
+    (target / "main.ragul").write_text(
+        f'// main.ragul — {name}\n'
+        f'\n'
+        f'program-nk-hatás\n'
+        f'\tüdvözlet-ba  "Helló, {name}!"-t.\n'
+        f'\tüdvözlet-képernyőre-va.\n',
+        encoding="utf-8",
+    )
+
+    # .gitignore
+    (target / ".gitignore").write_text(
+        "__pycache__/\n"
+        "*.py[cod]\n"
+        ".ragul_cache/\n"
+        "dist/\n"
+        "*.egg-info/\n",
+        encoding="utf-8",
+    )
+
+    # README.md
+    (target / "README.md").write_text(
+        f"# {name}\n"
+        f"\n"
+        f"A [Ragul](https://github.com/korykilpatrick/ragul) project.\n"
+        f"\n"
+        f"## Run\n"
+        f"\n"
+        f"```sh\n"
+        f"cd {name}\n"
+        f"ragul futtat main.ragul\n"
+        f"```\n",
+        encoding="utf-8",
+    )
+
+    console.print(f"[bold green]OK[/bold green] Created project [bold]{name}/[/bold]")
+    console.print(f"  [dim]ragul.config[/dim]")
+    console.print(f"  [dim]main.ragul[/dim]")
+    console.print(f"  [dim].gitignore[/dim]")
+    console.print(f"  [dim]README.md[/dim]")
+    console.print(f"\n  Run with: [bold]cd {name} && ragul futtat main.ragul[/bold]")
+    return 0
+
+
+def _new_module(name: str) -> int:
+    """Scaffold a new Ragul module file in the current project."""
+    from rich.console import Console
+    console = Console()
+
+    # Strip .ragul extension if the user typed it
+    if name.endswith(".ragul"):
+        name = name[:-6]
+
+    target = Path.cwd() / f"{name}.ragul"
+    if target.exists():
+        console.print(f"[bold red]Error:[/bold red] '{name}.ragul' already exists.")
+        return 1
+
+    target.write_text(
+        f"// {name}.ragul — {name} module\n"
+        f"\n"
+        f"{name}-nk-hatás\n"
+        f"\t// Add your code here.\n",
+        encoding="utf-8",
+    )
+
+    console.print(f"[bold green]OK[/bold green] Created module [bold]{name}.ragul[/bold]")
+    return 0
+
+
 def _repl() -> int:
     """Start the interactive REPL."""
     try:
@@ -106,6 +213,16 @@ def main() -> None:
     cmp_p = sub.add_parser("fordít",   aliases=["compile"], help="Compile to bytecode (v1: stub)")
     cmp_p.add_argument("file", type=Path)
 
+    # új / new
+    new_p = sub.add_parser("új", aliases=["new"], help="Scaffold a new project or module")
+    new_sub = new_p.add_subparsers(dest="new_command", metavar="WHAT")
+
+    proj_p = new_sub.add_parser("projekt", aliases=["project"], help="Scaffold a new project folder")
+    proj_p.add_argument("name", help="Project name")
+
+    mod_p = new_sub.add_parser("modul", aliases=["module"], help="Scaffold a new module file")
+    mod_p.add_argument("name", help="Module name")
+
     # repl
     sub.add_parser("repl", help="Start the interactive REPL")
 
@@ -130,6 +247,16 @@ def main() -> None:
         print("Bytecode compilation is not yet implemented in v1.", file=sys.stderr)
         print("Use 'ragul futtat' to run programs via the interpreter.")
         sys.exit(0)
+
+    elif cmd in ("új", "new"):
+        what = getattr(args, "new_command", None)
+        if what in ("projekt", "project"):
+            sys.exit(_new_project(args.name))
+        elif what in ("modul", "module"):
+            sys.exit(_new_module(args.name))
+        else:
+            new_p.print_help()
+            sys.exit(1)
 
     elif cmd == "repl":
         sys.exit(_repl())
