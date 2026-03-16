@@ -29,14 +29,15 @@ class Severity(Enum):
 @dataclass
 class RagulDiagnostic:
     """Base class for errors and warnings."""
-    code:       str          # "E001" … "E009", "W001"
-    severity:   Severity
-    file:       str
-    line:       int
-    message:    str          # one-sentence description
-    offending:  str = ""     # the offending token / word / sentence
-    detail:     str = ""     # expected vs found
-    suggestion: str = ""     # actionable fix hint
+    code:        str          # "E001" … "E009", "W001"
+    severity:    Severity
+    file:        str
+    line:        int
+    message:     str          # one-sentence description
+    offending:   str = ""     # the offending token / word / sentence
+    detail:      str = ""     # expected vs found
+    suggestion:  str = ""     # actionable fix hint
+    source_line: str = ""     # raw source line for context (populated by DiagnosticBag)
 
     @property
     def is_error(self) -> bool:
@@ -47,8 +48,10 @@ class RagulDiagnostic:
             f"{self.severity.value}  {self.file}:{self.line}  {self.code}",
             f"  {self.message}",
         ]
+        if self.source_line:
+            lines.append(f"  {self.line:4d} │  {self.source_line}")
         if self.offending:
-            lines.append(f"    {self.offending}")
+            lines.append(f"       offending: {self.offending}")
         if self.detail:
             lines.append(f"  {self.detail}")
         if self.suggestion:
@@ -84,7 +87,8 @@ def E001(file: str, line: int, suffix: str, expected_type: str, got_type: str,
         detail=f"Expected root type: {expected_type}  |  Got: {got_type}",
         suggestion=(
             f"Use a {expected_type} root, or add a bridge suffix to convert "
-            f"{got_type} → {expected_type} first."
+            f"{got_type} to {expected_type} first "
+            f"(e.g. -tonum (-számmá) for String→Number, -tostr (-szöteggé) for Number→String)."
         ),
     )
 
@@ -121,11 +125,11 @@ def E004(file: str, line: int, suffix: str, scope_name: str, offending: str = ""
     return RagulError(
         code="E004",
         file=file, line=line,
-        message=f"Effectful suffix {suffix} called from pure scope '{scope_name}'.",
+        message=f"Effectful suffix {suffix} called from {scope_name}.",
         offending=offending,
         detail="Effect suffixes can only be called from -hatás scopes.",
         suggestion=(
-            f"Wrap scope '{scope_name}' with -nk-hatás, or remove the effectful call."
+            f"Wrap {scope_name} with -ours-effect (-nk-hatás), or remove the effectful call."
         ),
     )
 
@@ -139,7 +143,7 @@ def E005(file: str, line: int, root: str, vagy_type: str, offending: str = "") -
         offending=offending,
         detail="A vagy type requires explicit error handling before use.",
         suggestion=(
-            "Add -va-e to propagate the error upward, or add a -hibára block "
+            "Add -doing-? (-va-e) to propagate the error upward, or add a -catch (-hibára) block "
             "to handle it explicitly."
         ),
     )
@@ -150,12 +154,12 @@ def E006(file: str, line: int, root: str, defined_scope: str, offending: str = "
     return RagulError(
         code="E006",
         file=file, line=line,
-        message=f"Root '{root}' is referenced outside its defining scope '{defined_scope}'.",
+        message=f"Root '{root}' is referenced outside its defining scope ({defined_scope}).",
         offending=offending,
-        detail=f"'{root}' was defined inside '{defined_scope}' and does not exist here.",
+        detail=f"'{root}' was defined inside {defined_scope} and does not exist here.",
         suggestion=(
-            f"Move the reference inside '{defined_scope}', or return the value "
-            f"from '{defined_scope}' and bind it to a new root in the outer scope."
+            f"Move the reference inside {defined_scope}, or return the value "
+            f"from {defined_scope} and bind it to a new root in the outer scope."
         ),
     )
 
@@ -169,8 +173,8 @@ def E007(file: str, line: int, module_name: str, searched_paths: list[str]) -> R
         message=f"Module '{module_name}' cannot be resolved.",
         detail=f"Searched: {paths_str}",
         suggestion=(
-            f"Ensure '{module_name}.ragul' exists in a directory listed in "
-            f"modulok.utvonalak in ragul.config, or check the module name spelling."
+            f"Ensure '{module_name}.ragul' exists in the same directory as your script, "
+            f"or add its directory to modulok.utvonalak (module search paths) in ragul.config."
         ),
     )
 
@@ -222,7 +226,7 @@ def W001(file: str, line: int, from_type: str, to_type: str, offending: str = ""
         offending=offending,
         detail=f"Type transition: {from_type} → {to_type}",
         suggestion=(
-            f"Add a bridge suffix (e.g. -szöteggé, -számmá) to make the "
+            f"Add a bridge suffix (e.g. -tostr (-szöteggé), -tonum (-számmá)) to make the "
             f"type conversion explicit."
         ),
     )
@@ -238,8 +242,14 @@ class DiagnosticBag:
     def __init__(self, file: str = "<unknown>") -> None:
         self.file = file
         self._items: list[RagulDiagnostic] = []
+        self.source_lines: list[str] = []   # set externally to enable source-line context
 
     def add(self, d: RagulDiagnostic) -> None:
+        # Attach the raw source line automatically if source is available
+        if self.source_lines and not d.source_line:
+            idx = d.line - 1
+            if 0 <= idx < len(self.source_lines):
+                d.source_line = self.source_lines[idx].rstrip()
         self._items.append(d)
 
     @property

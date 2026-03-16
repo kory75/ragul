@@ -20,7 +20,7 @@ Usage:
 from __future__ import annotations
 import re
 from pathlib import Path
-from ragul.model import Word, Sentence, Scope, RagulType, TYPE_ALIAS_TABLE, normalise_type_name
+from ragul.model import Word, Sentence, Scope, RagulType, TYPE_ALIAS_TABLE, normalise_type_name, suffix_display
 from ragul.errors import DiagnosticBag, E001, E003, E004, E005, E006, E007, E009, W001
 from ragul.config import RagulConfig
 from ragul.stdlib.core import SUFFIX_REGISTRY
@@ -155,11 +155,14 @@ def _infer_suffix_output(input_type: RagulType, aspect: str) -> RagulType:
 class TypeChecker:
 
     def __init__(self, root_scope: Scope, filename: str = "<unknown>",
-                 config: RagulConfig | None = None) -> None:
+                 config: RagulConfig | None = None,
+                 source: str = "") -> None:
         self.root_scope = root_scope
         self.filename   = filename
         self.config     = config or RagulConfig()
         self.bag        = DiagnosticBag(filename)
+        if source:
+            self.bag.source_lines = source.splitlines()
         # Source directory for module resolution
         self._source_dir: Path = (
             Path(filename).parent if filename not in ("<unknown>", "<test>", "<repl>")
@@ -307,7 +310,7 @@ class TypeChecker:
                         file=self.filename,
                         line=sentence.line,
                         root=word.root,
-                        vagy_type=repr(inferred),
+                        vagy_type=inferred.display(),
                         offending=word.source_text,
                     ))
 
@@ -407,7 +410,7 @@ class TypeChecker:
                 self.bag.add(E004(
                     file=self.filename,
                     line=word.line,
-                    suffix=aspect,
+                    suffix=suffix_display(aspect),
                     scope_name=self._scope_display_name(current_scope.name),
                     offending=word.source_text,
                 ))
@@ -420,9 +423,9 @@ class TypeChecker:
                     self.bag.add(E001(
                         file=self.filename,
                         line=word.line,
-                        suffix=aspect,
-                        expected_type=repr(expected_input),
-                        got_type=repr(current_type),
+                        suffix=suffix_display(aspect),
+                        expected_type=expected_input.display(),
+                        got_type=current_type.display(),
                         offending=word.source_text,
                     ))
 
@@ -433,8 +436,8 @@ class TypeChecker:
                         diag = W001(
                             file=self.filename,
                             line=word.line,
-                            from_type=repr(current_type),
-                            to_type=repr(entry["output_type"]),
+                            from_type=current_type.display(),
+                            to_type=entry["output_type"].display(),
                             offending=word.source_text,
                         )
                         self.bag.add(diag)
@@ -459,7 +462,7 @@ class TypeChecker:
                 self.bag.add(E004(
                     file=self.filename,
                     line=word.line,
-                    suffix=word.root,
+                    suffix=suffix_display(f"-{word.root}"),
                     scope_name=self._scope_display_name(current_scope.name),
                     offending=word.source_text,
                 ))
@@ -533,7 +536,7 @@ class TypeChecker:
         """Return a user-friendly scope name for error messages."""
         if name in ("__root__", "__repl__"):
             return "the top-level scope"
-        return f"'{name}'"
+        return f"scope '{name}'"
 
     def _is_literal_root(self, root: str) -> bool:
         """True if root is a compile-time literal (number, boolean, list sentinel)."""

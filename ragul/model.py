@@ -212,6 +212,24 @@ def normalise_type_name(name: str) -> str:
     return TYPE_ALIAS_TABLE.get(name, name)
 
 
+# Reverse alias lookup: canonical suffix → first English alias found.
+# Used by suffix_display() to show bilingual suffix names in error messages.
+_CANONICAL_TO_EN: dict[str, str] = {}
+for _alias, _canonical in ALIAS_TABLE.items():
+    # Only pick ASCII-letter aliases (English), skip symbolic ones (→, *, etc.)
+    _bare = _alias.lstrip("-")
+    if _bare and _bare.replace("_", "").isalpha() and _bare.isascii():
+        _CANONICAL_TO_EN.setdefault(_canonical, _alias)
+
+
+def suffix_display(canonical: str) -> str:
+    """Bilingual suffix name for user-facing messages: '-felett (-above)'."""
+    en = _CANONICAL_TO_EN.get(canonical, "")
+    if en and en != canonical:
+        return f"{canonical} ({en})"
+    return canonical
+
+
 # ---------------------------------------------------------------------------
 # Word — the fundamental unit
 # ---------------------------------------------------------------------------
@@ -255,6 +273,17 @@ class Word:
 # Type representation
 # ---------------------------------------------------------------------------
 
+# English display names for bilingual error messages (module-level to avoid dataclass issue)
+_TYPE_EN_NAMES: dict[str, str] = {
+    "Szám":    "Number",
+    "Szöveg":  "String",
+    "Logikai": "Bool",
+    "Hiba":    "Error",
+    "Lista":   "List",
+    "vagy":    "or",
+}
+
+
 @dataclass
 class RagulType:
     """
@@ -287,6 +316,23 @@ class RagulType:
         if self.base == "vagy":
             return "-vagy-".join(repr(p) for p in self.params)
         return self.base + "-" + "-".join(repr(p) for p in self.params)
+
+    def display(self) -> str:
+        """Bilingual type name for user-facing messages: 'Number (Szám)'."""
+        if self.base == self.UNKNOWN:
+            return "unknown"
+        if self.base == self.LISTA and self.params:
+            elem = self.params[0].display()
+            return f"List[{elem}]"
+        if self.base == self.VAGY and self.params:
+            parts = "|".join(
+                _TYPE_EN_NAMES.get(p.base, p.base) for p in self.params
+            )
+            return f"{parts} ({repr(self)})"
+        en = _TYPE_EN_NAMES.get(self.base, "")
+        if en:
+            return f"{en} ({self.base})"
+        return self.base
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, RagulType):

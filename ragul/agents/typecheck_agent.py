@@ -19,7 +19,8 @@ class TypeAgent(BaseAgent):
         if task.scope_tree is None:
             return TaskResult(ok=False, exit_code=1)
 
-        checker = TypeChecker(task.scope_tree, task.filename, task.config)
+        checker = TypeChecker(task.scope_tree, task.filename, task.config,
+                             source=task.source or "")
         bag     = checker.check()
 
         return TaskResult(
