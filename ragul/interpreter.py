@@ -110,14 +110,15 @@ def _channel_képernyőre(value: Any) -> None:
 def _channel_stderr(value: Any) -> None:
     print(value, file=sys.stderr)
 
-def _channel_bemenetről() -> str:
-    return input()
-
 EFFECT_CHANNELS: dict[str, Callable[..., Any]] = {
     "képernyőre": _channel_képernyőre,
     "stderr":     _channel_stderr,
-    "bemenetről": _channel_bemenetről,
 }
+
+# Input channels — called with no arguments, return a value.
+# Both canonical Hungarian and English alias names are listed here so that
+# ROOT_ALIASES normalisation (igaz/hamis model) is not needed at root-resolve time.
+INPUT_CHANNELS: frozenset[str] = frozenset({"bemenetről", "stdin"})
 
 
 # ---------------------------------------------------------------------------
@@ -595,7 +596,9 @@ class Interpreter:
 
             # --- Inline variable reference (e.g. -b in a-b-össze) ---
             # A bare word that isn't a known suffix is a variable name.
-            if aspect not in SUFFIX_REGISTRY and aspect not in self._user_scopes                     and aspect not in EFFECT_CHANNELS and bare:
+            if aspect not in SUFFIX_REGISTRY and aspect not in self._user_scopes \
+                    and aspect not in EFFECT_CHANNELS \
+                    and aspect.lstrip("-") not in INPUT_CHANNELS and bare:
                 # Try to resolve as a variable lookup
                 if env.has(bare):
                     inline_args.append(env.get(bare))
@@ -672,7 +675,11 @@ class Interpreter:
         if root == "igaz":   return True
         if root == "hamis":  return False
 
-        # Effect channel direct call (e.g. képernyőre-va)
+        # Input channel: call immediately and return the value
+        if root in INPUT_CHANNELS:
+            return input()
+
+        # Output effect channel direct call (e.g. képernyőre-va)
         if root in EFFECT_CHANNELS:
             return root  # deferred to action handling
 

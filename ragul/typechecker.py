@@ -30,12 +30,21 @@ from ragul.stdlib.core import SUFFIX_REGISTRY
 # ---------------------------------------------------------------------------
 
 EFFECT_SUFFIX_NAMES = frozenset({
-    "képernyőre", "fájlra", "hálózatra", "stderr", "bemenetről",
-    "fájlról", "hálózatról",
+    # Output channels
+    "képernyőre", "stdout",
+    "stderr",
+    "fájlra", "fileout",
+    "hálózatra", "netout",
+    # Input channels
+    "bemenetről", "stdin",
+    "fájlból", "filein",
+    "fájlról",       # harmonic alias, kept for backwards compat
+    "hálózatból", "netin",
+    "hálózatról",    # harmonic alias
 })
 
 # Suffixes that return a fallible vagy type
-FALLIBLE_SUFFIXES = frozenset({"-számmá", "-fájlolvasó"})
+FALLIBLE_SUFFIXES = frozenset({"-számmá", "-fájlolvasó", "-fájlból", "-fájlra"})
 
 # Bridge suffixes that change element type
 BRIDGE_SUFFIXES = frozenset({"-szöteggé", "-számmá", "-szöveggé"})

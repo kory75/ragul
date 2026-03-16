@@ -117,6 +117,16 @@ ALIAS_TABLE: dict[str, str] = {
     "-remove":      "-eltávolít",
     # Effect channel aliases
     "-print":       "-képernyőre",
+    "-stdout":      "-képernyőre",
+    "-stdin":       "-bemenetről",
+    # File channel aliases (English → Hungarian canonical)
+    "-filein":      "-fájlból",
+    "-fileout":     "-fájlra",
+    "-fájlról":     "-fájlból",    # harmonic variant → canonical
+    # Network channel aliases (stubs until v0.4.0)
+    "-netin":       "-hálózatból",
+    "-netout":      "-hálózatra",
+    "-hálózatról":  "-hálózatból", # harmonic variant → canonical
 }
 
 # Canonical case suffixes (outermost layer)
@@ -168,8 +178,10 @@ def normalise_suffix(suffix: str) -> str:
 # Root-level keyword aliases — resolved at lex time so the parser and
 # interpreter only ever see the canonical Hungarian keyword.
 ROOT_ALIASES: dict[str, str] = {
-    "true":  "igaz",
-    "false": "hamis",
+    "true":   "igaz",
+    "false":  "hamis",
+    "stdout": "képernyőre",
+    "stdin":  "bemenetről",
 }
 
 

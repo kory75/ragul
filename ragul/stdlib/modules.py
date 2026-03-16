@@ -9,6 +9,7 @@ Imported selectively:
 
 from __future__ import annotations
 import math
+from typing import Any
 from ragul.model import RagulType
 from ragul.stdlib.core import SUFFIX_REGISTRY
 
@@ -171,3 +172,49 @@ class _RagulHiba:
 
 # Make RagulHiba importable from stdlib
 RagulHiba = _RagulHiba
+
+
+# ---------------------------------------------------------------------------
+# File I/O suffixes  (-fájlból / -filein,  -fájlra / -fileout)
+# Always available (no import needed); effectful — require -hatás scope.
+# ---------------------------------------------------------------------------
+
+def _filein(filename: Any) -> Any:
+    """Read all text from *filename*, returning a string or RagulHiba."""
+    try:
+        with open(str(filename), "r", encoding="utf-8") as f:
+            return f.read()
+    except OSError as e:
+        return RagulHiba(str(e))
+
+
+def _fileout(value: Any, filename: Any) -> None:
+    """Write str(value) to *filename*. Returns None; errors silently produce RagulHiba."""
+    try:
+        with open(str(filename), "w", encoding="utf-8") as f:
+            f.write(str(value))
+    except OSError as e:
+        return RagulHiba(str(e))
+
+
+_vagy_szoveg_hiba = RagulType.vagy(RagulType.szoveg(), RagulType.hiba())
+
+_reg("-fájlból", _filein,  _szoveg, _vagy_szoveg_hiba, arg_types=[],       module="io")
+_reg("-fájlra",  _fileout, _szoveg, RagulType.unknown(), arg_types=[_szoveg], module="io")
+
+
+# ---------------------------------------------------------------------------
+# Network channel stubs  (-hálózatból / -netin,  -hálózatra / -netout)
+# Fully wired in v0.4.0; for now they return a RagulHiba immediately.
+# ---------------------------------------------------------------------------
+
+def _netin_stub(url: Any) -> Any:
+    return RagulHiba("netin: HTTP client not available until v0.4.0")
+
+
+def _netout_stub(value: Any, url: Any) -> Any:
+    return RagulHiba("netout: HTTP client not available until v0.4.0")
+
+
+_reg("-hálózatból", _netin_stub,  _szoveg, _vagy_szoveg_hiba, arg_types=[],       module="io")
+_reg("-hálózatra",  _netout_stub, _szoveg, RagulType.unknown(), arg_types=[_szoveg], module="io")
