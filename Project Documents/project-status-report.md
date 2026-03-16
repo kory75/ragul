@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-16 (updated)
+**Date:** 2026-03-16 (updated twice)
 
 ---
 
@@ -39,6 +39,14 @@ This report compares what those documents specify against what is currently impl
 | **v0.2.0** | **2026-03-16** | E006/E007 type checker errors; bilingual error messages; English I/O aliases; `adatok` module (JSON/CSV); `true`/`false` root aliases; `netin`/`netout` stubs; lexer arithmetic fix; error-code example files; docs overhaul |
 
 All three versions published to PyPI as `ragul-lang`.
+
+### Post-v0.2.0 changes (unreleased, on master)
+
+| Change | Details |
+|---|---|
+| `anthropic` made optional | Moved from `dependencies` to `[ai]` extra — `pip install ragul-lang[ai]`. Plain install no longer pulls in the Anthropic SDK. |
+| Orchestrator `thinking` param fixed | Removed invalid `thinking={"type": "adaptive"}` from Claude API call — would have caused silent API failures. |
+| AI feature documentation | README, `docs/index.md`, and `docs/tooling.md` updated with info boxes explaining what the feature does, that it is opt-in, what an API key is, and that Ragul never stores or logs it. |
 
 ---
 
@@ -150,7 +158,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 | `-val` binding resolution is stubbed | `parser.py` `_resolve_val_args()` | `-val` argument passing between words may not work in all cases |
 | Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
 | E009 trigger unreachable | `typechecker.py` | Field mutation check exists but `word.possession == "-ja"` can never be True with current parser — needs OOP syntax (v0.3.0) |
-| `anthropic` missing from `pyproject.toml` | `pyproject.toml` | AI analysis in orchestrator requires manual `pip install anthropic` |
+| `anthropic` optional extra | `pyproject.toml` | Install with `pip install ragul-lang[ai]` — resolved, no longer a hidden manual step |
 
 ### Implemented Differently from the Plan
 
