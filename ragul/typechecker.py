@@ -291,7 +291,7 @@ class TypeChecker:
         for w in words:
             if w.case in ("-ba", "-be"):
                 target_word = w
-            elif w.case in ("-t", "-ból", "-ből"):
+            elif w.case in ("-t", "-ból", "-ből", ""):
                 source_word = w
             else:
                 other_words.append(w)
@@ -301,7 +301,7 @@ class TypeChecker:
             inferred = self._check_word(word, env, in_effect, current_scope)
 
             # E005 — fallible source used without -e
-            if word.case in ("-ból", "-ből", "-t") and inferred is not None:
+            if word.case in ("-ból", "-ből", "-t", "") and inferred is not None:
                 if inferred.is_fallible() and not word.error:
                     self.bag.add(E005(
                         file=self.filename,
@@ -382,7 +382,7 @@ class TypeChecker:
                 file=self.filename,
                 line=word.line,
                 root=word.root,
-                defined_scope=defining_scope,
+                defined_scope=self._scope_display_name(defining_scope),
                 offending=word.source_text,
             ))
 
@@ -408,7 +408,7 @@ class TypeChecker:
                     file=self.filename,
                     line=word.line,
                     suffix=aspect,
-                    scope_name=current_scope.name,
+                    scope_name=self._scope_display_name(current_scope.name),
                     offending=word.source_text,
                 ))
 
@@ -460,7 +460,7 @@ class TypeChecker:
                     file=self.filename,
                     line=word.line,
                     suffix=word.root,
-                    scope_name=current_scope.name,
+                    scope_name=self._scope_display_name(current_scope.name),
                     offending=word.source_text,
                 ))
 
@@ -471,7 +471,7 @@ class TypeChecker:
                     file=self.filename,
                     line=word.line,
                     field_name=word.root,
-                    scope_name=current_scope.name,
+                    scope_name=self._scope_display_name(current_scope.name),
                     offending=word.source_text,
                 ))
 
@@ -528,6 +528,12 @@ class TypeChecker:
         if from_t.base == RagulType.UNKNOWN or to_t.base == RagulType.UNKNOWN:
             return False
         return from_t.base != to_t.base
+
+    def _scope_display_name(self, name: str) -> str:
+        """Return a user-friendly scope name for error messages."""
+        if name in ("__root__", "__repl__"):
+            return "the top-level scope"
+        return f"'{name}'"
 
     def _is_literal_root(self, root: str) -> bool:
         """True if root is a compile-time literal (number, boolean, list sentinel)."""

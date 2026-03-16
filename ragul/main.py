@@ -16,6 +16,13 @@ from __future__ import annotations
 import sys
 import argparse
 from pathlib import Path
+from rich.markup import escape as _markup_escape
+
+# Ensure stdout/stderr can handle Unicode (needed on Windows with legacy cp1252 console).
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 
 def _run(source_path: Path, strict: bool = False) -> int:
@@ -24,7 +31,7 @@ def _run(source_path: Path, strict: bool = False) -> int:
     from ragul.config import RagulConfig
     from rich.console import Console
 
-    console  = Console()
+    console  = Console(legacy_windows=False)
     source   = source_path.read_text(encoding="utf-8")
     filename = str(source_path)
     cfg      = RagulConfig.load()
@@ -34,9 +41,9 @@ def _run(source_path: Path, strict: bool = False) -> int:
                       flags={"strict": strict})
 
     for d in result.errors:
-        console.print(f"[bold red]{d.format()}[/bold red]")
+        console.print(f"[bold red]{_markup_escape(d.format())}[/bold red]")
     for d in result.warnings:
-        console.print(f"[yellow]{d.format()}[/yellow]")
+        console.print(f"[yellow]{_markup_escape(d.format())}[/yellow]")
 
     if result.ai_analysis:
         console.print("\n[cyan]── AI Analysis ──────────────────────────────────────[/cyan]")
@@ -52,7 +59,7 @@ def _check(source_path: Path, strict: bool = False) -> int:
     from ragul.config import RagulConfig
     from rich.console import Console
 
-    console  = Console()
+    console  = Console(legacy_windows=False)
     source   = source_path.read_text(encoding="utf-8")
     filename = str(source_path)
     cfg      = RagulConfig.load()
@@ -62,9 +69,9 @@ def _check(source_path: Path, strict: bool = False) -> int:
                       flags={"strict": strict})
 
     for d in result.errors:
-        console.print(f"[bold red]{d.format()}[/bold red]")
+        console.print(f"[bold red]{_markup_escape(d.format())}[/bold red]")
     for d in result.warnings:
-        console.print(f"[yellow]{d.format()}[/yellow]")
+        console.print(f"[yellow]{_markup_escape(d.format())}[/yellow]")
 
     if result.ai_analysis:
         console.print("\n[cyan]── AI Analysis ──────────────────────────────────────[/cyan]")
@@ -80,7 +87,7 @@ def _check(source_path: Path, strict: bool = False) -> int:
 def _new_project(name: str) -> int:
     """Scaffold a new Ragul project folder."""
     from rich.console import Console
-    console = Console()
+    console = Console(legacy_windows=False)
 
     target = Path.cwd() / name
     if target.exists():
@@ -159,7 +166,7 @@ def _new_project(name: str) -> int:
 def _new_module(name: str) -> int:
     """Scaffold a new Ragul module file in the current project."""
     from rich.console import Console
-    console = Console()
+    console = Console(legacy_windows=False)
 
     # Strip .ragul extension if the user typed it
     if name.endswith(".ragul"):
