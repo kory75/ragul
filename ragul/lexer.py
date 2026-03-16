@@ -58,18 +58,27 @@ def _split_and_normalise(raw_word: str) -> tuple[str, list[str]]:
     Split 'root-suf1-suf2-suf3' into (root, ['-suf1', '-suf2', '-suf3']).
     Each suffix is normalised via the alias table.
     Returns (root, suffixes).
+
+    Trailing dash (e.g. 'records-tojson-') is preserved at the end of the
+    suffix list as a bare '-' so the parser can detect it as a string-absorb
+    marker.  Without this, the WORD_RE match fails on the trailing '-' and
+    the preceding suffixes would not be normalised.
     """
-    m = _WORD_RE.match(raw_word)
+    trailing_dash = raw_word.endswith("-") and len(raw_word) > 1
+    word = raw_word[:-1] if trailing_dash else raw_word
+    m = _WORD_RE.match(word)
     if not m:
         return raw_word, []
     root = m.group(1)
     suf_str = m.group(2)
     if not suf_str:
-        return root, []
+        return root, ["-"] if trailing_dash else []
     # split on '-' keeping the dash
     parts = re.split(r'(?=-[A-Za-z\u0080-\uFFFF])', suf_str)  # split only before letter suffixes
     parts = [p for p in parts if p]
     normalised = [normalise_suffix(p) for p in parts]
+    if trailing_dash:
+        normalised.append("-")
     return root, normalised
 
 

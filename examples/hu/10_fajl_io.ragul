@@ -1,0 +1,34 @@
+// 10_fajl_io.ragul — Fájl olvasás és írás
+//
+// Bemutatja:
+//   - Érték fájlba írását (-fájlra)
+//   - Fájl visszaolvasását (-fájlból)
+//   - Fájl olvasás és JSON elemzés láncolását
+//   - Hibakezelést hiányzó fájl esetén (-e és -hibára)
+//
+// Futtatás: ragul futtat examples/hu/10_fajl_io.ragul
+
+program-nk-hatás
+	// 1. lépés: JSON adat előállítása és fájlba írása
+	rekordok-ba  "[{\"nev\": \"Alice\", \"pont\": 92}, {\"nev\": \"Bob\", \"pont\": 78}, {\"nev\": \"Carol\", \"pont\": 85}]"-json-t.
+	rekordok-jsonná-"pontok.json"-fájlra-va.
+	"Fájl megírva: pontok.json"-képernyőre-va.
+
+	// 2. lépés: fájl visszaolvasása és feldolgozása (láncolva)
+	betoltott-ba  "pontok.json"-fájlból-json-t.
+	nevek-ba      betoltott-"nev"-mező-t.
+	osszeg-ba     betoltott-"pont"-mező-összeg-t.
+
+	nevek-képernyőre-va.             // ['Alice', 'Bob', 'Carol']
+	osszeg-képernyőre-va.            // 255
+
+	// 3. lépés: eredmény kiírása új fájlba
+	eredmeny-ba  osszeg-szöteggé-t.
+	eredmeny-"eredmeny.txt"-fájlra-va.
+	"Eredmény elmentve: eredmeny.txt"-képernyőre-va.
+
+	// 4. lépés: hibakezelés — nem létező fájl olvasása
+	tartalom-ba  "nem_letezik.txt"-fájlból-e-t.
+	tartalom-képernyőre-va.
+-hibára
+	"Hiba: a fájl nem található (nem_letezik.txt)"-képernyőre-va.

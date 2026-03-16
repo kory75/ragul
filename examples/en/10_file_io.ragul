@@ -1,0 +1,33 @@
+// 10_file_io.ragul — File reading and writing
+//
+// Demonstrates:
+//   - Writing a value to a file (-fileout)
+//   - Reading a file back (-filein)
+//   - Chaining file read with JSON parsing
+//   - Error handling for a missing file (-? and -catch)
+//
+// Run: ragul run examples/en/10_file_io.ragul
+
+program-ours-effect
+	// Step 1: build JSON data and write it to a file
+	records-into  "[{\"name\": \"Alice\", \"score\": 92}, {\"name\": \"Bob\", \"score\": 78}, {\"name\": \"Carol\", \"score\": 85}]"-json-it.
+	records-tojson-"scores.json"-fileout-doing.
+	"Written: scores.json"-print-doing.
+
+	// Step 2: read the file back and process it (chained)
+	loaded-into  "scores.json"-filein-json-it.
+	names-into   loaded-"name"-field-it.
+	total-into   loaded-"score"-map-sum-it.
+
+	names-print-doing.               // ['Alice', 'Bob', 'Carol']
+	total-print-doing.               // 255
+
+	// Step 3: write the result to a second file
+	total-"result.txt"-fileout-doing.
+	"Result saved: result.txt"-print-doing.
+
+	// Step 4: error handling — try to read a file that does not exist
+	content-into  "no_such_file.txt"-filein-?-it.
+	content-print-doing.
+-catch
+	"Caught: file not found (no_such_file.txt)"-print-doing.
