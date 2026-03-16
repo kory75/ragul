@@ -73,9 +73,14 @@ def _split_and_normalise(raw_word: str) -> tuple[str, list[str]]:
     suf_str = m.group(2)
     if not suf_str:
         return root, ["-"] if trailing_dash else []
-    # split on '-' keeping the dash
-    parts = re.split(r'(?=-[A-Za-z\u0080-\uFFFF])', suf_str)  # split only before letter suffixes
-    parts = [p for p in parts if p]
+    # Tokenise the suffix string into individual parts.
+    # Order matters: try --digit (negative) before -digit (positive).
+    _part_re = re.compile(
+        r'--\d+(?:\.\d+)?'                              # --3 / --3.14  negative inline literal
+        r'|-[A-Za-z\u0080-\uFFFF][A-Za-z\u0080-\uFFFF0-9_]*'  # -add / -össze   letter suffix
+        r'|-\d+(?:\.\d+)?'                              # -3  / -3.14   positive inline literal
+    )
+    parts = _part_re.findall(suf_str)
     normalised = [normalise_suffix(p) for p in parts]
     if trailing_dash:
         normalised.append("-")
