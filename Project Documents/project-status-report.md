@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-15 (updated)
+**Date:** 2026-03-16 (updated)
 
 ---
 
@@ -21,18 +21,28 @@ This report compares what those documents specify against what is currently impl
 | **0 — Scaffold** | `model.py`, `errors.py`, `config.py`, `pyproject.toml`, tests folder | **Done** |
 | **1 — Lexer** | `lexer.py`, token types, alias normalisation at lex time | **Done** |
 | **2 — Parser** | `parser.py`, two-pass → Scope tree, `-hanem`/`-hibára` siblings, list literals | **Done** |
-| **3 — Type Checker** | `typechecker.py`, E001/E003/E004/E005/E009/W001, TypeEnv, harmony | **Done** |
+| **3 — Type Checker** | `typechecker.py`, E001/E003/E004/E005/E006/E007/E009/W001, TypeEnv, harmony | **Done** |
 | **4 — Interpreter** | `interpreter.py`, tree-walker, loops, conditionals, error propagation, user-defined scopes | **Done** |
 | **5 — CLI** | `ragul/main.py` — `futtat`, `ellenőriz`, `fordít` (stub), `repl`, `lsp` | **Done** |
 | **6 — REPL** | `repl/repl.py` — persistent env, `:kilep`/`:töröl`/`:mutat`/`:help` | **Done** |
 | **7 — LSP** | `lsp/` — pygls server, diagnostics, hover, completion, go-to-definition | **Done (basic)** |
-| **8 — Docs** | `docs/` folder, MkDocs site, GitHub Pages deployment | **Done (initial)** |
+| **8 — Docs** | `docs/` folder, MkDocs site, GitHub Pages deployment | **Done** |
+
+---
+
+## Release History
+
+| Version | Date | Highlights |
+|---|---|---|
+| v0.1.0 | 2026-03-15 | First public release — core toolchain, interpreter, CLI, REPL, LSP, CI/CD |
+| v0.1.1 | 2026-03-15 | `ragul new project/module` scaffold commands; pygls 2.0 fix |
+| **v0.2.0** | **2026-03-16** | E006/E007 type checker errors; bilingual error messages; English I/O aliases; `adatok` module (JSON/CSV); `true`/`false` root aliases; `netin`/`netout` stubs; lexer arithmetic fix; error-code example files; docs overhaul |
+
+All three versions published to PyPI as `ragul-lang`.
 
 ---
 
 ## v0.1.0 Milestone Checklist
-
-From the build plan's "First Milestone Checklist":
 
 - [x] `Word` dataclass with full suffix layer model
 - [x] All suffix aliases resolve to canonical forms
@@ -42,7 +52,7 @@ From the build plan's "First Milestone Checklist":
 - [x] `ragul futtat hello.ragul` works end-to-end
 - [x] `ragul ellenőriz` reports structured errors with line numbers
 - [x] CI green on push (`.github/workflows/ci.yml` + `docs.yml` present)
-- [x] GitHub Pages deployed (`docs/` + `mkdocs.yml` created; deploys on next merge to main)
+- [x] GitHub Pages deployed (`docs/` + `mkdocs.yml` created)
 
 ---
 
@@ -51,21 +61,23 @@ From the build plan's "First Milestone Checklist":
 ### Core Language Toolchain
 
 **Model (`ragul/model.py`)**
-`Word`, `Sentence`, `Scope`, and `RagulType` dataclasses are fully implemented. The alias normalisation table covers all English/symbolic aliases → canonical Hungarian suffix forms. `RagulType` supports parameterised types (`Lista-Szám`, `vagy-Szöveg-vagy-Hiba`).
+`Word`, `Sentence`, `Scope`, and `RagulType` dataclasses are fully implemented. The alias normalisation table covers all English/symbolic aliases → canonical Hungarian suffix forms. `RagulType` supports parameterised types (`Lista-Szám`, `vagy-Szöveg-vagy-Hiba`). `RagulType.display()` produces bilingual type names (e.g. `Number (Szám)`). `suffix_display()` produces bilingual suffix names (e.g. `-felett (-above)`). `_CANONICAL_TO_EN` reverse alias lookup.
 
 **Lexer (`ragul/lexer.py`)**
-Hand-written lexer. Produces all planned token types: `WORD`, `SCOPE_OPEN`, `NUMBER`, `STRING`, `LIST_OPEN`/`CLOSE`, `FULLSTOP`, `INDENT`/`DEDENT`, `COMMENT`, `MINUS_HANEM`, `MINUS_HIBARA`, `EOF`. Alias normalisation applied at lex time so the parser only sees canonical forms.
+Hand-written lexer. Produces all planned token types. Alias normalisation applied at lex time. Fixed arithmetic bug: `re.findall` with priority pattern replaces `re.split` so numeric inline args (e.g. `-add-2`) do not absorb the preceding letter suffix.
 
 **Parser (`ragul/parser.py`)**
 Two-pass parser building the full `Scope` tree. Handles free word order, nested scopes at arbitrary depth, `-ha`/`-hanem` conditionals, `-hibára` error handler siblings, `-míg`/`-ig`/`-mindegyik`/`-gyűjt` loop scopes, and list literals `[...]`.
 
 **Type Checker (`ragul/typechecker.py`)**
-Implements `TypeEnv` (lexically scoped type bindings), root type inference, and the two-level enforcement from the spec. Active error/warning codes:
+Implements `TypeEnv` (lexically scoped type bindings), root type inference, and the two-level enforcement from the spec. Automatically populates `source_line` context in diagnostics. Active error/warning codes:
 - E001 — root guard failure (wrong type for suffix)
 - E003 — parallel write conflict (pure scopes)
-- E004 — effectful suffix called from pure scope
-- E005 — unhandled `vagy` (fallible) type
-- E009 — field mutation outside `-hatás`
+- E004 — effectful suffix called from pure scope; uses bilingual scope display name
+- E005 — unhandled `vagy` (fallible) type; fires correctly for `-tonum` and all module-registered fallible suffixes (module import fixed in v0.2.0)
+- E006 — scope leak (root referenced outside its defining scope)
+- E007 — module not found (unresolvable `-from`/`-ból` import)
+- E009 — field mutation outside `-hatás` (check wired, syntax not yet in parser — v0.3.0)
 - W001 — harmony warning (type crossing without bridge)
 
 **Interpreter (`ragul/interpreter.py`)**
@@ -74,12 +86,14 @@ Tree-walking interpreter with full support for:
 - All loop kinds: `-míg` (while), `-ig` (until), `-mindegyik` (for-each), `-gyűjt` (fold)
 - Conditionals: `-ha` + `-hanem` (else)
 - Error propagation via `-va-e` and `-hibára` handler blocks
-- Effect channels: `képernyőre`, `stderr`, `bemenetről`
+- Effect channels: `képernyőre`/`stdout`, `stderr`, `bemenetről`/`stdin`
+- File I/O channels: `fájlolvasó`/`filein`, `fájlba`/`fileout`
+- Network stubs: `netin`, `netout`
 - User-defined scope calls as suffix functions
 - `-megszakít` break signal
 
 **CLI (`ragul/main.py`)**
-All five subcommands wired up. Hungarian command names are primary; English aliases (`run`, `check`, `compile`) accepted silently for convenience.
+All five subcommands wired up. Hungarian command names are primary; English aliases accepted silently. UTF-8 stdout/stderr reconfiguration at startup; `rich` legacy Windows renderer disabled to prevent Unicode crashes on non-ASCII diagnostic characters.
 
 **REPL (`ragul/repl/repl.py`)**
 Interactive REPL with persistent environment across sentences. Multi-line scope entry via continuation prompt (`...`). Special commands: `:kilep`/`:exit`, `:töröl`/`:clear`, `:mutat`/`:show`, `:help`/`:súgó`.
@@ -92,38 +106,51 @@ pygls-based LSP server with:
 - Go-to-definition (jumps to the `-unk` scope that defines a suffix)
 
 **Standard Library**
-- `stdlib/core.py` — arithmetic (`-össze`, `-kivon`, `-szoroz`, `-oszt`, `-maradék`), comparison (`-felett`, `-alatt`, `-legalább`, `-legfeljebb`), equality, logical (`-nem`, `-és`, `-vagy`), string concat (`-összefűz`)
-- `stdlib/modules.py` — matematika (`-négyzetgyök`, `-hatvány`, `-abszolút`, `-kerekítve`, `-padló`, `-plafon`, `-log`, `-sin`, `-cos`), szöveg (`-hossz`, `-nagybetűs`, `-kisbetűs`, `-tartalmaz`, `-kezdődik`, `-végződik`, `-feloszt`, `-formáz`, `-szelet`, `-csere`, `-számmá`), lista (`-rendezve`, `-fordítva`, `-első`, `-utolsó`, `-egyedi`, `-lapítva`, `-szűrve`, `-hozzáad`, `-eltávolít`, polymorphic filter/compare)
+- `stdlib/core.py` — arithmetic, comparison, equality, logical, string concat
+- `stdlib/modules.py` — matematika (9 functions), szöveg (10 functions including `-számmá`/`-tonum`), lista (polymorphic filter/compare/fold), adatok (`-json`/`-jsonná`/`-csv`/`-csvné`/`-mezők`)
 
 **Tests (`ragul/tests/test_ragul.py`)**
-Comprehensive test suite covering: lexer (9 tests), parser (5 tests), interpreter (16 tests), stdlib (14 tests), type checker (7 tests), error handling (2 tests).
+64 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling.
 
-**Fixtures**
-- `tests/fixtures/hello.ragul`
-- `tests/fixtures/arithmetic.ragul`
-- `tests/fixtures/pipeline.ragul`
+**Error-Code Example Files (`examples/error-codes/`)**
+8 standalone `.ragul` files, one per diagnostic, each verified to produce the expected `ragul check` output:
+- `E001_root_guard.ragul` — wrong type for suffix
+- `E003_parallel_write.ragul` — parallel write in pure scope
+- `E004_effect_pure_scope.ragul` — effect suffix outside `-hatás`
+- `E005_unhandled_fallible.ragul` — `vagy` result without error handling
+- `E006_scope_leak.ragul` — root referenced outside its defining scope
+- `E007_module_not_found.ragul` — unresolvable `-from` import
+- `E009_field_mutation.ragul` — documents planned v0.3.0 behaviour
+- `W001_harmony.ragul` — type boundary crossed without bridge
+
+**Documentation (`docs/`)**
+Full MkDocs Material site deployed to GitHub Pages. Includes:
+- Language reference (syntax, types, functions, control, effects, errors, modules)
+- Standard library reference
+- Tooling & CLI guide (all commands, error codes, editor integration)
+- `error-codes.md` — one-page summary with code sample, expected output, and fix for every error code
+- Glossary (Hungarian ↔ English suffix/keyword map)
+- 9 bilingual example pages (English alias / Hungarian tabs)
 
 **Agent Architecture (`ragul/agents/`)**
-Full agent layer implemented at `ragul/agents/`:
-- `task.py` — `Task` / `TaskResult` typed message protocol
-- `base.py` — `BaseAgent` abstract class
-- `orchestrator.py` — `OrchestratorAgent`; reads `ragul.config`, builds task pipelines, delegates to specialist agents. On compiler errors/warnings, optionally calls **Claude Opus 4.6** (streaming) to generate a plain-English explanation with fix suggestions (requires `ANTHROPIC_API_KEY`; gracefully skipped if absent)
-- `lexer_agent.py`, `parser_agent.py`, `typecheck_agent.py`, `interpreter_agent.py`, `repl_agent.py`, `lsp_agent.py`, `docs_agent.py` — all 7 specialist agents
+- `task.py`, `base.py`, `orchestrator.py` — pipeline with optional Claude Opus 4.6 AI analysis
+- 7 specialist agents: `lexer_agent.py`, `parser_agent.py`, `typecheck_agent.py`, `interpreter_agent.py`, `repl_agent.py`, `lsp_agent.py`, `docs_agent.py`
 
 **GitHub Actions (`/.github/workflows/`)**
-- `ci.yml` — runs pytest + mypy on every push/PR; uploads JSON test report as artifact
-- `docs.yml` — deploys MkDocs site to GitHub Pages on merge to main
-
-**`ragul.config`**
-Project config file at repo root (dogfooding). Hungarian TOML keys: `[projekt]`, `[fordito]`, `[modulok]`, `[ellenorzes]`, `[hibak]`.
+- `ci.yml` — pytest + mypy on every push/PR
+- `docs.yml` — MkDocs deploy to GitHub Pages on merge to main
+- PyPI publish workflow triggered on GitHub Release (publishes `ragul-lang` to PyPI)
 
 ---
 
-## What Is Missing
+## What Is Missing / Known Issues
 
-### Entirely Absent
-
-*(All major gaps resolved. See Known Issues below for remaining smaller items.)*
+| Issue | Location | Impact |
+|---|---|---|
+| `-val` binding resolution is stubbed | `parser.py` `_resolve_val_args()` | `-val` argument passing between words may not work in all cases |
+| Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
+| E009 trigger unreachable | `typechecker.py` | Field mutation check exists but `word.possession == "-ja"` can never be True with current parser — needs OOP syntax (v0.3.0) |
+| `anthropic` missing from `pyproject.toml` | `pyproject.toml` | AI analysis in orchestrator requires manual `pip install anthropic` |
 
 ### Implemented Differently from the Plan
 
@@ -134,86 +161,42 @@ Project config file at repo root (dogfooding). Hungarian TOML keys: `[projekt]`,
 | Separate `stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py` | All merged into `stdlib/modules.py` |
 | Tests at top-level `tests/` | Tests at `ragul/tests/` |
 
-### Known Issues
+---
 
-| Issue | Location | Impact |
-|---|---|---|
-| `-val` binding resolution is stubbed | `parser.py` `_resolve_val_args()` | `-val` argument passing between words may not work in all cases |
-| Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
-| E006 (scope leak) not enforced | `typechecker.py` | Variables can be referenced outside their defining scope without an error |
-| E007 (module resolution) not enforced | `typechecker.py` | Bad module imports produce no diagnostic |
-| `anthropic` missing from `pyproject.toml` | `pyproject.toml` | AI analysis in orchestrator requires manual `pip install anthropic` |
+## Bug Fixes Log
 
-### Interpreter Bugs (fixed 2026-03-14)
+### v0.2.0 (2026-03-16)
 
-All 4 interpreter bugs identified during examples authoring have been resolved:
+| Bug | Fix |
+|---|---|
+| `-tonum` (and all module suffixes) not type-checked | Added `import ragul.stdlib.modules` to `typechecker.py` — module suffixes now registered in `SUFFIX_REGISTRY` at check time; E005 fires correctly |
+| E006 false positive on valid programs | `_check_sentence` now treats `case=""` as a source word so a root used in an action-only sentence is properly recorded in `local_env` |
+| Rich Unicode crash on Windows | `sys.stdout.reconfigure(encoding='utf-8')` at startup; `Console(legacy_windows=False)`; `_markup_escape()` on diagnostic output |
+| `ValueError: mutable default dict` in `RagulType` | Moved `_EN_NAMES` dict to module level as `_TYPE_EN_NAMES` |
+| Double-quote in E006 messages (`''name''`) | `_scope_display_name()` returns `"scope 'name'"` directly; message templates no longer add their own quotes |
+| Lexer arithmetic bug (`x-3-add-2-mul` → 30 instead of 26) | Replaced `re.split` with `re.findall` using priority pattern: double-dash negative → letter suffix → digit literal |
 
-| Bug | Fix | Files Changed |
-|---|---|---|
-| Conditionals inside `-hatás` execute unconditionally | Added `_interleave()` to execute sentences and child scopes in source order (by line number); fixed parser to reset `current_line = 0` after SCOPE_OPEN so subsequent sentences get their correct line | `interpreter.py`, `parser.py`, `model.py` |
-| Custom scope calls return input unchanged | Fixed `_eval_word` user-scope lookup to use `bare` (without leading dash) instead of full `aspect` string | `interpreter.py` |
-| `-mindegyik` (for-each) loop crashes | Initialised `loop_env` before the loop body to handle empty iterables | `interpreter.py` |
-| `"42"` string literal coerced to int | Parser now re-adds quotes around STRING token values so `_resolve_root` distinguishes `"42"` (str) from `42` (int) | `parser.py` |
+### v0.1.x (2026-03-14–15)
 
-Root causes of the conditional bug (two intertwined parser issues):
-- `current_line` was set to the SCOPE_OPEN token's line after a child scope, causing subsequent sentences to inherit the wrong line number and sort before the conditional in `_interleave`
-- Effect scope body ran all `sentences` before all `children`, violating source sequential order
+| Bug | Fix |
+|---|---|
+| Conditionals inside `-hatás` execute unconditionally | Added `_interleave()` to sort sentences and child scopes by line; fixed `current_line` reset in parser |
+| Custom scope calls return input unchanged | Fixed user-scope lookup to use `bare` name (no leading dash) |
+| `-mindegyik` crashes on empty list | Initialised `loop_env` before the loop body |
+| `"42"` string literal coerced to int | Parser re-adds quotes around STRING token values |
 
 ---
 
 ## Recommended Next Steps
 
-### v0.1.1 — Patch + First New Feature
+### v0.3.0 — Planned
 
-- [x] Publish to PyPI as `ragul-lang` (done 2026-03-15)
-- [x] Fix pygls 2.0 compatibility in LSP server (done 2026-03-15)
-- [x] **`ragul új projekt <name>` / `ragul new project <name>`** — scaffold a new project folder (`ragul.config`, `main.ragul`, `.gitignore`, `README.md`) (done 2026-03-15)
-- [x] **`ragul új modul <name>` / `ragul new module <name>`** — scaffold a new module file inside an existing project (done 2026-03-15)
-- [x] Publish v0.1.1 to PyPI via GitHub Release (done 2026-03-15)
-
-### v0.2.0 — Planned
-
-- [ ] `true` / `false` root-level boolean aliases (via `ROOT_ALIASES` table in lexer, alongside `igaz`/`hamis`)
-- [ ] English I/O channel aliases: `stdout`, `stdin`, `stderr` (existing channels); `filein`, `fileout` (new file channels). Hungarian canonical names unchanged. Both string literal and variable filename arguments supported.
-- [ ] `netin` / `netout` channel stubs (wired up in v0.4.0)
-- [ ] `adatok` module — JSON + CSV parse/emit, field access suffixes (no XML — separate module later if demand exists)
-- [ ] E006/E007 type checker errors (scope leak, module resolution)
-
----
-
-## Planned Initiative — Bilingual Documentation (2026-03-14)
-
-### Approach
-
-Docs stay in **English prose** throughout. Code examples get **two tabs** (Hungarian / English aliases) using the `pymdownx.tabbed` extension already configured in `mkdocs.yml`. No separate site, no i18n plugin, no duplicate pages.
-
-Example of what tabbed blocks look like in MkDocs Material:
-
-```
-=== "Hungarian"
-    x-ba  3-t.
-    y-ba  x-3-össze-t.
-
-=== "English aliases"
-    x-into  3-it.
-    y-into  x-3-add-it.
-```
-
-### Implementation order
-
-1. **Audit the alias table** — identify which suffixes have no English alias (e.g. `-össze` → `-add`, `-felett` → `-above`). Some stdlib suffixes may need new aliases added to the ALIAS_TABLE and registered in the stdlib.
-2. **Add missing English aliases** — update `ragul/model.py` ALIAS_TABLE and `ragul/stdlib/` so every suffix is callable by its English name.
-3. **Add a glossary page** (`docs/glossary.md`) — single reference mapping every Hungarian suffix and keyword to its English alias, with a pronunciation guide. Add to MkDocs nav.
-4. **Retrofit the 7 example pages** — replace bare code blocks with tabbed blocks. Highest traffic, biggest reader impact.
-5. **Retrofit the language reference pages** — syntax, types, functions, control, effects, errors, modules. Work through gradually.
-
-### Status
-
-Complete. All docs pages updated; glossary added. English alias examples verified correct after interpreter bug fixes.
-
-### PyPI readiness note
-
-Fix the 4 interpreter bugs → then publish to PyPI. The package infrastructure (`pyproject.toml`, entry point, README) is already correct. Only remaining PyPI prep work: add classifiers (`Development Status :: 3 - Alpha`, `Programming Language :: Python`, `Topic :: Software Development :: Compilers`) to `pyproject.toml`.
+- [ ] `minta` module — regex pattern matching (`-minta`, `-egyezés`, `-csere-minta`)
+- [ ] `dátum` module — date/time operations
+- [ ] OOP / record-update syntax for E009 to become triggerable
+- [ ] `-val` binding resolution (currently stubbed in `parser.py`)
+- [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)
+- [ ] Add `anthropic` as optional dependency in `pyproject.toml` (`pip install ragul-lang[ai]`)
 
 ---
 
