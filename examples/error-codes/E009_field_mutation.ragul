@@ -1,29 +1,36 @@
 // E009_field_mutation.ragul — Field mutation outside effect scope
 //
 // E009 fires when a field on a data record is mutated (written to)
-// from inside a pure scope. Direct mutation of fields is only
-// permitted inside -ours-effect (-nk-hatás) scopes.
+// from inside a pure (non-effect) scope. Direct field mutation is
+// only permitted inside -ours-effect (-nk-hatás) scopes.
+//
+// NOTE: Field mutation syntax (object-field-into) is planned for v0.3.0
+// alongside the OOP / record-update module. This file shows the intended
+// behaviour; the check is already wired into the type checker.
 //
 // Check: ragul check examples/error-codes/E009_field_mutation.ragul
 //
-// Expected output:
-//   ERROR  E009  Field 'name' is mutated outside a -hatás scope (in '__root__').
+// Expected output (v0.3.0):
+//   ERROR  E009  Field 'name' is mutated outside a -hatás scope (in the top-level scope).
 //   → Move the mutation into a -hatás scope, or return a new instance
 //     with the updated field value instead.
+//
+// Until then, to reproduce similar enforcement today, try mutating state
+// in a pure scope with reassignment — the type checker will flag it as E003.
 
-// ERROR — mutating a field from the pure top-level scope
-person-into  "Alice"-it.
-person-name-into  "Bob"-it.   // E009: field mutation not allowed here
+// Current equivalent that fires E003 (parallel write conflict):
+x-into  1-it.
+x-into  2-it.   // E003: pure scopes forbid reassigning the same root
 
 
-// FIX 1 — move mutation inside an effect scope
+// Intended v0.3.0 FIX — move field update inside an effect scope:
 //
 // program-ours-effect
-//     person-into  "Alice"-it.
-//     person-name-into  "Bob"-it.   // mutation is allowed in -ours-effect
+//     person-into  record-"Alice"-with-name-it.
+//     person-name-into  "Bob"-it.    // mutation allowed in -ours-effect
 //     person-print-doing.
-
-
-// FIX 2 — return a new instance with the updated field (pure style)
+//
+//
+// Intended v0.3.0 FIX 2 — pure-style: return a new instance:
 //
 // updated-into  person-"Bob"-with-name-it.   // construct a new record

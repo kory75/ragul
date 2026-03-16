@@ -8,8 +8,9 @@
 // Check: ragul check examples/error-codes/E001_root_guard.ragul
 //
 // Expected output:
-//   ERROR  E001  Suffix -felett (-above) expects Number (Szam), but root is String (Szoveg).
-//   → Use a Number root, or convert first with -tonum (-szamma).
+//   ERROR  E001  Suffix -felett (-above) expects Number (Szám), but root is String (Szöveg).
+//   → Use a Number (Szám) root, or add a bridge suffix to convert String (Szöveg) to Number (Szám) first.
+//   WARN  W001  Suffix chain crosses type boundary from String (Szöveg) to Number (Szám) without a bridge suffix.
 
 program-ours-effect
 

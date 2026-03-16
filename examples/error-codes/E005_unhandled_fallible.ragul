@@ -8,8 +8,10 @@
 // Check: ragul check examples/error-codes/E005_unhandled_fallible.ragul
 //
 // Expected output:
+//   ERROR  E005  Root '"abc"' is Number|Error — both cases must be handled.
+//   → Add -doing-? (-va-e) to propagate the error upward, or add a -catch block.
 //   ERROR  E005  Root 'n' is Number|Error — both cases must be handled.
-//   → Add -doing-? (-va-e) to propagate, or add a -catch block.
+//   → Add -doing-? (-va-e) to propagate the error upward, or add a -catch block.
 
 program-ours-effect
 

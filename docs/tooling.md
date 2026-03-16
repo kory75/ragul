@@ -2,7 +2,13 @@
 
 ## Installation
 
-Ragul is not yet on PyPI. Install from source:
+Install from PyPI:
+
+```bash
+pip install ragul
+```
+
+Or install the latest development version from source:
 
 ```bash
 git clone https://github.com/kory75/ragul.git
@@ -198,6 +204,8 @@ nyelv = "en"         # "en" | "hu"
 | E003 | Parallel write conflict | Same root written twice in a pure scope |
 | E004 | Effect boundary violation | Effectful suffix called from a pure scope |
 | E005 | Unhandled `vagy` type | Fallible result used without `-e` / `-?` or `-hibára` / `-catch` |
+| E006 | Scope leak | Root defined in an inner scope referenced in an outer scope |
+| E007 | Module not found | Import references a module file that cannot be resolved |
 | E009 | Field mutation outside `-hatás` | Mutation of a field outside an effect scope |
 
 ### Warnings
@@ -205,6 +213,8 @@ nyelv = "en"         # "en" | "hu"
 | Code | Name | Description |
 |---|---|---|
 | W001 | Harmony warning | Type boundary crossed without a bridge suffix |
+
+See [Error Code Examples](error-codes.md) for runnable `.ragul` files that trigger each diagnostic.
 
 ---
 

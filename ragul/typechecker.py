@@ -24,6 +24,7 @@ from ragul.model import Word, Sentence, Scope, RagulType, TYPE_ALIAS_TABLE, norm
 from ragul.errors import DiagnosticBag, E001, E003, E004, E005, E006, E007, E009, W001
 from ragul.config import RagulConfig
 from ragul.stdlib.core import SUFFIX_REGISTRY
+import ragul.stdlib.modules  # noqa: F401 — side-effect: registers module suffixes into SUFFIX_REGISTRY
 
 
 # ---------------------------------------------------------------------------

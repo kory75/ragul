@@ -15,9 +15,10 @@ calculator-ours-effect
 	result-into  6-7-mul-it.   // 'result' lives inside 'calculator'
 	result-print-doing.
 
-// ERROR — 'result' is defined inside 'calculator', not here
-summary-into  result-it.
-summary-print-doing.
+program-ours-effect
+	// ERROR — 'result' is defined inside 'calculator', not here
+	summary-into  result-it.
+	summary-print-doing.
 
 
 // FIX 1 — reference 'result' from inside the scope that defines it

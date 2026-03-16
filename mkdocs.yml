@@ -46,6 +46,7 @@ nav:
   - Reference:
     - Standard Library: stdlib.md
     - Tooling & CLI: tooling.md
+    - Error Code Examples: error-codes.md
     - Glossary: glossary.md
   - Examples:
     - Hello World: examples/01_hello.md

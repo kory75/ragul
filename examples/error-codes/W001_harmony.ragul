@@ -1,29 +1,34 @@
 // W001_harmony.ragul — Type harmony warning
 //
-// W001 fires when a suffix chain crosses a type boundary (e.g. Number
-// to String or vice versa) without an explicit bridge suffix.
-// This is a WARNING, not an error — the program will still run,
-// but the implicit coercion may hide a mistake.
+// W001 fires when a suffix changes the element type (e.g. String → List,
+// or Number → Bool) without an explicit bridge suffix. This is a WARNING,
+// not an error — the program will still run, but the implicit type crossing
+// may indicate an accidental operation.
 //
 // Check: ragul check examples/error-codes/W001_harmony.ragul
 //
 // Expected output:
-//   WARN  W001  Suffix chain crosses type boundary from Number (Szám) to String (Szöveg)
-//               without a bridge suffix.
-//   → Add a bridge suffix (e.g. -tostr (-szöteggé), -tonum (-számmá)) to make the
-//     type conversion explicit.
+//   WARN  W001  Suffix chain crosses type boundary from String (Szöveg) to
+//               List[String (Szöveg)] without a bridge suffix.
+//   → Add a bridge suffix (e.g. -tostr (-szöteggé), -tonum (-számmá)) to make
+//     the type conversion explicit.
 
 program-ours-effect
 
-	// W001 — the chain goes Number → String without -tostr
-	n-into  42-it.
-	result-into  n-" items"-add-it.   // implicit Number-to-String coercion
-	result-print-doing.
+	// W001 — -split converts String → List without an explicit bridge
+	sentence-into  "hello world"-it.
+	words-into  sentence-split-" "-it.
+	words-print-doing.
 
 
-// FIX — add -tostr to make the type crossing explicit
+// FIX — suppress W001 by making the intent explicit in a comment,
+// or by structuring the pipeline so the type crossing is obvious:
 //
 // program-ours-effect
-//     n-into  42-it.
-//     result-into  n-tostr-" items"-add-it.   // Number → String bridge is clear
-//     result-print-doing.
+//     sentence-into  "hello world"-it.
+//     // -split intentionally converts String to List[String]
+//     words-into  sentence-split-" "-it.
+//     words-print-doing.
+//
+// (W001 is advisory — you may silence it by setting harmony = "off"
+//  in your ragul.config file.)

@@ -1,24 +1,40 @@
 // E007_module_not_found.ragul — Module not found
 //
-// E007 fires when a scope name is used with a module-style call
-// (i.e., the scope name is not defined in the current file) and
-// no matching .ragul file can be found on the module search path.
+// E007 fires when a module is imported with -from (-ból) but no
+// matching .ragul file can be found on the module search path,
+// and the name is not a built-in stdlib module.
 //
 // Check: ragul check examples/error-codes/E007_module_not_found.ragul
 //
 // Expected output:
-//   ERROR  E007  Module 'geometry' not found.
+//   ERROR  E007  Module 'geometry' cannot be resolved.
 //   → Ensure 'geometry.ragul' exists in the same directory as your script,
 //     or add its directory to modulok.utvonalak (module search paths) in ragul.config.
 
 program-ours-effect
 
-	// ERROR — 'geometry' is not defined here and no geometry.ragul exists
-	area-into  10-5-geometry-it.
+	// ERROR — no geometry.ragul exists on the search path
+	geometry-from.
+	area-into  10-5-area-calc-it.
 	area-print-doing.
 
 
-// FIX 1 — define the scope in the same file
+// FIX 1 — create geometry.ragul in the same directory as your script:
+//
+// area-calc-ours
+//     w-yours.
+//     h-yours.
+//     w-h-mul-it.
+//
+// Then import and call it:
+//
+// program-ours-effect
+//     geometry-from.
+//     area-into  10-5-area-calc-it.
+//     area-print-doing.
+
+
+// FIX 2 — define the scope inline (no import needed):
 //
 // area-calc-ours
 //     w-yours.
@@ -28,14 +44,3 @@ program-ours-effect
 // program-ours-effect
 //     area-into  10-5-area-calc-it.
 //     area-print-doing.
-
-
-// FIX 2 — place geometry.ragul in the same directory and run
-//
-// geometry.ragul:
-//     area-ours
-//         w-yours.
-//         h-yours.
-//         w-h-mul-it.
-//
-// then: ragul run program.ragul
