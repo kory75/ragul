@@ -19,8 +19,9 @@ Usage:
 
 from __future__ import annotations
 import re
+from pathlib import Path
 from ragul.model import Word, Sentence, Scope, RagulType, TYPE_ALIAS_TABLE, normalise_type_name
-from ragul.errors import DiagnosticBag, E001, E003, E004, E005, E009, W001
+from ragul.errors import DiagnosticBag, E001, E003, E004, E005, E006, E007, E009, W001
 from ragul.config import RagulConfig
 from ragul.stdlib.core import SUFFIX_REGISTRY
 
@@ -48,6 +49,14 @@ FALLIBLE_SUFFIXES = frozenset({"-számmá", "-fájlolvasó", "-fájlból", "-fá
 
 # Bridge suffixes that change element type
 BRIDGE_SUFFIXES = frozenset({"-szöteggé", "-számmá", "-szöveggé"})
+
+# Built-in stdlib module names — always resolve without E007
+STDLIB_MODULES = frozenset({
+    "matematika", "math",
+    "szöveg", "szoveg", "string", "text",
+    "lista", "list",
+    "adatok", "data",
+})
 
 
 # ---------------------------------------------------------------------------
@@ -151,14 +160,31 @@ class TypeChecker:
         self.filename   = filename
         self.config     = config or RagulConfig()
         self.bag        = DiagnosticBag(filename)
+        # Source directory for module resolution
+        self._source_dir: Path = (
+            Path(filename).parent if filename not in ("<unknown>", "<test>", "<repl>")
+            else Path.cwd()
+        )
         # Collect all user-defined scope names for lookup
         self._user_scopes: dict[str, Scope] = {}
         self._collect_scopes(root_scope)
+        # Pre-collect all root definitions across the tree (for E006)
+        self._all_definitions: dict[str, str] = {}  # root → defining scope name
+        self._collect_all_definitions(root_scope, "<root>")
 
     def _collect_scopes(self, scope: Scope) -> None:
         for child in scope.children:
             self._user_scopes[child.name] = child
             self._collect_scopes(child)
+
+    def _collect_all_definitions(self, scope: Scope, scope_name: str) -> None:
+        """Pre-pass: record every root that is written (via -ba/-be) and in which scope."""
+        for sentence in scope.sentences:
+            for word in sentence.words:
+                if word.case in ("-ba", "-be"):
+                    self._all_definitions[word.root] = scope_name
+        for child in scope.children:
+            self._collect_all_definitions(child, child.name)
 
     # ------------------------------------------------------------------
     # Public entry
@@ -171,12 +197,60 @@ class TypeChecker:
         return self.bag
 
     # ------------------------------------------------------------------
+    # Import checker (E007)
+    # ------------------------------------------------------------------
+
+    def _is_import_sentence(self, sentence: Sentence) -> bool:
+        """
+        An import sentence has no assignment target (-ba/-be) and contains
+        a word with case -ból whose root is a plain identifier (not a literal).
+        Example: 'matematika-ból.' or 'matematika-ból  négyzetgyök-val.'
+        """
+        has_target = any(w.case in ("-ba", "-be") for w in sentence.words)
+        if has_target:
+            return False
+        for w in sentence.words:
+            if w.case == "-ból" and not w.aspects and not self._is_literal_root(w.root):
+                return True
+        return False
+
+    def _check_imports(self, scope: Scope) -> None:
+        """Emit E007 for unresolvable module imports in this scope."""
+        for sentence in scope.sentences:
+            if not self._is_import_sentence(sentence):
+                continue
+            for w in sentence.words:
+                if w.case != "-ból" or w.aspects or self._is_literal_root(w.root):
+                    continue
+                module_name = w.root
+                if module_name in STDLIB_MODULES:
+                    break  # always available
+                # Try filesystem resolution
+                candidates: list[str] = [
+                    str(self._source_dir / f"{module_name}.ragul"),
+                ]
+                for sp in self.config.search_paths:
+                    candidates.append(str(self._source_dir / sp / f"{module_name}.ragul"))
+                found = any(Path(c).is_file() for c in candidates)
+                if not found:
+                    self.bag.add(E007(
+                        file=self.filename,
+                        line=sentence.line,
+                        module_name=module_name,
+                        searched_paths=candidates,
+                    ))
+                break  # only one module-source word per sentence
+
+    # ------------------------------------------------------------------
     # Scope checker
     # ------------------------------------------------------------------
 
     def _check_scope(self, scope: Scope, env: TypeEnv, in_effect: bool) -> None:
         is_effect = in_effect or scope.is_effect
         local_env = TypeEnv(parent=env)
+
+        # E007 — check module imports in this scope
+        self._check_imports(scope)
 
         # Collect write targets in this scope to detect E003
         write_targets: dict[str, int] = {}  # root name → first write line
@@ -297,6 +371,20 @@ class TypeChecker:
 
         # --- Resolve root type ---
         root_type = self._resolve_root_type(word.root, env)
+
+        # E006 — scope leak: root used as source but only defined in a non-ancestor scope
+        if (word.case not in ("-ba", "-be")
+                and env.get(word.root) is None
+                and not self._is_literal_root(word.root)
+                and word.root in self._all_definitions):
+            defining_scope = self._all_definitions[word.root]
+            self.bag.add(E006(
+                file=self.filename,
+                line=word.line,
+                root=word.root,
+                defined_scope=defining_scope,
+                offending=word.source_text,
+            ))
 
         # --- Walk aspect chain ---
         current_type = root_type
@@ -440,3 +528,13 @@ class TypeChecker:
         if from_t.base == RagulType.UNKNOWN or to_t.base == RagulType.UNKNOWN:
             return False
         return from_t.base != to_t.base
+
+    def _is_literal_root(self, root: str) -> bool:
+        """True if root is a compile-time literal (number, boolean, list sentinel)."""
+        if root in ("igaz", "hamis", "true", "false", "__list__"):
+            return True
+        try:
+            float(root)
+            return True
+        except (ValueError, TypeError):
+            return False

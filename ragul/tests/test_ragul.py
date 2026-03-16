@@ -428,6 +428,40 @@ class TestTypeChecker:
         errors = [d for d in bag if d.code == "E003"]
         assert len(errors) == 0
 
+    def test_E006_scope_leak(self):
+        # x is defined inside a child scope; referencing it at root level is E006
+        source = (
+            "inner-nk-hatás\n"
+            "\tx-ba  42-t.\n"
+            "x-képernyőre-va.\n"   # x not in root scope
+        )
+        bag = self._check(source)
+        errors = [d for d in bag if d.code == "E006"]
+        assert len(errors) >= 1
+        assert errors[0].message.startswith("Root 'x'")
+
+    def test_E006_not_raised_for_in_scope_root(self):
+        # x defined at root level — no E006
+        source = "x-ba  3-t.\ny-ba  x-3-össze-t."
+        bag = self._check(source)
+        errors = [d for d in bag if d.code == "E006"]
+        assert len(errors) == 0
+
+    def test_E007_unknown_module(self):
+        # 'nonexistent-ból.' — not a stdlib module, file doesn't exist
+        source = "nonexistent-ból.\nx-ba  3-t.\n"
+        bag = self._check(source)
+        errors = [d for d in bag if d.code == "E007"]
+        assert len(errors) >= 1
+        assert "nonexistent" in errors[0].message
+
+    def test_E007_stdlib_module_no_error(self):
+        # 'matematika-ból.' — stdlib module, always resolves
+        source = "matematika-ból.\nx-ba  3-t.\n"
+        bag = self._check(source)
+        errors = [d for d in bag if d.code == "E007"]
+        assert len(errors) == 0
+
     def test_typecheck_integrates_with_cli(self):
         import subprocess, sys, os
         from pathlib import Path
