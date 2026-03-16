@@ -145,18 +145,24 @@ program-ours-effect
 
 ---
 
-## What's in v0.1.1
+## What's in v0.2.0
 
 | Feature | Status |
 |---|---|
 | Lexer with full alias normalisation | ✅ |
 | Parser → Scope tree (indentation-based) | ✅ |
 | Static type checker (E001–E009, W001) | ✅ |
+| **E006** scope leak detection | ✅ |
+| **E007** module resolution failure | ✅ |
 | Interpreter — assignment, arithmetic, pipelines | ✅ |
 | All loop kinds: `-while`, `-until`, `-each`, `-fold` | ✅ |
 | Conditionals: `-if` / `-else` / `-else-if` | ✅ |
 | Error propagation: `-?` and `-catch` | ✅ |
 | Effect scopes (`-ours-effect`) + I/O channels | ✅ |
+| `true` / `false` boolean aliases | ✅ |
+| English I/O aliases: `stdout`, `stdin`, `stderr`, `filein`, `fileout` | ✅ |
+| `netin` / `netout` channel stubs | ✅ |
+| `adatok` module — JSON + CSV parse/emit, field access | ✅ |
 | Stdlib: arithmetic, comparison, logical, string, list, math | ✅ |
 | CLI: `run`, `check`, `compile`, `repl`, `lsp`, `new` | ✅ |
 | `ragul new project` / `ragul new module` scaffolding | ✅ |
