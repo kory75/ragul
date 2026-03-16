@@ -2,7 +2,7 @@
 
 ## I/O as a Suffix Family
 
-I/O in Ragul is not special-cased by the compiler. Every I/O channel is a named scope defined with `-nk-hatás` / `-ours-effect` (the effect scope suffix). This makes every channel a suffix that can appear in any suffix chain — while the compiler enforces it can only be called from within another effect scope.
+I/O in Ragul is not special-cased by the compiler. Every I/O channel is a named scope defined with `-nk-hatás` / `-ours-effect`. This makes every channel a suffix that can appear in any suffix chain — while the compiler enforces it can only be called from within another effect scope.
 
 ---
 
@@ -31,7 +31,7 @@ Two rules enforced by the compiler:
 
 === "English aliases"
     ```ragul
-    tiszta-számítás-ours
+    pure-calculation-ours
         x-into  3-it.
         x-print-doing.      // ERROR E004: effectful suffix called from pure scope
     ```
@@ -45,58 +45,208 @@ Two rules enforced by the compiler:
 
 ---
 
-## Standard I/O Channels
+## I/O Channels
 
-Every channel is a built-in scope defined with `-nk-hatás` / `-ours-effect`. The channel name carries its own case suffix indicating direction — `-ra` / `-re` (onto) for write, `-ról` / `-ről` (from) for read:
+Every channel is a built-in effect scope. The table below lists all channels with their English aliases.
 
-| Channel root | English | Direction | Meaning |
+| Hungarian root | English alias | Direction | Meaning |
 |---|---|---|---|
-| `képernyőre` | `-print` alias | write | Console / stdout |
-| `bemenetről` | — | read | Console / stdin |
-| `fájlra` | — | write | File system write |
-| `fájlról` | — | read | File system read |
-| `hálózatra` | — | write | Network write |
-| `hálózatról` | — | read | Network read |
-| `stderr` | — | write | Stderr / error output |
+| `képernyőre` | `stdout` / `-print` | write | Console stdout |
+| `bemenetről` | `stdin` | read | Console stdin |
+| `stderr` | `stderr` | write | Stderr |
+| `fájlból` | `filein` | read | File read |
+| `fájlra` | `fileout` | write | File write |
+| `hálózatból` | `netin` | read | Network read (stub — v0.4.0) |
+| `hálózatra` | `netout` | write | Network write (stub — v0.4.0) |
 
-All channels work identically — same suffix mechanism, different target. Swapping the channel root is the only change:
+`stdout` and `stdin` normalise to `képernyőre` and `bemenetről` at lex time — they are full aliases, not separate channels.
+
+---
+
+## Console Output
+
+`-print` / `-képernyőre` writes a value to stdout. `stderr` writes to stderr.
 
 === "English aliases"
     ```ragul
     program-ours-effect
-        x-into  "hello"-it.
-        x-print-doing.      // write to console
-        x-fájlra-doing.     // write to file — same sentence structure
-        x-stderr-doing.     // write to stderr — same sentence structure
+        msg-into  "hello world"-it.
+        msg-print-doing.            // stdout
+        msg-stderr-doing.           // stderr
     ```
 
 === "Hungarian"
     ```ragul
     program-nk-hatás
-        x-be  "helló"-t.
-        x-képernyőre-va.    // write to console
-        x-fájlra-va.        // write to file — same sentence structure
-        x-stderr-va.        // write to stderr — same sentence structure
+        üzenet-be  "helló világ"-t.
+        üzenet-képernyőre-va.       // stdout
+        üzenet-stderr-va.           // stderr
     ```
 
 ---
 
-## Reading Input
+## Console Input
 
-Reading is also an effect operation. The pattern uses the read channel as a source with `-ből` / `-from`:
+`stdin` / `bemenetről` reads a line from the user when resolved as a source value.
 
 === "English aliases"
     ```ragul
     program-ours-effect
-        input-into  bemenetről-from  read-doing-it.
-        input-print-doing.
+        name-into  stdin-it.
+        greeting-into  "Hello, "-name-concat-it.
+        greeting-print-doing.
     ```
 
 === "Hungarian"
     ```ragul
     program-nk-hatás
-        input-be  bemenetről-ből  olvas-va-t.
-        input-képernyőre-va.
+        nev-be  bemenetről-t.
+        udvozles-be  "Szia, "-nev-összefűz-t.
+        udvozles-képernyőre-va.
+    ```
+
+---
+
+## File Write
+
+`-fileout` / `-fájlra` writes a value to a file. The filename is the inline argument immediately before the channel suffix.
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        report-into  "Sales: 42, Returns: 3"-it.
+        report-"report.txt"-fileout-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        jelentes-be  "Eladás: 42, Visszárú: 3"-t.
+        jelentes-"report.txt"-fájlra-va.
+    ```
+
+The filename can also be a variable:
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        outfile-into  "report.txt"-it.
+        report-into   "Sales: 42, Returns: 3"-it.
+        report-outfile-fileout-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        kijfajl-be  "report.txt"-t.
+        jelentes-be "Eladás: 42, Visszárú: 3"-t.
+        jelentes-kijfajl-fájlra-va.
+    ```
+
+---
+
+## File Read
+
+`-filein` / `-fájlból` reads the entire contents of a file and returns a string. It returns a `Hiba` value if the file cannot be read.
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        content-into  "data.txt"-filein-it.
+        content-print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        tartalom-ba  "data.txt"-fájlból-t.
+        tartalom-képernyőre-va.
+    ```
+
+Operations can be chained directly onto the read — for example, parse a JSON file in one step:
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        records-into  "orders.json"-filein-json-it.
+        count-into    records-len-it.
+        count-print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        rekordok-ba  "orders.json"-fájlból-json-t.
+        db-ba        rekordok-hossz-t.
+        db-képernyőre-va.
+    ```
+
+---
+
+## File I/O with Error Handling
+
+File operations can fail. `-filein` / `-fájlból` returns a `Hiba` value when the file does not exist or cannot be read. Attach `-e` / `-?` to propagate the error to the nearest `-catch` / `-hibára` handler.
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        content-into  "config.txt"-filein-?-it.
+        content-print-doing.
+    -catch
+        "Error: could not read config.txt"-print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        tartalom-ba  "config.txt"-fájlból-e-t.
+        tartalom-képernyőre-va.
+    -hibára
+        "Hiba: nem sikerült beolvasni a config.txt fájlt"-képernyőre-va.
+    ```
+
+The same pattern applies to writing — `-fileout` / `-fájlra` returns a `Hiba` if the file cannot be written (for example, a read-only path):
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        data-into  "results"-it.
+        data-"/read-only/out.txt"-fileout-?-doing.
+    -catch
+        "Error: could not write output file"-print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        adat-be  "eredmények"-t.
+        adat-"/read-only/out.txt"-fájlra-e-va.
+    -hibára
+        "Hiba: nem sikerült megírni a kimeneti fájlt"-képernyőre-va.
+    ```
+
+A complete read-transform-write pipeline with error handling on both ends:
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        raw-into      "input.json"-filein-?-it.
+        records-into  raw-json-it.
+        names-into    records-"name"-field-it.
+        names-tojson-"output.json"-fileout-?-doing.
+    -catch
+        "Pipeline failed — check input.json exists and output path is writable"-print-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        nyers-ba     "input.json"-fájlból-e-t.
+        rekordok-ba  nyers-json-t.
+        nevek-ba     rekordok-"name"-mező-t.
+        nevek-jsonná-"output.json"-fájlra-e-va.
+    -hibára
+        "Hiba a feldolgozásban — ellenőrizd az input.json fájlt"-képernyőre-va.
     ```
 
 ---
@@ -141,9 +291,11 @@ Once defined, `adatbázisba` becomes a suffix usable anywhere — identically to
 
 | Hungarian | English | Meaning |
 |---|---|---|
-| `-nk-hatás` | `-ours-effect` | Defines an effect scope — eager evaluation, I/O permitted |
-| `-hatás` | `-effect` | Marks a scope as effectful when composing |
+| `-nk-hatás` | `-ours-effect` | Declares an effect scope — eager, I/O permitted |
 | `-va` / `-ve` | `-doing` | Action — executes the operation |
-| `-képernyőre` | `-print` | Write to stdout |
-| `-ból` / `-ből` / `-ról` / `-ről` | `-from` | Source — FROM (read direction) |
-| `-ra` / `-re` | — | Target embedded in channel name (write direction) |
+| `-képernyőre` | `-print` / `stdout` | Write to stdout |
+| `bemenetről` | `stdin` | Read from stdin (used as root value) |
+| `stderr` | `stderr` | Write to stderr |
+| `-fájlból` | `-filein` | Read entire file, returns `Szöveg` or `Hiba` |
+| `-fájlra` | `-fileout` | Write value to file (filename is inline arg) |
+| `-e` / `-?` | `-e` / `-?` | Propagate `Hiba` to nearest `-catch` handler |
