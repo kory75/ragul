@@ -58,3 +58,4 @@ nav:
     - Error Handling: examples/07_error_handling.md
     - JSON Parsing: examples/08_json.md
     - CSV Processing: examples/09_csv.md
+    - "-with / -val Arguments": examples/11_with_arguments.md

@@ -1,0 +1,81 @@
+// 11_with_arguments.ragul — -with (-val) arguments
+//
+// There are two ways to pass an extra argument to a suffix:
+//
+//   1. Inline argument — baked into the chain:
+//        s-"Hello"-contains-it
+//
+//   2. Sentence-level -with argument — a separate word in the sentence:
+//        s-contains-it  "Hello"-with.
+//
+// The -with form is useful when the argument is:
+//   - A variable (not a literal)
+//   - A previously computed value
+//   - Multiple sequential arguments for different suffixes
+//
+// Run: ragul run examples/en/11_with_arguments.ragul
+
+program-ours-effect
+
+	// -------------------------------------------------------
+	// 1. Arithmetic — argument comes from a variable
+	// -------------------------------------------------------
+	base-into   10-it.
+	step-into   3-it.
+
+	// Inline: argument baked into the chain
+	a-into  base-3-add-it.
+	a-print-doing.                     // 13
+
+	// -with: argument from a separate variable
+	b-into  base-add-it  step-with.
+	b-print-doing.                     // 13
+
+	// -------------------------------------------------------
+	// 2. Strings — contains / split / replace
+	// -------------------------------------------------------
+	sentence-into  "Hello, Ragul!"-it.
+	sep-into       ", "-it.
+
+	// Contains — search word from a variable
+	word-into  "Ragul"-it.
+	found-into  sentence-contains-it  word-with.
+	found-print-doing.                 // True
+
+	// Split — separator from a variable
+	parts-into  sentence-split-it  sep-with.
+	parts-print-doing.                 // ['Hello', 'Ragul!']
+
+	// Replace — two -with arguments in sequence
+	old_word-into  "Ragul"-it.
+	new_word-into  "world"-it.
+	changed-into  sentence-replace-it  old_word-with  new_word-with.
+	changed-print-doing.               // Hello, world!
+
+	// -------------------------------------------------------
+	// 3. User scope — second parameter from -with
+	// -------------------------------------------------------
+	// Scope definition: first parameter receives the piped value (-d),
+	// second parameter receives the -with argument (-d).
+	multiply-ours
+		x-yours.
+		y-yours.
+		x-y-mul-it.
+
+	result-into  5-multiply-it  6-with.
+	result-print-doing.                // 30
+
+	// -------------------------------------------------------
+	// 4. Fold — initial accumulator supplied via -with
+	// -------------------------------------------------------
+	sum_fold-ours-fold
+		accumulated-yours.
+		item-yours.
+		accumulated-item-add-it.
+
+	numbers-into  [1, 2, 3, 4, 5]-it.
+	total-into    numbers-sum_fold-it  0-with.
+	total-print-doing.                 // 15
+
+	offset-into   numbers-sum_fold-it  100-with.
+	offset-print-doing.                // 115  (100 + 1 + 2 + 3 + 4 + 5)

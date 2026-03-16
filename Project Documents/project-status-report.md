@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-16 (updated twice)
+**Date:** 2026-03-16 (updated three times)
 
 ---
 
@@ -37,16 +37,23 @@ This report compares what those documents specify against what is currently impl
 | v0.1.0 | 2026-03-15 | First public release — core toolchain, interpreter, CLI, REPL, LSP, CI/CD |
 | v0.1.1 | 2026-03-15 | `ragul new project/module` scaffold commands; pygls 2.0 fix |
 | **v0.2.0** | **2026-03-16** | E006/E007 type checker errors; bilingual error messages; English I/O aliases; `adatok` module (JSON/CSV); `true`/`false` root aliases; `netin`/`netout` stubs; lexer arithmetic fix; error-code example files; docs overhaul |
+| **v0.2.1** | **2026-03-16** | `-val` binding resolution; fold-as-suffix call; 8 new `-val` tests; `-with`/`-val` example files + docs page |
 
-All three versions published to PyPI as `ragul-lang`.
+All versions published to PyPI as `ragul-lang`.
 
-### Post-v0.2.0 changes (unreleased, on master)
+### Post-v0.2.0 changes (in v0.2.1, unreleased)
 
 | Change | Details |
 |---|---|
 | `anthropic` made optional | Moved from `dependencies` to `[ai]` extra — `pip install ragul-lang[ai]`. Plain install no longer pulls in the Anthropic SDK. |
 | Orchestrator `thinking` param fixed | Removed invalid `thinking={"type": "adaptive"}` from Claude API call — would have caused silent API failures. |
 | AI feature documentation | README, `docs/index.md`, and `docs/tooling.md` updated with info boxes explaining what the feature does, that it is opt-in, what an API key is, and that Ragul never stores or logs it. |
+| `-val` binding resolution | `_resolve_val_args` in `parser.py` now absorbs `-val`/`-vel` case words into the preceding word's `val_args` at parse time (was a no-op stub). |
+| Fold-as-suffix fixed | `_eval_word` now detects when a user scope has `loop_kind == "gyűjt"` and pulls the initial accumulator from the val_arg queue; `_exec_fold_call` added. |
+| Fold scopes callable | `_collect_scopes` now registers `-gyűjt` scopes in `_user_scopes` (previously excluded as loops). |
+| Fold scope header order | Correct order is `name-unk-gyűjt` (possession before modifier); `name-gyűjt-unk` emits E002. |
+| Example files | `examples/hu/11_val_argumentumok.ragul` and `examples/en/11_with_arguments.ragul` — four patterns: arithmetic, string ops, user scope, fold. |
+| Docs page | `docs/examples/11_with_arguments.md` added to MkDocs nav. |
 
 ---
 
@@ -155,7 +162,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 
 | Issue | Location | Impact |
 |---|---|---|
-| `-val` binding resolution is stubbed | `parser.py` `_resolve_val_args()` | `-val` argument passing between words may not work in all cases |
+| Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
 | Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
 | E009 trigger unreachable | `typechecker.py` | Field mutation check exists but `word.possession == "-ja"` can never be True with current parser — needs OOP syntax (v0.3.0) |
 | `anthropic` optional extra | `pyproject.toml` | Install with `pip install ragul-lang[ai]` — resolved, no longer a hidden manual step |
@@ -202,9 +209,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 - [ ] `minta` module — regex pattern matching (`-minta`, `-egyezés`, `-csere-minta`)
 - [ ] `dátum` module — date/time operations
 - [ ] OOP / record-update syntax for E009 to become triggerable
-- [ ] `-val` binding resolution (currently stubbed in `parser.py`)
 - [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)
-- [ ] Add `anthropic` as optional dependency in `pyproject.toml` (`pip install ragul-lang[ai]`)
 
 ---
 

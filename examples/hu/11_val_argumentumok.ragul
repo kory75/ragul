@@ -1,0 +1,81 @@
+// 11_val_argumentumok.ragul — -val argumentumok
+//
+// Kétféleképpen lehet extra argumentumot átadni egy szuffixnek:
+//
+//   1. Beágyazott (inline) argumentum — a láncon belül kötött:
+//        s-"Hello"-tartalmaz-t
+//
+//   2. Mondatszintű -val argumentum — önálló szóként a mondatban:
+//        s-tartalmaz-t  "Hello"-val.
+//
+// A -val alak azért hasznos, mert az argumentum lehet:
+//   - Változó (nem literál)
+//   - Egy korábban kiszámított érték
+//   - Több egymást követő argumentum különböző szuffixekhez
+//
+// Futtatás: ragul futtat examples/hu/11_val_argumentumok.ragul
+
+program-nk-hatás
+
+	// -------------------------------------------------------
+	// 1. Aritmetika — az argumentum változóból jön
+	// -------------------------------------------------------
+	alap-ba  10-t.
+	lepes-ba 3-t.
+
+	// Inline: az argumentum a láncba sütve
+	a-ba  alap-3-össze-t.
+	a-képernyőre-va.                   // 13
+
+	// -val: az argumentum önálló változóból
+	b-ba  alap-össze-t  lepes-val.
+	b-képernyőre-va.                   // 13
+
+	// -------------------------------------------------------
+	// 2. Szöveg — tartalmaz / oszt / cserél
+	// -------------------------------------------------------
+	mondat-ba  "Szia, Ragul!"-t.
+	elvalaszto-ba  ", "-t.
+
+	// Tartalmaz — a keresett szó változóból
+	szoveg-ba  "Ragul"-t.
+	van-ba  mondat-tartalmaz-t  szoveg-val.
+	van-képernyőre-va.                 // True
+
+	// Szétválasztás — az elválasztó változóból
+	szavak-ba  mondat-feloszt-t  elvalaszto-val.
+	szavak-képernyőre-va.              // ['Szia', 'Ragul!']
+
+	// Csere — két -val argumentum egymás után
+	regi-ba  "Ragul"-t.
+	uj-ba    "világ"-t.
+	modositott-ba  mondat-csere-t  regi-val  uj-val.
+	modositott-képernyőre-va.          // Szia, világ!
+
+	// -------------------------------------------------------
+	// 3. Felhasználói hatókör — második paraméter -val-ból
+	// -------------------------------------------------------
+	// Hatókör definiálása: első paraméter a cső értéke (-d),
+	// második paraméter -val argumentumból (-d).
+	szorzat-unk
+		x-d.
+		y-d.
+		x-y-szoroz-t.
+
+	eredmeny-ba  5-szorzat-t  6-val.
+	eredmeny-képernyőre-va.            // 30
+
+	// -------------------------------------------------------
+	// 4. Gyűjtés (fold) — a kezdeti akkumulátor -val-ból jön
+	// -------------------------------------------------------
+	osszead-unk-gyűjt
+		felhalmozott-d.
+		elem-d.
+		felhalmozott-elem-össze-t.
+
+	szamok-ba  [1, 2, 3, 4, 5]-t.
+	osszeg-ba  szamok-osszead-t  0-val.
+	osszeg-képernyőre-va.              // 15
+
+	szorzat2-ba  szamok-osszead-t  100-val.
+	szorzat2-képernyőre-va.            // 115  (100 + 1 + 2 + 3 + 4 + 5)

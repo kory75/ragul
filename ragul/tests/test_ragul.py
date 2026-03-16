@@ -333,6 +333,57 @@ class TestStdlib:
 
 
 # ---------------------------------------------------------------------------
+# -val argument binding tests
+# ---------------------------------------------------------------------------
+
+class TestValArgs:
+
+    def test_val_arg_add(self):
+        # a + 5 via sentence-level -val argument
+        bindings = eval_expr("a-ba  3-t.\nb-ba  a-össze-t  5-val.")
+        assert bindings.get("b") == 8
+
+    def test_val_arg_add_direct(self):
+        # Simplest case: y = x + 5 expressed with sentence-level -val
+        bindings = eval_expr("x-ba  10-t.\ny-ba  x-össze-t  5-val.")
+        assert bindings.get("y") == 15
+
+    def test_val_arg_string_contains(self):
+        bindings = eval_expr('x-ba  "hello world"-tartalmaz-t  "world"-val.')
+        assert bindings.get("x") == True
+
+    def test_val_arg_string_contains_false(self):
+        bindings = eval_expr('x-ba  "hello world"-tartalmaz-t  "xyz"-val.')
+        assert bindings.get("x") == False
+
+    def test_val_arg_string_split(self):
+        bindings = eval_expr('x-ba  "a,b,c"-feloszt-t  ","-val.')
+        assert bindings.get("x") == ["a", "b", "c"]
+
+    def test_val_arg_string_replace_two_args(self):
+        bindings = eval_expr('x-ba  "hello world"-csere-t  "world"-val  "ragul"-val.')
+        assert bindings.get("x") == "hello ragul"
+
+    def test_val_arg_user_scope(self):
+        # User scope with two parameters: first gets piped value, second gets -val arg
+        src = "összead-unk\n\ta-d.\n\tb-d.\n\ta-b-össze-t.\nx-ba  3-összead-t  7-val.\n"
+        bindings = eval_expr(src)
+        assert bindings.get("x") == 10
+
+    def test_val_arg_fold(self):
+        # Fold list to sum using a user-defined -gyűjt scope
+        src = (
+            "összesítő-gyűjt-unk\n"
+            "\tfelhalmozott-d.\n"
+            "\telem-d.\n"
+            "\tfelhalmozott-elem-össze-t.\n"
+            "lista-ba  [1, 2, 3, 4]-t.\n"
+            "x-ba  lista-összesítő-t  0-val.\n"
+        )
+        bindings = eval_expr(src)
+        assert bindings.get("x") == 10
+
+# ---------------------------------------------------------------------------
 # Error handling tests
 # ---------------------------------------------------------------------------
 

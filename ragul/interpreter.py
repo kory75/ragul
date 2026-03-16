@@ -152,7 +152,7 @@ class Interpreter:
             is_callable = (
                 child.name
                 and child.name != "__root__"
-                and not child.is_loop
+                and not (child.is_loop and child.loop_kind != "gyűjt")
                 and not child.is_conditional
             )
             if is_callable:
@@ -627,7 +627,17 @@ class Interpreter:
                     value = RagulHiba(str(e))
             elif bare in self._user_scopes:
                 us = self._user_scopes[bare]
-                value = self._call_user_scope(us, value, val_arg_iter, env)
+                if us.loop_kind == "gyűjt":
+                    # Fold: root_val is the iterable; first -val arg is the initial accumulator
+                    initial: Any = 0
+                    try:
+                        av = next(val_arg_iter)
+                        initial = self._eval_word(av, env)
+                    except StopIteration:
+                        pass
+                    value = self._exec_fold_call(us, value, initial, env)
+                else:
+                    value = self._call_user_scope(us, value, val_arg_iter, env)
             elif aspect.lstrip("-") in EFFECT_CHANNELS:
                 EFFECT_CHANNELS[aspect.lstrip("-")](value)
                 value = None
@@ -712,6 +722,30 @@ class Interpreter:
                     break
 
         return self._exec_scope(scope, env, args)
+
+    def _exec_fold_call(self, scope: Scope, iterable: Any,
+                        initial_val: Any, env: Environment) -> Any:
+        """
+        Execute a -gyűjt (fold/reduce) scope called as a suffix.
+
+        iterable  — the list being reduced (the piped-in root value).
+        initial_val — the accumulator seed (first -val argument in the call).
+        """
+        if not isinstance(iterable, list):
+            iterable = []
+        params = self._extract_params(scope)
+        acc_name  = params[0] if len(params) > 0 else "felhalmozott"
+        elem_name = params[1] if len(params) > 1 else "elem"
+        accumulator = initial_val
+        for element in iterable:
+            fold_env = Environment(parent=env)
+            fold_env.set(acc_name, accumulator)
+            fold_env.set(elem_name, element)
+            for sentence in scope.sentences:
+                val = self._exec_sentence(sentence, fold_env, scope)
+                if val is not None:
+                    accumulator = val
+        return accumulator
 
     def _extract_params(self, scope: Scope) -> list[str]:
         """Extract -d parameter root names from a scope's sentences."""

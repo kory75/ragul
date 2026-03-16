@@ -472,15 +472,39 @@ class Parser:
 
 def _resolve_val_args(words: list[Word]) -> list[Word]:
     """
-    Assign -val argument words to the preceding word that needs them.
-    A word with aspects needs -val args; they are consumed left-to-right.
+    Absorb -val/-vel case words into the val_args of the preceding word.
 
-    Heuristic: a word whose case is -val with no aspects is an argument,
-    not a standalone root.
+    A word with case '-val' or '-vel' is an instrument argument — it provides
+    an extra value to the nearest preceding non-val word's suffix chain.
+    Left-to-right order is preserved; multiple -val words queue onto the same
+    preceding word.
+
+    The -val case is stripped from the absorbed word (its role is now positional
+    argument, not a case-marked sentence participant).
+
+    Returns the word list with all -val words removed (they are now in val_args).
     """
-    # For now: return words as-is; full resolution happens in the interpreter
-    # where the dependency graph provides more context.
-    return words
+    result: list[Word] = []
+    for word in words:
+        if word.case in ("-val", "-vel"):
+            if result:
+                # Strip the case so the word is a plain argument value
+                arg = Word(
+                    root=word.root,
+                    possession=word.possession,
+                    aspects=list(word.aspects),
+                    action=word.action,
+                    error=word.error,
+                    case="",
+                    val_args=list(word.val_args),
+                    source_text=word.source_text,
+                    line=word.line,
+                )
+                result[-1].val_args.append(arg)
+            # No preceding word — discard (malformed sentence; parser emits no error here)
+        else:
+            result.append(word)
+    return result
 
 
 # ---------------------------------------------------------------------------
