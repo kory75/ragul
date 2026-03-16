@@ -526,3 +526,76 @@ class TestTypeChecker:
             env=env,
         )
         assert result.returncode == 0
+
+
+# ---------------------------------------------------------------------------
+# minta module tests
+# ---------------------------------------------------------------------------
+
+class TestMinta:
+
+    def test_minta_match_true(self):
+        bindings = eval_expr('x-ba  "hello world"-minta-t  "world"-val.')
+        assert bindings.get("x") is True
+
+    def test_minta_match_false(self):
+        bindings = eval_expr('x-ba  "hello world"-minta-t  "xyz"-val.')
+        assert bindings.get("x") is False
+
+    def test_minta_regex_pattern(self):
+        bindings = eval_expr(r'x-ba  "abc123"-minta-t  "\d+"-val.')
+        assert bindings.get("x") is True
+
+    def test_egyezés_full_match(self):
+        # No capture group — returns full matched string
+        bindings = eval_expr(r'x-ba  "price: 42"-egyezés-t  "\d+"-val.')
+        assert bindings.get("x") == "42"
+
+    def test_egyezés_single_group(self):
+        bindings = eval_expr(r'x-ba  "2026-03-16"-egyezés-t  "(\d{4})"-val.')
+        assert bindings.get("x") == "2026"
+
+    def test_egyezés_no_match_is_hiba(self):
+        from ragul.stdlib.modules import RagulHiba
+        bindings = eval_expr(r'x-ba  "hello"-egyezés-t  "\d+"-val.')
+        assert isinstance(bindings.get("x"), RagulHiba)
+
+    def test_egyezések_all_matches(self):
+        bindings = eval_expr(r'x-ba  "one1two2three3"-egyezések-t  "\d"-val.')
+        assert bindings.get("x") == ["1", "2", "3"]
+
+    def test_egyezések_empty(self):
+        bindings = eval_expr(r'x-ba  "no digits"-egyezések-t  "\d"-val.')
+        assert bindings.get("x") == []
+
+    def test_mintacsere(self):
+        bindings = eval_expr(r'x-ba  "hello world"-mintacsere-t  "o"-val  "0"-val.')
+        assert bindings.get("x") == "hell0 w0rld"
+
+    def test_mintacsere_capture_group(self):
+        bindings = eval_expr(r'x-ba  "2026-03-16"-mintacsere-t  "(\d+)-(\d+)-(\d+)"-val  "\3/\2/\1"-val.')
+        assert bindings.get("x") == "16/03/2026"
+
+    def test_mintafeloszt(self):
+        bindings = eval_expr(r'x-ba  "one,two,,three"-mintafeloszt-t  ","-val.')
+        assert bindings.get("x") == ["one", "two", "", "three"]
+
+    def test_mintafeloszt_regex(self):
+        bindings = eval_expr(r'x-ba  "a1b2c3d"-mintafeloszt-t  "\d"-val.')
+        assert bindings.get("x") == ["a", "b", "c", "d"]
+
+    def test_english_alias_match(self):
+        bindings = eval_expr('x-ba  "hello"-match-t  "ell"-val.')
+        assert bindings.get("x") is True
+
+    def test_english_alias_findall(self):
+        bindings = eval_expr(r'x-ba  "a1b2c3"-findall-t  "\d"-val.')
+        assert bindings.get("x") == ["1", "2", "3"]
+
+    def test_english_alias_resub(self):
+        bindings = eval_expr('x-ba  "foo bar"-resub-t  " "-val  "_"-val.')
+        assert bindings.get("x") == "foo_bar"
+
+    def test_english_alias_resplit(self):
+        bindings = eval_expr(r'x-ba  "x  y  z"-resplit-t  "\s+"-val.')
+        assert bindings.get("x") == ["x", "y", "z"]

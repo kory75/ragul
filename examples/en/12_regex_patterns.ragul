@@ -1,0 +1,71 @@
+// 12_regex_patterns.ragul — minta module (regular expressions)
+//
+// The minta module provides five suffixes:
+//
+//   -match        String → Bool    — does the string match? (re.search)
+//   -capture      String → String|Error — first match / groups
+//   -findall      String → List    — all matches (re.findall)
+//   -resub        String → String  — regex replace (re.sub)
+//   -resplit      String → List    — regex split (re.split)
+//
+// Import: minta-from.
+//
+// Run: ragul run examples/en/12_regex_patterns.ragul
+
+minta-from.
+
+program-ours-effect
+
+	// -------------------------------------------------------
+	// 1. -match — check for a match
+	// -------------------------------------------------------
+	num_pattern-into  "\d+"-it.
+
+	has_num-into  "price: 1990"-match-it  num_pattern-with.
+	has_num-print-doing.                        // True
+
+	letters_only-into  "no digits here"-match-it  num_pattern-with.
+	letters_only-print-doing.                   // False
+
+	// -------------------------------------------------------
+	// 2. -capture — return first match
+	// -------------------------------------------------------
+	text-into  "Date: 2026-03-16"-it.
+
+	// No capture group — returns the full matched substring
+	year-into  text-capture-it  "\d{4}"-with.
+	year-print-doing.                           // 2026
+
+	// One capture group — returns that group
+	year2-into  text-capture-it  "(\d{4})-\d{2}-\d{2}"-with.
+	year2-print-doing.                          // 2026
+
+	// No match → Error value
+	result-into  "letters"-capture-it  "\d+"-with.
+	result-print-doing.                         // Hiba(...)
+
+	// -------------------------------------------------------
+	// 3. -findall — all matches
+	// -------------------------------------------------------
+	sentence-into  "1 apple, 2 pears, 3 plums"-it.
+	numbers-into   sentence-findall-it  "\d+"-with.
+	numbers-print-doing.                        // ['1', '2', '3']
+
+	// -------------------------------------------------------
+	// 4. -resub — regex replace
+	// -------------------------------------------------------
+	source-into  "  lots   of   spaces  "-it.
+	normalised-into  source-resub-it  "\s+"-with  " "-with.
+	normalised-print-doing.                     //  lots of spaces
+
+	// Backreference to captured groups
+	date-into  "2026-03-16"-it.
+	flipped-into  date-resub-it  "(\d+)-(\d+)-(\d+)"-with  "\3/\2/\1"-with.
+	flipped-print-doing.                        // 16/03/2026
+
+	// -------------------------------------------------------
+	// 5. -resplit — split on a regex
+	// -------------------------------------------------------
+	mixed-into  "apple;pear  plum,apricot"-it.
+	parts-into  mixed-resplit-it  "[;,\s]+"-with.
+	parts-print-doing.                          // ['apple', 'pear', 'plum', 'apricot']

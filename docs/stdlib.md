@@ -157,6 +157,74 @@ The standard library is loaded automatically — no import needed. All suffixes 
 
 ---
 
+## minta — Regex Patterns
+
+| Hungarian | English | Expects | Arg(s) | Produces | Description |
+|---|---|---|---|---|---|
+| `-minta` | `-match` | `Szöveg` | pattern | `Logikai` | True if the string contains a match (`re.search`) |
+| `-egyezés` | `-capture` | `Szöveg` | pattern | `vagy-Szöveg-vagy-Hiba` | First match; returns group if one capture group, list if multiple, full match if none |
+| `-egyezések` | `-findall` | `Szöveg` | pattern | `Lista-Szöveg` | All non-overlapping matches |
+| `-mintacsere` | `-resub` | `Szöveg` | pattern, replacement | `Szöveg` | Replace every match (`re.sub`); backreferences (`\1`, `\2` …) supported |
+| `-mintafeloszt` | `-resplit` | `Szöveg` | pattern | `Lista-Szöveg` | Split on every match (`re.split`) |
+
+=== "English aliases"
+    ```ragul
+    minta-from.
+
+    program-ours-effect
+        text-into  "order #1042 placed 2026-03-16"-it.
+
+        // check for a match
+        has-into  text-match-it  "\d{4}-\d{2}-\d{2}"-with.
+        has-print-doing.                   // True
+
+        // extract first match
+        date-into  text-capture-it  "\d{4}-\d{2}-\d{2}"-with.
+        date-print-doing.                  // 2026-03-16
+
+        // all numbers
+        nums-into  text-findall-it  "\d+"-with.
+        nums-print-doing.                  // ['1042', '2026', '03', '16']
+
+        // replace digits with *
+        masked-into  text-resub-it  "\d"-with  "*"-with.
+        masked-print-doing.                // order #**** placed ****-**-**
+
+        // split on non-word chars
+        words-into  text-resplit-it  "\W+"-with.
+        words-print-doing.                 // ['order', '1042', 'placed', '2026', '03', '16']
+    ```
+
+=== "Hungarian"
+    ```ragul
+    minta-ból.
+
+    program-nk-hatás
+        szöveg-ba  "rendelés #1042 rögzítve: 2026-03-16"-t.
+
+        // egyezés ellenőrzése
+        van-ba  szöveg-minta-t  "\d{4}-\d{2}-\d{2}"-val.
+        van-képernyőre-va.                 // True
+
+        // első egyezés
+        dátum-ba  szöveg-egyezés-t  "\d{4}-\d{2}-\d{2}"-val.
+        dátum-képernyőre-va.               // 2026-03-16
+
+        // összes szám
+        számok-ba  szöveg-egyezések-t  "\d+"-val.
+        számok-képernyőre-va.              // ['1042', '2026', '03', '16']
+
+        // számjegyek cseréje *-gal
+        maszkolt-ba  szöveg-mintacsere-t  "\d"-val  "*"-val.
+        maszkolt-képernyőre-va.            // rendelés #**** rögzítve: ****-**-**
+
+        // szétválasztás nem-szókaraktereken
+        szavak-ba  szöveg-mintafeloszt-t  "\W+"-val.
+        szavak-képernyőre-va.              // ['rendelés', '1042', 'rögzítve', '2026', '03', '16']
+    ```
+
+---
+
 ## Bridge Suffixes
 
 Bridge suffixes convert between types and must be used when chaining across type boundaries:

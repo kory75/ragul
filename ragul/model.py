@@ -122,6 +122,12 @@ ALIAS_TABLE: dict[str, str] = {
     "-sum":         "-összeg",
     "-tojson":      "-jsonná",
     "-tocsv":       "-csvné",
+    # minta (regex) module aliases
+    "-match":       "-minta",
+    "-capture":     "-egyezés",
+    "-findall":     "-egyezések",
+    "-resub":       "-mintacsere",
+    "-resplit":     "-mintafeloszt",
     # Effect channel aliases
     "-print":       "-képernyőre",
     "-stdout":      "-képernyőre",

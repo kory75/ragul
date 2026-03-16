@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-16 (updated three times)
+**Date:** 2026-03-16 (updated — v0.2.1 released)
 
 ---
 
@@ -38,10 +38,11 @@ This report compares what those documents specify against what is currently impl
 | v0.1.1 | 2026-03-15 | `ragul new project/module` scaffold commands; pygls 2.0 fix |
 | **v0.2.0** | **2026-03-16** | E006/E007 type checker errors; bilingual error messages; English I/O aliases; `adatok` module (JSON/CSV); `true`/`false` root aliases; `netin`/`netout` stubs; lexer arithmetic fix; error-code example files; docs overhaul |
 | **v0.2.1** | **2026-03-16** | `-val` binding resolution; fold-as-suffix call; 8 new `-val` tests; `-with`/`-val` example files + docs page |
+| **v0.3.0** | **2026-03-16** | `minta` module — 5 regex suffixes (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`); 5 English aliases; 16 new tests; bilingual example files |
 
 All versions published to PyPI as `ragul-lang`.
 
-### Post-v0.2.0 changes (in v0.2.1, unreleased)
+### v0.2.1 highlights
 
 | Change | Details |
 |---|---|
@@ -122,10 +123,10 @@ pygls-based LSP server with:
 
 **Standard Library**
 - `stdlib/core.py` — arithmetic, comparison, equality, logical, string concat
-- `stdlib/modules.py` — matematika (9 functions), szöveg (10 functions including `-számmá`/`-tonum`), lista (polymorphic filter/compare/fold), adatok (`-json`/`-jsonná`/`-csv`/`-csvné`/`-mezők`)
+- `stdlib/modules.py` — matematika (9 functions), szöveg (10 functions including `-számmá`/`-tonum`), lista (polymorphic filter/compare/fold), adatok (`-json`/`-jsonná`/`-csv`/`-csvné`/`-mezők`), minta (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`)
 
 **Tests (`ragul/tests/test_ragul.py`)**
-64 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling.
+88 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling, `-val` argument binding (8 new tests in `TestValArgs`), regex/minta module (16 new tests in `TestMinta`).
 
 **Error-Code Example Files (`examples/error-codes/`)**
 8 standalone `.ragul` files, one per diagnostic, each verified to produce the expected `ragul check` output:
@@ -145,7 +146,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 - Tooling & CLI guide (all commands, error codes, editor integration)
 - `error-codes.md` — one-page summary with code sample, expected output, and fix for every error code
 - Glossary (Hungarian ↔ English suffix/keyword map)
-- 9 bilingual example pages (English alias / Hungarian tabs)
+- 11 bilingual example pages (English alias / Hungarian tabs), including `-with`/`-val` arguments and regex patterns
 
 **Agent Architecture (`ragul/agents/`)**
 - `task.py`, `base.py`, `orchestrator.py` — pipeline with optional Claude Opus 4.6 AI analysis
@@ -163,9 +164,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 | Issue | Location | Impact |
 |---|---|---|
 | Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
-| Dependency graph / topological sort not implemented | `interpreter.py` | Sentences execute in written order, not DAG order; the spec's implicit parallelism is not enforced |
 | E009 trigger unreachable | `typechecker.py` | Field mutation check exists but `word.possession == "-ja"` can never be True with current parser — needs OOP syntax (v0.3.0) |
-| `anthropic` optional extra | `pyproject.toml` | Install with `pip install ragul-lang[ai]` — resolved, no longer a hidden manual step |
 
 ### Implemented Differently from the Plan
 
@@ -179,6 +178,15 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 ---
 
 ## Bug Fixes Log
+
+### v0.2.1 (2026-03-16)
+
+| Bug | Fix |
+|---|---|
+| `-val`/`-vel` words not absorbed into preceding word at parse time | `_resolve_val_args` in `parser.py` implemented (was a no-op stub); absorbs instrument-case words into `val_args` left-to-right |
+| Fold scopes not callable as suffixes | `_collect_scopes` guard narrowed: only non-fold loops are excluded from `_user_scopes`; fold scopes are now registered |
+| Fold initial accumulator hard-coded to 0 | `_exec_fold_call` added to interpreter; initial value consumed from val_arg queue (first `-val` argument) |
+| `_fileout` mypy error | Return type changed from `-> None` to `-> Any`; explicit `return None` on success path added |
 
 ### v0.2.0 (2026-03-16)
 
@@ -206,10 +214,11 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 
 ### v0.3.0 — Planned
 
-- [ ] `minta` module — regex pattern matching (`-minta`, `-egyezés`, `-csere-minta`)
+- [x] `minta` module — regex pattern matching (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`)
 - [ ] `dátum` module — date/time operations
 - [ ] OOP / record-update syntax for E009 to become triggerable
 - [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)
+- [ ] Split `stdlib/modules.py` into separate per-module files (`stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py`, `stdlib/minta.py`, etc.) — easier to maintain and extend
 
 ---
 

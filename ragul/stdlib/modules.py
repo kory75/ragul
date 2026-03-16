@@ -1,10 +1,11 @@
 """
-ragul/stdlib/modules.py — Standard library modules (matematika, szöveg, lista).
+ragul/stdlib/modules.py — Standard library modules (matematika, szöveg, lista, minta).
 
 Imported selectively:
     matematika-ból  négyzetgyök-val  hatvány-val.
     szöveg-ből  hossz-val  feloszt-val.
     lista-ból.
+    minta-ból.
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ import csv as _csv_mod
 import io
 import json
 import math
+import re as _re
 from typing import Any
 from ragul.model import RagulType
 from ragul.stdlib.core import SUFFIX_REGISTRY
@@ -189,6 +191,65 @@ def _összeg(v: Any) -> Any:
 
 _reg("-térképezve", _térképezve, _lista_t, _lista_t, [RagulType.unknown()], module="lista")
 _reg("-összeg",     _összeg,     _lista_t, _szam,    module="lista")
+
+
+# ---------------------------------------------------------------------------
+# minta module  (regex pattern matching)
+# ---------------------------------------------------------------------------
+
+def _minta(v: Any, pattern: Any) -> bool:
+    """Return True if *v* contains a match for regex *pattern*."""
+    return bool(_re.search(str(pattern), str(v)))
+
+
+def _egyezés(v: Any, pattern: Any) -> Any:
+    """Return the first match.
+
+    - No capture groups → returns the full matched string.
+    - One capture group → returns that group as a string.
+    - Multiple capture groups → returns them as a list.
+    - No match → RagulHiba.
+    """
+    m = _re.search(str(pattern), str(v))
+    if m is None:
+        return RagulHiba(f"No match for pattern '{pattern}' in '{v}'")
+    groups = m.groups()
+    if not groups:
+        return m.group(0)
+    if len(groups) == 1:
+        return groups[0]
+    return list(groups)
+
+
+def _egyezések(v: Any, pattern: Any) -> Any:
+    """Return all non-overlapping matches (findall).
+
+    When the pattern has no capture groups each item is a string.
+    When the pattern has groups each item is a list of group strings.
+    """
+    results = _re.findall(str(pattern), str(v))
+    # findall with groups returns list-of-tuples; normalise to list-of-lists
+    return [list(r) if isinstance(r, tuple) else r for r in results]
+
+
+def _mintacsere(v: Any, pattern: Any, replacement: Any) -> str:
+    """Replace every match of *pattern* in *v* with *replacement* (re.sub)."""
+    return _re.sub(str(pattern), str(replacement), str(v))
+
+
+def _mintafeloszt(v: Any, pattern: Any) -> list:
+    """Split *v* on every match of *pattern* (re.split)."""
+    return _re.split(str(pattern), str(v))
+
+
+_vagy_szoveg_hiba2 = RagulType.vagy(RagulType.szoveg(), RagulType.hiba())
+_lista_szoveg      = RagulType.lista(RagulType.szoveg())
+
+_reg("-minta",       _minta,        _szoveg, _logikai,          [_szoveg], module="minta")
+_reg("-egyezés",     _egyezés,      _szoveg, _vagy_szoveg_hiba2, [_szoveg], module="minta")
+_reg("-egyezések",   _egyezések,    _szoveg, _lista_szoveg,     [_szoveg], module="minta")
+_reg("-mintacsere",  _mintacsere,   _szoveg, _szoveg,           [_szoveg, _szoveg], module="minta")
+_reg("-mintafeloszt",_mintafeloszt, _szoveg, _lista_szoveg,     [_szoveg], module="minta")
 
 
 # ---------------------------------------------------------------------------

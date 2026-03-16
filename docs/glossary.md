@@ -147,6 +147,16 @@ Operate on `Logikai` (boolean) values.
 | `-csere` | `-replace` | old, new | `Szöveg` | Replace all occurrences |
 | `-számmá` | `-tonum` | — | `vagy-Szám-vagy-Hiba` | Parse as number |
 
+### `minta` Module (Regex)
+
+| Hungarian | English | Args | Produces | Description |
+|---|---|---|---|---|
+| `-minta` | `-match` | pattern | `Logikai` | True if string contains a match |
+| `-egyezés` | `-capture` | pattern | `vagy-Szöveg-vagy-Hiba` | First match / capture groups |
+| `-egyezések` | `-findall` | pattern | `Lista-Szöveg` | All matches |
+| `-mintacsere` | `-resub` | pattern, replacement | `Szöveg` | Regex replace |
+| `-mintafeloszt` | `-resplit` | pattern | `Lista-Szöveg` | Regex split |
+
 ---
 
 ## Math Suffixes (`matematika` Module)

@@ -81,6 +81,7 @@ The standard library ships four built-in modules. All suffixes are available wit
 | `szöveg` | `-hossz`, `-nagybetűs`, `-kisbetűs`, `-tartalmaz`, `-kezdődik`, `-végződik`, `-feloszt`, `-formáz`, `-szelet`, `-csere`, `-számmá` | `-len`, `-upper`, `-lower`, `-contains`, `-startswith`, `-endswith`, `-split`, `-format`, `-slice`, `-replace`, `-tonum` |
 | `lista` | `-rendezve`, `-fordítva`, `-első`, `-utolsó`, `-egyedi`, `-lapítva`, `-szűrve`, `-hozzáad`, `-eltávolít`, `-térképezve`, `-összeg` | `-sorted`, `-reversed`, `-first`, `-last`, `-unique`, `-flat`, `-filter`, `-append`, `-remove`, `-map`, `-sum` |
 | `adatok` | `-json`, `-jsonná`, `-csv`, `-csvné`, `-mező`, `-mezők` | `-json`, `-tojson`, `-csv`, `-tocsv`, `-field`, `-fields` |
+| `minta` | `-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt` | `-match`, `-capture`, `-findall`, `-resub`, `-resplit` |
 
 ---
 

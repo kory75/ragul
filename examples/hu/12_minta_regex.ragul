@@ -1,0 +1,71 @@
+// 12_minta_regex.ragul — minta modul (reguláris kifejezések)
+//
+// A minta modul öt szuffixet biztosít:
+//
+//   -minta       Szöveg → Logikai   — van-e egyezés? (re.search)
+//   -egyezés     Szöveg → Szöveg|Hiba — első egyezés / csoportok
+//   -egyezések   Szöveg → Lista     — összes egyezés (re.findall)
+//   -mintacsere  Szöveg → Szöveg    — csere mintával (re.sub)
+//   -mintafeloszt Szöveg → Lista    — szétválasztás mintával (re.split)
+//
+// Importálás: minta-ból.
+//
+// Futtatás: ragul futtat examples/hu/12_minta_regex.ragul
+
+minta-ból.
+
+program-nk-hatás
+
+	// -------------------------------------------------------
+	// 1. -minta — egyezés ellenőrzése
+	// -------------------------------------------------------
+	szam_minta-ba  "\d+"-t.
+
+	van_szam-ba  "ár: 1990 Ft"-minta-t  szam_minta-val.
+	van_szam-képernyőre-va.                     // True
+
+	csak_betu-ba  "nincs szám itt"-minta-t  szam_minta-val.
+	csak_betu-képernyőre-va.                    // False
+
+	// -------------------------------------------------------
+	// 2. -egyezés — első egyezés visszaadása
+	// -------------------------------------------------------
+	szoveg-ba  "Dátum: 2026-03-16"-t.
+
+	// Csoport nélkül — a teljes egyező részletet adja vissza
+	ev-ba  szoveg-egyezés-t  "\d{4}"-val.
+	ev-képernyőre-va.                           // 2026
+
+	// Egy csoporttal — a csoport tartalmát adja vissza
+	ev2-ba  szoveg-egyezés-t  "(\d{4})-\d{2}-\d{2}"-val.
+	ev2-képernyőre-va.                          // 2026
+
+	// Nincs egyezés → Hiba
+	eredmeny-ba  "betűk"-egyezés-t  "\d+"-val.
+	eredmeny-képernyőre-va.                     // Hiba(...)
+
+	// -------------------------------------------------------
+	// 3. -egyezések — összes egyezés
+	// -------------------------------------------------------
+	mondat-ba  "1 alma, 2 körte, 3 szilva"-t.
+	szamok-ba  mondat-egyezések-t  "\d+"-val.
+	szamok-képernyőre-va.                       // ['1', '2', '3']
+
+	// -------------------------------------------------------
+	// 4. -mintacsere — csere reguláris kifejezéssel
+	// -------------------------------------------------------
+	forras-ba  "  sok   szóköz   van  "-t.
+	normalizalt-ba  forras-mintacsere-t  "\s+"-val  " "-val.
+	normalizalt-képernyőre-va.                  //  sok szóköz van
+
+	// Visszahivatkozás a csoportokra
+	datum-ba  "2026-03-16"-t.
+	fordított-ba  datum-mintacsere-t  "(\d+)-(\d+)-(\d+)"-val  "\3/\2/\1"-val.
+	fordított-képernyőre-va.                    // 16/03/2026
+
+	// -------------------------------------------------------
+	// 5. -mintafeloszt — szétválasztás mintával
+	// -------------------------------------------------------
+	lista_szoveg-ba  "alma;körte  szilva,barack"-t.
+	részek-ba  lista_szoveg-mintafeloszt-t  "[;,\s]+"-val.
+	részek-képernyőre-va.                       // ['alma', 'körte', 'szilva', 'barack']
