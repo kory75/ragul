@@ -1,0 +1,38 @@
+// 09_csv.ragul — CSV feldolgozás
+//
+// -csv: CSV szövegből rekordlistát készít (első sor a fejléc)
+// -mező: mezőt kér le rekordból vagy rekordlistából
+// -csvné: rekordlistát CSV szöveggé alakít
+//
+// Megjegyzés: a CSV minden értéke szöveg — számmá kell alakítani,
+// ha numerikus műveleteket szeretnénk végezni (-számmá).
+//
+// Futtatás: ragul futtat examples/hu/09_csv.ragul
+
+program-nk-hatás
+	// CSV szöveg elemzése (sorlezáró \n)
+	csv_szoveg-ba  "nev,pont\nAlice,92\nBob,78\nCarol,85"-t.
+	rekordok-ba    csv_szoveg-csv-t.
+
+	// Rekordok száma
+	db-ba  rekordok-hossz-t.
+	db-képernyőre-va.              // 3
+
+	// Nevek kinyerése (polimorf -mező listán)
+	nevek-ba  rekordok-"nev"-mező-t.
+	nevek-képernyőre-va.           // ['Alice', 'Bob', 'Carol']
+
+	// Pontok kinyerése (szöveg értékek)
+	pontok-ba  rekordok-"pont"-mező-t.
+	pontok-képernyőre-va.          // ['92', '78', '85']
+
+	// Első és utolsó rekord
+	elso-ba   rekordok-első-t.
+	utolso-ba rekordok-utolsó-t.
+
+	elso-"nev"-mező-képernyőre-va.    // Alice
+	utolso-"nev"-mező-képernyőre-va.  // Carol
+
+	// Visszaalakítás CSV szöveggé
+	csv_ki-ba  rekordok-csvné-t.
+	csv_ki-képernyőre-va.

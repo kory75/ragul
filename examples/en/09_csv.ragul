@@ -1,0 +1,38 @@
+// 09_csv.ragul — CSV parsing and data processing
+//
+// -csv: parse a CSV string into a list of records (first row is the header)
+// -field: access a field from a record or from every record in a list
+// -tocsv: serialize a list of records back to CSV
+//
+// Note: CSV values are always strings after parsing.
+// Use -tonum to convert to a number before arithmetic.
+//
+// Run: ragul run examples/en/09_csv.ragul
+
+program-ours-effect
+	// Parse inline CSV (newlines written as \n)
+	raw-into      "name,score\nAlice,92\nBob,78\nCarol,85"-it.
+	records-into  raw-csv-it.
+
+	// Record count
+	count-into  records-len-it.
+	count-print-doing.             // 3
+
+	// Extract names (polymorphic -field on a list)
+	names-into  records-"name"-field-it.
+	names-print-doing.             // ['Alice', 'Bob', 'Carol']
+
+	// Extract scores (string values from CSV)
+	scores-into  records-"score"-field-it.
+	scores-print-doing.            // ['92', '78', '85']
+
+	// First and last record
+	first-into  records-first-it.
+	last-into   records-last-it.
+
+	first-"name"-field-print-doing.   // Alice
+	last-"name"-field-print-doing.    // Carol
+
+	// Serialize back to CSV
+	out-into  records-tocsv-it.
+	out-print-doing.

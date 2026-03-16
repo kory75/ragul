@@ -8,6 +8,9 @@ Imported selectively:
 """
 
 from __future__ import annotations
+import csv as _csv_mod
+import io
+import json
 import math
 from typing import Any
 from ragul.model import RagulType
@@ -152,6 +155,124 @@ def _szelet_list(v, start, end=None):
     return v[int(start):int(end)]
 
 _reg("-szelet", _szelet_list, _lista_t, _lista_t, [_szam, _szam], module="lista")
+
+
+# ---------------------------------------------------------------------------
+# lista extras  (-térképezve / -map,  -összeg / -sum)
+# ---------------------------------------------------------------------------
+
+def _térképezve(v: Any, key: Any) -> Any:
+    """Extract *key* field from each dict/list item in *v*."""
+    if not isinstance(v, list):
+        return _RagulHiba(f"-térképezve requires a list, got {type(v).__name__}")
+    result = []
+    for item in v:
+        if isinstance(item, dict):
+            result.append(item.get(str(key)))
+        elif isinstance(item, list):
+            try:
+                result.append(item[int(key)])
+            except (IndexError, ValueError):
+                result.append(None)
+        else:
+            result.append(None)
+    return result
+
+
+def _összeg(v: Any) -> Any:
+    """Sum all elements of a numeric list."""
+    try:
+        return sum(v)
+    except (TypeError, ValueError) as e:
+        return _RagulHiba(str(e))
+
+
+_reg("-térképezve", _térképezve, _lista_t, _lista_t, [RagulType.unknown()], module="lista")
+_reg("-összeg",     _összeg,     _lista_t, _szam,    module="lista")
+
+
+# ---------------------------------------------------------------------------
+# adatok module  (JSON + CSV parse/emit, field access)
+# ---------------------------------------------------------------------------
+
+def _json_parse(v: Any) -> Any:
+    try:
+        return json.loads(str(v))
+    except (json.JSONDecodeError, ValueError) as e:
+        return _RagulHiba(f"JSON parse error: {e}")
+
+
+def _json_emit(v: Any) -> str:
+    return json.dumps(v, ensure_ascii=False)
+
+
+def _csv_parse(v: Any) -> Any:
+    try:
+        reader = _csv_mod.DictReader(io.StringIO(str(v)))
+        return [dict(row) for row in reader]
+    except Exception as e:
+        return _RagulHiba(f"CSV parse error: {e}")
+
+
+def _csv_emit(v: Any) -> Any:
+    if not isinstance(v, list) or not v:
+        return ""
+    out = io.StringIO()
+    writer = _csv_mod.DictWriter(
+        out, fieldnames=list(v[0].keys()), lineterminator="\n"
+    )
+    writer.writeheader()
+    writer.writerows(v)
+    return out.getvalue()
+
+
+def _mező(v: Any, key: Any) -> Any:
+    """
+    Field access.  Polymorphic:
+      - dict  → v[key]
+      - list  → [item[key] for item in v]  (extract field from every record)
+    """
+    if isinstance(v, list):
+        result = []
+        for item in v:
+            if isinstance(item, dict):
+                result.append(item.get(str(key)))
+            elif isinstance(item, (list, str)):
+                try:
+                    result.append(item[int(key)])
+                except (IndexError, ValueError):
+                    result.append(None)
+            else:
+                result.append(None)
+        return result
+    if isinstance(v, dict):
+        k = str(key)
+        if k in v:
+            return v[k]
+        return _RagulHiba(f"Field '{k}' not found")
+    if isinstance(v, (list, str)):
+        try:
+            return v[int(key)]
+        except (IndexError, ValueError) as e:
+            return _RagulHiba(str(e))
+    return _RagulHiba(f"Cannot access field on {type(v).__name__}")
+
+
+def _mezők(v: Any) -> Any:
+    if isinstance(v, dict):
+        return list(v.keys())
+    return _RagulHiba(f"-mezők requires a dict, got {type(v).__name__}")
+
+
+_any          = RagulType.unknown()
+_vagy_any_hiba = RagulType.vagy(_any, RagulType.hiba())
+
+_reg("-json",   _json_parse, _szoveg,  _vagy_any_hiba, module="adatok")
+_reg("-jsonná", _json_emit,  _any,     _szoveg,        module="adatok")
+_reg("-csv",    _csv_parse,  _szoveg,  _vagy_any_hiba, module="adatok")
+_reg("-csvné",  _csv_emit,   _lista_t, _szoveg,        module="adatok")
+_reg("-mező",   _mező,       _any,     _any,           [_any], module="adatok")
+_reg("-mezők",  _mezők,      _any,     _lista_t,       module="adatok")
 
 
 # ---------------------------------------------------------------------------

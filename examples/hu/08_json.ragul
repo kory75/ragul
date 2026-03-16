@@ -1,0 +1,38 @@
+// 08_json.ragul — JSON elemzés és mezőhozzáférés
+//
+// -json: JSON szövegből Ragul értéket készít (dict, lista, stb.)
+// -mező: megnevezett mezőt kér le egy rekordból vagy rekordlistából (polimorf)
+// -térképezve: mezőt kér le minden elemből egy listában
+// -összeg: numerikus lista összegét számolja
+// -jsonná: értéket JSON szöveggé alakít
+//
+// Futtatás: ragul futtat examples/hu/08_json.ragul
+
+program-nk-hatás
+	// JSON szöveg elemzése
+	rekordok-ba  "[{\"nev\": \"Alice\", \"pont\": 92}, {\"nev\": \"Bob\", \"pont\": 78}, {\"nev\": \"Carol\", \"pont\": 85}]"-json-t.
+
+	// Első rekord lekérése
+	elso-ba  rekordok-első-t.
+	nev-ba   elso-"nev"-mező-t.
+	pont-ba  elso-"pont"-mező-t.
+
+	nev-képernyőre-va.             // Alice
+	pont-képernyőre-va.            // 92
+
+	// Egy mező kinyerése minden rekordból (polimorf -mező listán)
+	nevek-ba   rekordok-"nev"-mező-t.
+	nevek-képernyőre-va.           // ['Alice', 'Bob', 'Carol']
+
+	// Összes pont összeadása
+	pontok-ba  rekordok-"pont"-mező-t.
+	osszeg-ba  pontok-összeg-t.
+	osszeg-képernyőre-va.          // 255
+
+	// Lista rekordszáma
+	db-ba  rekordok-hossz-t.
+	db-képernyőre-va.              // 3
+
+	// Visszaalakítás JSON szöveggé
+	kimenet-ba  rekordok-jsonná-t.
+	kimenet-képernyőre-va.

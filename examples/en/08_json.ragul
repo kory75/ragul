@@ -1,0 +1,38 @@
+// 08_json.ragul — JSON parsing and field access
+//
+// -json: parse a JSON string into a Ragul value (dict, list, etc.)
+// -field: access a named field from a record or from every record in a list (polymorphic)
+// -map: extract a field from every item in a list
+// -sum: sum a list of numbers
+// -tojson: serialize a value back to a JSON string
+//
+// Run: ragul run examples/en/08_json.ragul
+
+program-ours-effect
+	// Parse a JSON array
+	records-into  "[{\"name\": \"Alice\", \"score\": 92}, {\"name\": \"Bob\", \"score\": 78}, {\"name\": \"Carol\", \"score\": 85}]"-json-it.
+
+	// Access fields from the first record
+	first-into  records-first-it.
+	name-into   first-"name"-field-it.
+	score-into  first-"score"-field-it.
+
+	name-print-doing.              // Alice
+	score-print-doing.             // 92
+
+	// Extract one field from every record (polymorphic -field on a list)
+	names-into   records-"name"-field-it.
+	names-print-doing.             // ['Alice', 'Bob', 'Carol']
+
+	// Sum all scores
+	scores-into  records-"score"-map-it.
+	total-into   scores-sum-it.
+	total-print-doing.             // 255
+
+	// Record count
+	count-into  records-len-it.
+	count-print-doing.             // 3
+
+	// Serialize back to JSON
+	output-into  records-tojson-it.
+	output-print-doing.

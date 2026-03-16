@@ -115,6 +115,13 @@ ALIAS_TABLE: dict[str, str] = {
     "-filter":      "-szűrve",
     "-append":      "-hozzáad",
     "-remove":      "-eltávolít",
+    # adatok (data) module aliases
+    "-field":       "-mező",
+    "-fields":      "-mezők",
+    "-map":         "-térképezve",
+    "-sum":         "-összeg",
+    "-tojson":      "-jsonná",
+    "-tocsv":       "-csvné",
     # Effect channel aliases
     "-print":       "-képernyőre",
     "-stdout":      "-képernyőre",
