@@ -1,6 +1,6 @@
 # Booleans & Comparisons
 
-Demonstrates comparison operators and logical combinators. Comparisons produce `Logikai` (boolean) values — `igaz` (true) or `hamis` (false) — which can be stored, printed, and combined.
+Demonstrates comparison operators and logical combinators. Comparisons produce `Logikai` (boolean) values — `true`/`igaz` or `false`/`hamis` — which can be stored, printed, and combined.
 
 === "English aliases"
     ```ragul
@@ -20,8 +20,8 @@ Demonstrates comparison operators and logical combinators. Comparisons produce `
         equal-print-doing.               // True
 
         // Logical operators
-        p-into  igaz-it.
-        q-into  hamis-it.
+        p-into  true-it.
+        q-into  false-it.
 
         and_res-into  p-q-and-it.          // True AND False = False
         or_res-into   p-q-or-it.           // True OR False  = True
@@ -114,8 +114,8 @@ Comparison suffixes take an inline argument and return a `Logikai`:
 The argument can also be a variable: `x-y-above-it` means "is x > y?".
 
 !!! note "Boolean literals"
-    `igaz` (true) and `hamis` (false) are language keywords — they do not have English aliases.
-    The English alias system covers suffixes only.
+    `true` and `false` are English aliases for `igaz` and `hamis`. Both forms are accepted
+    and normalised at lex time — the interpreter always sees the canonical Hungarian keywords.
 
 ---
 
@@ -134,4 +134,4 @@ The argument can also be a variable: `x-y-above-it` means "is x > y?".
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/05_booleans.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/05_booleans.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/05_booleans.ragul)

@@ -1,0 +1,15 @@
+// 07_error_handling.ragul — Error handling
+//
+// Operations that can fail return a fallible (or) type.
+// -? propagates errors upward to the nearest -catch boundary.
+//
+// Run: ragul run examples/en/07_error_handling.ragul
+
+program-ours-effect
+	// -tonum tries to parse a string as a number — it fails on non-numeric strings.
+	// -? propagates the error upward; -catch catches it.
+
+	n-into  "not-a-number"-tonum-doing-?.
+	n-print-doing.
+	-catch
+		"Error caught: could not parse string as number"-print-doing.

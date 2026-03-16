@@ -1,0 +1,39 @@
+// 02_arithmetic.ragul — Arithmetic & suffix chaining
+//
+// Suffix chains build pipelines left to right.
+// Each suffix operates on the result of the previous one.
+//
+// Run: ragul run examples/en/02_arithmetic.ragul
+
+program-ours-effect
+	x-into  10-it.
+	y-into  3-it.
+
+	// Basic operations
+	sum-into      x-y-add-it.       // 10 + 3  = 13
+	diff-into     x-y-sub-it.       // 10 - 3  = 7
+	product-into  x-y-mul-it.       // 10 * 3  = 30
+	quotient-into x-y-div-it.       // 10 / 3  = 3.33
+	rem-into      x-y-rem-it.       // 10 mod 3 = 1
+
+	sum-print-doing.
+	diff-print-doing.
+	product-print-doing.
+	quotient-print-doing.
+	rem-print-doing.
+
+	// Chained pipeline: (10 + 3) * 2 = 26
+	chain-into  x-3-add-2-mul-it.
+	chain-print-doing.
+
+	// Math suffixes
+	root-into   16-sqrt-it.         // sqrt(16) = 4.0
+	power-into  2-10-pow-it.        // 2^10 = 1024
+
+	// Absolute value: use subtraction to get a negative, then abs
+	negative-into  0-7-sub-it.      // 0 - 7 = -7
+	absval-into    negative-abs-it. // |-7| = 7
+
+	root-print-doing.
+	power-print-doing.
+	absval-print-doing.

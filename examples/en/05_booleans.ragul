@@ -1,0 +1,39 @@
+// 05_booleans.ragul — Boolean values and comparisons
+//
+// Comparisons produce boolean values: true or false.
+// Boolean results can be stored, printed, and combined with logical operators.
+//
+// Run: ragul run examples/en/05_booleans.ragul
+
+program-ours-effect
+	x-into  10-it.
+	y-into  3-it.
+
+	// Comparisons
+	greater-into  x-y-above-it.       // 10 > 3   = True
+	lesser-into   x-y-below-it.       // 10 < 3   = False
+	at_least-into x-10-atleast-it.    // 10 >= 10 = True
+	equal-into    x-10-eq-it.         // 10 == 10 = True
+
+	greater-print-doing.              // True
+	lesser-print-doing.               // False
+	at_least-print-doing.             // True
+	equal-print-doing.                // True
+
+	// Logical operators
+	p-into  true-it.
+	q-into  false-it.
+
+	and_res-into  p-q-and-it.         // True AND False = False
+	or_res-into   p-q-or-it.          // True OR False  = True
+	not_res-into  p-not-it.           // NOT True       = False
+
+	and_res-print-doing.              // False
+	or_res-print-doing.               // True
+	not_res-print-doing.              // False
+
+	// Combining two comparisons with AND
+	cmp1-into  x-y-above-it.          // 10 > 3   = True
+	cmp2-into  x-10-atleast-it.       // 10 >= 10 = True
+	both-into  cmp1-cmp2-and-it.      // True AND True = True
+	both-print-doing.                 // True

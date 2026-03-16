@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from enum import Enum, auto
-from ragul.model import normalise_suffix, ALIAS_TABLE
+from ragul.model import normalise_suffix, ALIAS_TABLE, ROOT_ALIASES
 from ragul.errors import DiagnosticBag, E002
 
 
@@ -256,6 +256,8 @@ class Lexer:
             if parts:
                 suffixes = [normalise_suffix(p) for p in parts]
                 root = ""
+        # Normalise root-level keyword aliases (e.g. "true" → "igaz")
+        root = ROOT_ALIASES.get(root, root)
         normalised_value = root + "".join(suffixes)
 
         # Determine if this is a scope-opening word

@@ -1,0 +1,46 @@
+// 06_list_operations.ragul — List operations
+//
+// Lists support a rich set of suffix operations.
+// Suffix chains pipeline transformations left to right.
+//
+// Run: ragul run examples/en/06_list_operations.ragul
+
+program-ours-effect
+	numbers-into  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-it.
+
+	// Sort ascending
+	sorted-into  numbers-sorted-it.
+	sorted-print-doing.            // [1, 2, 3, 3, 4, 7, 9, 9, 12, 15]
+
+	// Remove duplicates
+	unique-into  numbers-unique-it.
+	unique-print-doing.            // [7, 2, 15, 3, 9, 1, 12, 4]
+
+	// Sort + deduplicate pipeline
+	clean-into  numbers-unique-sorted-it.
+	clean-print-doing.             // [1, 2, 3, 4, 7, 9, 12, 15]
+
+	// Reverse
+	flipped-into  sorted-reversed-it.
+	flipped-print-doing.           // [15, 12, 9, 9, 7, 4, 3, 3, 2, 1]
+
+	// Filter — condition inline in the chain
+	large-into  sorted-3-above-it.
+	large-print-doing.             // [4, 7, 9, 9, 12, 15]
+
+	// First and last
+	first_num-into  sorted-first-it.
+	last_num-into   sorted-last-it.
+	first_num-print-doing.         // 1
+	last_num-print-doing.          // 15
+
+	// Length
+	count-into  numbers-len-it.
+	count-print-doing.             // 10
+
+	// Add and remove elements
+	extended-into  sorted-append-it  100-with.
+	extended-print-doing.          // [1, 2, 3, 3, 4, 7, 9, 9, 12, 15, 100]
+
+	reduced-into  sorted-remove-it  1-with.
+	reduced-print-doing.           // [2, 3, 3, 4, 7, 9, 9, 12, 15]

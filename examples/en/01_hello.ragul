@@ -1,0 +1,10 @@
+// 01_hello.ragul — Hello World
+//
+// The simplest Ragul program.
+// Assign a string and print it.
+//
+// Run: ragul run examples/en/01_hello.ragul
+
+program-ours-effect
+	greeting-into  "Hello, World!"-it.
+	greeting-print-doing.

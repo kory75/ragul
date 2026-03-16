@@ -165,6 +165,14 @@ def normalise_suffix(suffix: str) -> str:
     return ALIAS_TABLE.get(suffix, suffix)
 
 
+# Root-level keyword aliases — resolved at lex time so the parser and
+# interpreter only ever see the canonical Hungarian keyword.
+ROOT_ALIASES: dict[str, str] = {
+    "true":  "igaz",
+    "false": "hamis",
+}
+
+
 # Type name alias table — English → canonical Hungarian type names
 TYPE_ALIAS_TABLE: dict[str, str] = {
     "Num":    "Szám",

@@ -27,7 +27,7 @@ Ragul is **inferred typed**. Types are never declared explicitly — the compile
 | `Szám` | `Num` / `Number` | Numbers, measurements | `3`, `3.14`, `-7` |
 | `Szöveg` | `Str` / `Text` / `String` | Strings, text | `"hello"`, `"adat.txt"` |
 | `Lista` | `List` | Collections | `[1,2,3]`, `["a","b"]` |
-| `Logikai` | `Bool` | Booleans | `igaz`, `hamis` |
+| `Logikai` | `Bool` | Booleans | `igaz` / `true`, `hamis` / `false` |
 | `Hiba` | `Err` / `Error` | Error values | propagated via `-e` / `-?` |
 
 Types are capitalised to distinguish them from variable roots, which are lowercase.

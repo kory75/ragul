@@ -1,0 +1,23 @@
+// 03_filter_sort.ragul — List pipelines
+//
+// Suffix chains work on lists too.
+// Filter, sort, deduplicate — all by stacking suffixes.
+//
+// Run: ragul run examples/en/03_filter_sort.ragul
+
+program-ours-effect
+	numbers-into  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-it.
+
+	// Remove duplicates, then sort ascending
+	sorted-into  numbers-unique-sorted-it.
+
+	// Keep only numbers greater than 3
+	large-into  sorted-3-above-it.
+
+	// Reverse the result
+	flipped-into  large-reversed-it.
+
+	numbers-print-doing.
+	sorted-print-doing.
+	large-print-doing.
+	flipped-print-doing.

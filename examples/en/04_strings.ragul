@@ -1,0 +1,40 @@
+// 04_strings.ragul — String operations
+//
+// String suffixes accept their argument inline in the chain.
+// Pass the argument directly: s-"needle"-contains-it
+//
+// Run: ragul run examples/en/04_strings.ragul
+
+program-ours-effect
+	s-into  "Hello, Ragul!"-it.
+
+	// Length
+	n-into  s-len-it.
+	n-print-doing.                 // 13
+
+	// Case conversion
+	upper-into  s-upper-it.
+	lower-into  s-lower-it.
+	upper-print-doing.             // HELLO, RAGUL!
+	lower-print-doing.             // hello, ragul!
+
+	// Contains / starts / ends — pass needle inline in the chain
+	has-into    s-"Ragul"-contains-it.
+	starts-into s-"Hello"-startswith-it.
+	ends-into   s-"!"-endswith-it.
+	has-print-doing.               // True
+	starts-print-doing.            // True
+	ends-print-doing.              // True
+
+	// Replace
+	new_str-into  s-"Ragul"-"world"-replace-it.
+	new_str-print-doing.           // Hello, world!
+
+	// Split — pass separator inline
+	words-into  s-", "-split-it.
+	words-print-doing.             // ['Hello', 'Ragul!']
+
+	// Concatenation — pass second string inline
+	a-into  "Ragul"-it.
+	b-into  a-" rocks"-concat-it.
+	b-print-doing.                 // Ragul rocks

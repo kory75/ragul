@@ -216,10 +216,10 @@ fájlolvasó-ours
 
 ## Boolean Literals
 
-| Hungarian | Meaning |
-|---|---|
-| `igaz` | True |
-| `hamis` | False |
+| Hungarian | English alias | Meaning |
+|---|---|---|
+| `igaz` | `true` | True |
+| `hamis` | `false` | False |
 
 ---
 
