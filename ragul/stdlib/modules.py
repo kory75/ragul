@@ -309,11 +309,12 @@ def _filein(filename: Any) -> Any:
         return RagulHiba(str(e))
 
 
-def _fileout(value: Any, filename: Any) -> None:
-    """Write str(value) to *filename*. Returns None; errors silently produce RagulHiba."""
+def _fileout(value: Any, filename: Any) -> Any:
+    """Write str(value) to *filename*. Returns None on success, RagulHiba on error."""
     try:
         with open(str(filename), "w", encoding="utf-8") as f:
             f.write(str(value))
+        return None
     except OSError as e:
         return RagulHiba(str(e))
 
