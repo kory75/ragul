@@ -23,12 +23,19 @@ pip install ragul-lang
 
 Requires **Python 3.11+**.
 
+To also enable **AI-assisted error explanations** (Claude Opus 4.6, requires `ANTHROPIC_API_KEY`):
+
+```bash
+pip install ragul-lang[ai]
+```
+
 Or install from source:
 
 ```bash
 git clone https://github.com/kory75/ragul.git
 cd ragul
-pip install -e ".[dev]"
+pip install -e ".[dev]"        # toolchain + dev tools
+pip install -e ".[ai,dev]"     # + AI support
 ```
 
 ---

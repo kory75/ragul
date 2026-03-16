@@ -2,18 +2,31 @@
 
 ## Installation
 
-Install from PyPI:
+### Standard install
 
 ```bash
-pip install ragul
+pip install ragul-lang
 ```
 
-Or install the latest development version from source:
+Includes the full toolchain: interpreter, type checker, REPL, LSP server, and CLI. No AI dependencies.
+
+### With AI-assisted error explanations
+
+```bash
+pip install ragul-lang[ai]
+```
+
+Adds the `anthropic` package. When `ANTHROPIC_API_KEY` is set in your environment, `ragul check` and `ragul run` will call **Claude Opus 4.6** to generate a plain-English explanation of any compiler diagnostics — what went wrong, why, and exactly how to fix it.
+
+The AI analysis is purely additive: if the key is absent or the package is not installed, the compiler works exactly as normal with no errors or warnings.
+
+### From source
 
 ```bash
 git clone https://github.com/kory75/ragul.git
 cd ragul
-pip install -e ".[dev]"
+pip install -e ".[dev]"        # toolchain + test/type-check tools
+pip install -e ".[ai,dev]"     # + AI support
 ```
 
 ---

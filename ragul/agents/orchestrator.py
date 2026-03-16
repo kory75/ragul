@@ -227,7 +227,6 @@ class OrchestratorAgent:
         with client.messages.stream(
             model="claude-opus-4-6",
             max_tokens=1024,
-            thinking={"type": "adaptive"},
             system=_ANALYSIS_SYSTEM,
             messages=[{"role": "user", "content": user_prompt}],
         ) as stream:

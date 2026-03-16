@@ -80,12 +80,20 @@ Key properties that follow from this design:
 pip install ragul-lang
 ```
 
+To also enable **AI-assisted error explanations** (powered by Claude — requires an `ANTHROPIC_API_KEY`):
+
+```bash
+pip install ragul-lang[ai]
+```
+
 ### Install from source
 
 ```bash
 git clone https://github.com/kory75/ragul.git
 cd ragul
 pip install -e ".[dev]"
+# with AI support:
+pip install -e ".[ai,dev]"
 ```
 
 Then run a program:
