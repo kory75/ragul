@@ -3,7 +3,7 @@
 // Lists support a rich set of suffix operations.
 // Suffix chains pipeline transformations left to right.
 //
-// Run: ragul futtat examples/06_list_operations.ragul
+// Run: ragul futtat examples/hu/06_list_operations.ragul
 
 program-nk-hatás
 	szamok-ba  [7, 2, 15, 3, 9, 1, 12, 4, 9, 3]-t.

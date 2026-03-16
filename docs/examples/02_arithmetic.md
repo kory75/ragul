@@ -135,4 +135,4 @@ Demonstrates arithmetic operations and suffix chaining. Each suffix in a chain o
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/02_arithmetic.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/02_arithmetic.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/02_arithmetic.ragul)

@@ -3,7 +3,7 @@
 // Suffix chains build pipelines left to right.
 // Each suffix operates on the result of the previous one.
 //
-// Run: ragul futtat examples/02_arithmetic.ragul
+// Run: ragul futtat examples/hu/02_arithmetic.ragul
 
 program-nk-hatás
 	x-ba  10-t.

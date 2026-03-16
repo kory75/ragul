@@ -3,7 +3,7 @@
 // String suffixes accept their argument inline in the chain.
 // Pass the argument directly: s-"needle"-tartalmaz-t
 //
-// Run: ragul futtat examples/04_strings.ragul
+// Run: ragul futtat examples/hu/04_strings.ragul
 
 program-nk-hatás
 	s-ba  "Hello, Ragul!"-t.

@@ -141,4 +141,4 @@ The type system ensures each suffix in the chain receives the right element type
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/06_list_operations.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/06_list_operations.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/06_list_operations.ragul)

@@ -3,7 +3,7 @@
 // Comparisons produce Logikai (boolean) values: igaz (true) or hamis (false).
 // Boolean results can be stored, printed, and combined with logical operators.
 //
-// Run: ragul futtat examples/05_booleans.ragul
+// Run: ragul futtat examples/hu/05_booleans.ragul
 
 program-nk-hatás
 	x-ba  10-t.

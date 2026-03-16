@@ -106,4 +106,4 @@ If no `-hibára` / `-catch` is present and an error reaches the top of the progr
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/07_error_handling.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/07_error_handling.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/07_error_handling.ragul)

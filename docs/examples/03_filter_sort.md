@@ -113,4 +113,4 @@ The filter uses an inline literal argument — `3-above` / `3-felett` means "gre
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/03_filter_sort.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/03_filter_sort.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/03_filter_sort.ragul)

@@ -3,7 +3,7 @@
 // The simplest Ragul program.
 // Assign a string and print it.
 //
-// Run: ragul futtat examples/01_hello.ragul
+// Run: ragul futtat examples/hu/01_hello.ragul
 
 program-nk-hatás
 	üdvözlet-be  "Helló, világ!"-t.

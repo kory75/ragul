@@ -130,4 +130,4 @@ This is consistent with how numeric arguments work (`x-3-add-it` = add 3).
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/04_strings.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/04_strings.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/04_strings.ragul)

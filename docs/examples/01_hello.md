@@ -19,9 +19,9 @@ The simplest Ragul program — assign a string and print it.
 **Run it:**
 
 ```bash
-ragul run examples/01_hello.ragul
+ragul run examples/hu/01_hello.ragul
 # or
-ragul futtat examples/01_hello.ragul
+ragul futtat examples/hu/01_hello.ragul
 ```
 
 **Output:**
@@ -70,4 +70,4 @@ The `-concat` / `-összefűz` suffix concatenates two strings. The second string
 
 ---
 
-[Download example](https://github.com/kory75/ragul/blob/master/examples/01_hello.ragul)
+[Download — English](https://github.com/kory75/ragul/blob/master/examples/en/01_hello.ragul) · [Download — Hungarian](https://github.com/kory75/ragul/blob/master/examples/hu/01_hello.ragul)

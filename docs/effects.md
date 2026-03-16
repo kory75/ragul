@@ -111,6 +111,9 @@ Every channel is a built-in effect scope. The table below lists all channels wit
 
 `-fileout` / `-fájlra` writes a value to a file. The filename is the inline argument immediately before the channel suffix.
 
+!!! note "File paths are relative to the working directory"
+    File paths resolve relative to **where you invoke `ragul run`**, not to the script file itself. If you run `ragul run examples/en/10_file_io.ragul` from the project root, files are created in the project root. Subdirectory paths work — `"output/results.txt"` writes into an `output/` subfolder relative to your cwd (the directory must already exist).
+
 === "English aliases"
     ```ragul
     program-ours-effect
@@ -149,11 +152,15 @@ The filename can also be a variable:
 
 `-filein` / `-fájlból` reads the entire contents of a file and returns a string. It returns a `Hiba` value if the file cannot be read.
 
+Paths are relative to the working directory where `ragul run` is invoked. Subdirectory paths work as expected — `"myfiles/data.txt"` reads from a subfolder of your cwd.
+
 === "English aliases"
     ```ragul
     program-ours-effect
         content-into  "data.txt"-filein-it.
         content-print-doing.
+        // Subdirectory path:
+        config-into   "config/settings.json"-filein-it.
     ```
 
 === "Hungarian"
@@ -161,6 +168,8 @@ The filename can also be a variable:
     program-nk-hatás
         tartalom-ba  "data.txt"-fájlból-t.
         tartalom-képernyőre-va.
+        // Almappában lévő fájl:
+        beallitas-ba  "config/settings.json"-fájlból-t.
     ```
 
 Operations can be chained directly onto the read — for example, parse a JSON file in one step:
