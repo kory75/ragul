@@ -16,9 +16,22 @@ Includes the full toolchain: interpreter, type checker, REPL, LSP server, and CL
 pip install ragul-lang[ai]
 ```
 
-Adds the `anthropic` package. When `ANTHROPIC_API_KEY` is set in your environment, `ragul check` and `ragul run` will call **Claude Opus 4.6** to generate a plain-English explanation of any compiler diagnostics — what went wrong, why, and exactly how to fix it.
+!!! info "What does this do — and is it safe?"
+    This installs the `anthropic` package and unlocks an **optional** feature:
+    when `ragul check` or `ragul run` finds a compiler error or warning, Ragul
+    can send the error message and the relevant lines of your source file to
+    **Claude** (an AI assistant made by Anthropic) and print a plain-English
+    explanation of what went wrong and how to fix it — directly below the normal
+    error output.
 
-The AI analysis is purely additive: if the key is absent or the package is not installed, the compiler works exactly as normal with no errors or warnings.
+    **Nothing is sent unless you opt in.** To activate it, set your own
+    `ANTHROPIC_API_KEY` environment variable. This is a personal access token
+    you create at [console.anthropic.com](https://console.anthropic.com) — it
+    belongs to you. Ragul never stores, logs, or transmits it anywhere other than
+    directly to Anthropic's API on your behalf, and only when a diagnostic fires.
+
+    If the key is absent or `ragul-lang[ai]` is not installed, the compiler
+    behaves exactly as normal — no errors, no warnings, no network calls.
 
 ### From source
 

@@ -80,11 +80,26 @@ Key properties that follow from this design:
 pip install ragul-lang
 ```
 
-To also enable **AI-assisted error explanations** (powered by Claude — requires an `ANTHROPIC_API_KEY`):
+To also enable **AI-assisted error explanations**:
 
 ```bash
 pip install ragul-lang[ai]
 ```
+
+!!! info "What is the AI feature?"
+    When Ragul finds a type error or warning in your code, this optional feature
+    sends the error and the relevant source lines to **Claude** (an AI assistant
+    made by Anthropic) and prints a plain-English explanation of what went wrong
+    and how to fix it — directly below the normal error output.
+
+    **This is completely optional.** The standard Ragul toolchain works identically
+    without it. Nothing is ever sent anywhere unless you explicitly set an
+    `ANTHROPIC_API_KEY` environment variable in your own terminal session.
+
+    An API key is a personal access token you create for free at
+    [console.anthropic.com](https://console.anthropic.com). It is stored only in
+    your environment — Ragul never stores, logs, or transmits it anywhere other
+    than directly to Anthropic's API on your behalf.
 
 ### Install from source
 

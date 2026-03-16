@@ -23,11 +23,23 @@ pip install ragul-lang
 
 Requires **Python 3.11+**.
 
-To also enable **AI-assisted error explanations** (Claude Opus 4.6, requires `ANTHROPIC_API_KEY`):
+To also enable **AI-assisted error explanations**:
 
 ```bash
 pip install ragul-lang[ai]
 ```
+
+> **What is this?**
+> When Ragul finds a type error in your code, this optional feature sends the error
+> and the relevant source lines to Claude (an AI assistant by Anthropic) and prints
+> a plain-English explanation of what went wrong and how to fix it.
+>
+> **This is completely optional and nothing is ever sent automatically.**
+> To activate it, set your own `ANTHROPIC_API_KEY` environment variable — a personal
+> access token you create at [console.anthropic.com](https://console.anthropic.com).
+> Ragul never stores or logs your key; it is sent directly to Anthropic's API only
+> when a diagnostic fires. Without the key, the compiler works identically with no
+> network calls whatsoever.
 
 Or install from source:
 
