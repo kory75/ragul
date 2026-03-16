@@ -1,0 +1,30 @@
+// E003_parallel_write.ragul — Parallel write conflict
+//
+// E003 fires when two independent sentences in a pure (non-effect) scope
+// both write to the same root. Pure scopes evaluate sentences by
+// dependency order — two writes to the same root are ambiguous
+// (which one wins?) and are disallowed.
+//
+// Check: ragul check examples/error-codes/E003_parallel_write.ragul
+//
+// Expected output:
+//   ERROR  E003  Root 'x' is written by two independent sentences — parallel write conflict.
+
+// ERROR — x is written twice in the same pure scope
+x-into  3-it.
+x-into  5-it.   // E003: which value does x hold?
+
+
+// FIX 1 — give each write a distinct name
+//
+// a-into  3-it.
+// b-into  5-it.
+
+
+// FIX 2 — if sequential updates are intended, use an effect scope
+//
+// program-ours-effect
+//     x-into  3-it.
+//     x-print-doing.   // prints 3
+//     x-into  5-it.    // sequential reassignment is fine in -hatás
+//     x-print-doing.   // prints 5

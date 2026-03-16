@@ -1,0 +1,29 @@
+// E009_field_mutation.ragul — Field mutation outside effect scope
+//
+// E009 fires when a field on a data record is mutated (written to)
+// from inside a pure scope. Direct mutation of fields is only
+// permitted inside -ours-effect (-nk-hatás) scopes.
+//
+// Check: ragul check examples/error-codes/E009_field_mutation.ragul
+//
+// Expected output:
+//   ERROR  E009  Field 'name' is mutated outside a -hatás scope (in '__root__').
+//   → Move the mutation into a -hatás scope, or return a new instance
+//     with the updated field value instead.
+
+// ERROR — mutating a field from the pure top-level scope
+person-into  "Alice"-it.
+person-name-into  "Bob"-it.   // E009: field mutation not allowed here
+
+
+// FIX 1 — move mutation inside an effect scope
+//
+// program-ours-effect
+//     person-into  "Alice"-it.
+//     person-name-into  "Bob"-it.   // mutation is allowed in -ours-effect
+//     person-print-doing.
+
+
+// FIX 2 — return a new instance with the updated field (pure style)
+//
+// updated-into  person-"Bob"-with-name-it.   // construct a new record

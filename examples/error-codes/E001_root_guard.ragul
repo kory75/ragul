@@ -1,0 +1,30 @@
+// E001_root_guard.ragul — Root guard failure
+//
+// E001 fires when a suffix is applied to a root whose type does not
+// satisfy the suffix's type contract.
+//
+// Here -above (-felett) requires a Number, but "hello" is a String.
+//
+// Check: ragul check examples/error-codes/E001_root_guard.ragul
+//
+// Expected output:
+//   ERROR  E001  Suffix -felett (-above) expects Number (Szam), but root is String (Szoveg).
+//   → Use a Number root, or convert first with -tonum (-szamma).
+
+program-ours-effect
+
+	// ERROR — "hello" is a String; -above requires a Number
+	result-into  "hello"-5-above-it.
+	result-print-doing.
+
+
+// FIX 1 — use a Number root directly
+//
+//	result-into  42-5-above-it.
+//	result-print-doing.
+
+
+// FIX 2 — convert the String to a Number first with -tonum
+//
+//	result-into  "42"-tonum-5-above-it.
+//	result-print-doing.

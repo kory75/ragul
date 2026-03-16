@@ -1,0 +1,35 @@
+// E005_unhandled_fallible.ragul — Unhandled fallible (or) type
+//
+// Some operations can fail and return a Number|Error (vagy) type.
+// E005 fires when you use the result without first handling the
+// error case — either by propagating it with -doing-? (-va-e)
+// or catching it with a -catch (-hibara) block.
+//
+// Check: ragul check examples/error-codes/E005_unhandled_fallible.ragul
+//
+// Expected output:
+//   ERROR  E005  Root 'n' is Number|Error — both cases must be handled.
+//   → Add -doing-? (-va-e) to propagate, or add a -catch block.
+
+program-ours-effect
+
+	// -tonum returns Number|Error — parsing "abc" will fail at runtime.
+	// ERROR — the fallible result is used without error handling.
+	n-into  "abc"-tonum-doing.
+	n-print-doing.
+
+
+// FIX 1 — propagate the error upward with -doing-? (-va-e)
+//
+// program-ours-effect
+//     n-into  "abc"-tonum-doing-?.
+//     n-print-doing.
+
+
+// FIX 2 — catch and handle the error with -catch (-hibara)
+//
+// program-ours-effect
+//     n-into  "abc"-tonum-doing-?.
+//     n-print-doing.
+//     -catch
+//         "Could not parse as number"-print-doing.

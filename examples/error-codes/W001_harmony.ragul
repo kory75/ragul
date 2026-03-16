@@ -1,0 +1,29 @@
+// W001_harmony.ragul — Type harmony warning
+//
+// W001 fires when a suffix chain crosses a type boundary (e.g. Number
+// to String or vice versa) without an explicit bridge suffix.
+// This is a WARNING, not an error — the program will still run,
+// but the implicit coercion may hide a mistake.
+//
+// Check: ragul check examples/error-codes/W001_harmony.ragul
+//
+// Expected output:
+//   WARN  W001  Suffix chain crosses type boundary from Number (Szám) to String (Szöveg)
+//               without a bridge suffix.
+//   → Add a bridge suffix (e.g. -tostr (-szöteggé), -tonum (-számmá)) to make the
+//     type conversion explicit.
+
+program-ours-effect
+
+	// W001 — the chain goes Number → String without -tostr
+	n-into  42-it.
+	result-into  n-" items"-add-it.   // implicit Number-to-String coercion
+	result-print-doing.
+
+
+// FIX — add -tostr to make the type crossing explicit
+//
+// program-ours-effect
+//     n-into  42-it.
+//     result-into  n-tostr-" items"-add-it.   // Number → String bridge is clear
+//     result-print-doing.

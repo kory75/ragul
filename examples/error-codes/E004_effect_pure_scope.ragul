@@ -1,0 +1,22 @@
+// E004_effect_pure_scope.ragul — Effectful call from pure scope
+//
+// E004 fires when an I/O or side-effect suffix is used outside a
+// -ours-effect (-nk-hatas) scope. Pure scopes are declarative —
+// they compute values but cannot interact with the outside world.
+//
+// Check: ragul check examples/error-codes/E004_effect_pure_scope.ragul
+//
+// Expected output:
+//   ERROR  E004  Effectful suffix -kepernyor (-print) called from the top-level scope.
+//   → Wrap the top-level scope with -ours-effect (-nk-hatas), or remove the effectful call.
+
+// ERROR — -print is an effect suffix; the top-level scope is pure
+x-into  42-it.
+x-print-doing.
+
+
+// FIX — wrap the program in an effect scope
+//
+// program-ours-effect
+//     x-into  42-it.
+//     x-print-doing.
