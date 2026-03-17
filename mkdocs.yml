@@ -60,3 +60,4 @@ nav:
     - CSV Processing: examples/09_csv.md
     - "-with / -val Arguments": examples/11_with_arguments.md
     - "Regex Patterns (minta)": examples/12_regex_patterns.md
+    - "Terminal & Game": examples/13_terminal_game.md

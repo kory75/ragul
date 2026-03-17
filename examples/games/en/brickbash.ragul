@@ -1,0 +1,218 @@
+// brickbash.ragul — character-mode Brickbash in Ragul (English)
+//
+// Controls:
+//   a / LEFT  — move paddle left
+//   d / RIGHT — move paddle right
+//   q         — quit
+//
+// Layout: 22 × 17 terminal cells
+//   Row  0  : top border
+//   Rows 1–4: bricks (8 bricks × 2 chars wide = 16 chars, padded to 20)
+//   Rows 5–13: open play field
+//   Row 14  : paddle (====)
+//   Row 15  : ball zone / lose line
+//   Row 16  : bottom border
+//
+// Suffix order: possession (-ours) before scope modifier (-effect, -if, -while, -each)
+// Indentation: TAB characters
+
+program-ours-effect
+
+	// -----------------------------------------------------------------------
+	// Load level: each line of the file → list of chars → grid
+	// -----------------------------------------------------------------------
+	text-into	"examples/games/level1.txt"-filein-it.
+	rows-into	text-split-it  "\n"-with.
+
+	grid-into	[]-it.
+	rows-ours-each
+		row-yours.
+		letters-into	row-chars-it.
+		grid-into	grid-letters-append-it.
+
+	// -----------------------------------------------------------------------
+	// Brick liveness: 32 ints (4 rows × 8 bricks), 1 = alive, 0 = dead
+	// -----------------------------------------------------------------------
+	bricks-into	1-repeat-it  32-with.
+
+	// -----------------------------------------------------------------------
+	// Initial game state
+	// -----------------------------------------------------------------------
+	sx-into	9-it.
+	sy-into	12-it.
+	dx-into	1-it.
+	dy-into	-1-it.
+	px-into	8-it.
+	prev_sx-into	9-it.
+	prev_sy-into	12-it.
+	prev_px-into	8-it.
+	score-into	0-it.
+	lives-into	3-it.
+	running-into	true-it.
+
+	// -----------------------------------------------------------------------
+	// Game loop: first sentence = condition, rest = body
+	// -----------------------------------------------------------------------
+	game-ours-while
+		running-it.
+
+		// --- Save previous positions -----------------------------------------
+		prev_sx-into	sx-it.
+		prev_sy-into	sy-it.
+		prev_px-into	px-it.
+
+		// --- Input -----------------------------------------------------------
+		btn-into	0-key-it.
+
+		// Paddle left
+		left-into	btn-"a"-eq-it.
+		arrow_l-into	btn-"LEFT"-eq-it.
+		move_l-into	left-arrow_l-or-it.
+		move_l-if
+			new_px-into	px-1-sub-it.
+			in_l-into	new_px-1-atleast-it.
+			in_l-if
+				px-into	new_px-it.
+
+		// Paddle right
+		right-into	btn-"d"-eq-it.
+		arrow_r-into	btn-"RIGHT"-eq-it.
+		move_r-into	right-arrow_r-or-it.
+		move_r-if
+			new_px-into	px-1-add-it.
+			right_edge-into	new_px-3-add-it.
+			in_r-into	right_edge-19-atmost-it.
+			in_r-if
+				px-into	new_px-it.
+
+		// Quit
+		quitting-into	btn-"q"-eq-it.
+		quitting-if
+			running-into	false-it.
+
+		// --- Move ball -------------------------------------------------------
+		sx-into	sx-dx-add-it.
+		sy-into	sy-dy-add-it.
+
+		// --- Wall bounces ----------------------------------------------------
+		left_wall-into	sx-1-atmost-it.
+		left_wall-if
+			sx-into	1-it.
+			dx-into	dx-mul-it  -1-with.
+
+		right_wall-into	sx-19-atleast-it.
+		right_wall-if
+			sx-into	19-it.
+			dx-into	dx-mul-it  -1-with.
+
+		top_wall-into	sy-1-atmost-it.
+		top_wall-if
+			sy-into	1-it.
+			dy-into	dy-mul-it  -1-with.
+
+		// --- Ball lost -------------------------------------------------------
+		lost-into	sy-15-atleast-it.
+		lost-if
+			lives-into	lives-1-sub-it.
+			sx-into	9-it.
+			sy-into	12-it.
+			dy-into	-1-it.
+			game_over-into	lives-0-atmost-it.
+			game_over-if
+				running-into	false-it.
+
+		// --- Paddle hit ------------------------------------------------------
+		at_pdl-into	sy-14-eq-it.
+		past_left-into	sx-px-atleast-it.
+		pdl_end-into	px-3-add-it.
+		before_right-into	sx-pdl_end-atmost-it.
+		hit1-into	at_pdl-past_left-and-it.
+		hit-into	hit1-before_right-and-it.
+		hit-if
+			dy-into	dy-mul-it  -1-with.
+			sy-into	13-it.
+
+		// --- Brick hit -------------------------------------------------------
+		in_b_rows-into	sy-1-atleast-it.
+		in_b_rows2-into	sy-4-atmost-it.
+		in_bricks-into	in_b_rows-in_b_rows2-and-it.
+		in_bricks-if
+			row_idx-into	sy-1-sub-it.
+			col_raw-into	sx-1-sub-it.
+			col-into	col_raw-floor-it  2-with.
+			col_ok-into	col-7-atmost-it.
+			row_off-into	row_idx-8-mul-it.
+			b_idx-into	row_off-col-add-it.
+			b_val-into	bricks-index-it  b_idx-with.
+			hit_raw-into	b_val-1-eq-it.
+			b_hit-into	hit_raw-col_ok-and-it.
+			b_hit-if
+				bricks-into	bricks-set-it  b_idx-with  0-with.
+				score-into	score-10-add-it.
+				dy-into	dy-mul-it  -1-with.
+				// Erase brick in grid (2 chars wide)
+				g_row-into	sy-it.
+				lc-into	col-2-mul-it.
+				lc-into	lc-1-add-it.
+				rc-into	lc-1-add-it.
+				b_row-into	grid-index-it  g_row-with.
+				b_row-into	b_row-set-it  lc-with  " "-with.
+				b_row-into	b_row-set-it  rc-with  " "-with.
+				grid-into	grid-set-it  g_row-with  b_row-with.
+
+		// --- Win check -------------------------------------------------------
+		total-into	bricks-sum-it.
+		won-into	total-0-eq-it.
+		won-if
+			running-into	false-it.
+
+		// --- Clear previous ball position ------------------------------------
+		prev_br-into	grid-index-it  prev_sy-with.
+		prev_br-into	prev_br-set-it  prev_sx-with  " "-with.
+		grid-into	grid-set-it  prev_sy-with  prev_br-with.
+
+		// --- Clear previous paddle -------------------------------------------
+		prev_pdl-into	grid-index-it  14-with.
+		ppx0-into	prev_px-it.
+		ppx1-into	prev_px-1-add-it.
+		ppx2-into	prev_px-2-add-it.
+		ppx3-into	prev_px-3-add-it.
+		prev_pdl-into	prev_pdl-set-it  ppx0-with  " "-with.
+		prev_pdl-into	prev_pdl-set-it  ppx1-with  " "-with.
+		prev_pdl-into	prev_pdl-set-it  ppx2-with  " "-with.
+		prev_pdl-into	prev_pdl-set-it  ppx3-with  " "-with.
+		grid-into	grid-set-it  14-with  prev_pdl-with.
+
+		// --- Draw ball -------------------------------------------------------
+		ball_r-into	grid-index-it  sy-with.
+		ball_r-into	ball_r-set-it  sx-with  "O"-with.
+		grid-into	grid-set-it  sy-with  ball_r-with.
+
+		// --- Draw paddle -----------------------------------------------------
+		pdl-into	grid-index-it  14-with.
+		pdl1-into	px-1-add-it.
+		pdl2-into	px-2-add-it.
+		pdl3-into	px-3-add-it.
+		pdl-into	pdl-set-it  px-with  "="-with.
+		pdl-into	pdl-set-it  pdl1-with  "="-with.
+		pdl-into	pdl-set-it  pdl2-with  "="-with.
+		pdl-into	pdl-set-it  pdl3-with  "="-with.
+		grid-into	grid-set-it  14-with  pdl-with.
+
+		// --- Render ----------------------------------------------------------
+		grid-render-doing.
+		score_s-into	"Score: "-score-concat-it.
+		lives_s-into	"  Lives: "-lives-concat-it.
+		info-into	score_s-lives_s-concat-it.
+		info-write-doing.
+
+		// --- Frame delay ~80 ms ----------------------------------------------
+		0-sleep-it  80-with.
+
+	// -----------------------------------------------------------------------
+	// Game over
+	// -----------------------------------------------------------------------
+	0-clear-doing.
+	msg-into	"Game over.  Score: "-score-concat-it.
+	msg-write-doing.
+	10-sleep-it  1500-with.

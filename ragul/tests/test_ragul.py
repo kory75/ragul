@@ -384,6 +384,65 @@ class TestValArgs:
         assert bindings.get("x") == 10
 
 # ---------------------------------------------------------------------------
+# Loop interleaving tests  (sentences and child scopes execute in source order)
+# ---------------------------------------------------------------------------
+
+class TestLoopInterleave:
+
+    def test_while_conditional_fires_before_later_sentence(self):
+        # Proves interleaving: mid-ha (child) must fire BETWEEN the sentence
+        # that sets mid and the LATER sentence that reads x.
+        # mid-ha sets x=10, which exits the loop condition (x<3).
+        # The sentence `result-ba x-t.` appears AFTER mid-ha in source.
+        # With interleaving:  result = 10  (conditional fired first)
+        # Without interleaving (old two-phase): result = 1  (sentence ran before conditional)
+        src = (
+            "x-ba  0-t.\n"
+            "result-ba  0-t.\n"
+            "lp-unk-míg\n"
+            "\tx-3-alatt-t.\n"
+            "\tx-ba  x-1-össze-t.\n"
+            "\tmid-ba  x-1-egyenlő-t.\n"
+            "\tmid-ha\n"
+            "\t\tx-ba  10-t.\n"
+            "\tresult-ba  x-t.\n"
+        )
+        bindings = eval_expr(src)
+        assert bindings.get("result") == 10
+
+    def test_while_conditional_accumulate_odd(self):
+        # While loop accumulates odd numbers via an in-loop conditional.
+        src = (
+            "x-ba  0-t.\n"
+            "acc-ba  []-t.\n"
+            "lp-unk-míg\n"
+            "\tx-6-alatt-t.\n"
+            "\tx-ba  x-1-össze-t.\n"
+            "\tmaradék-ba  x-2-maradék-t.\n"
+            "\tpáratlan-ba  maradék-1-egyenlő-t.\n"
+            "\tpáratlan-ha\n"
+            "\t\tacc-ba  acc-x-hozzáad-t.\n"
+        )
+        bindings = eval_expr(src)
+        assert bindings.get("acc") == [1, 3, 5]
+
+    def test_foreach_conditional_interleaved(self):
+        # Foreach + conditional: collect even numbers from a list.
+        src = (
+            "számok-ba  [1, 2, 3, 4, 5, 6]-t.\n"
+            "páros-ba  []-t.\n"
+            "számok-unk-mindegyik\n"
+            "\tx-d.\n"
+            "\tmaradék-ba  x-2-maradék-t.\n"
+            "\tpáros_e-ba  maradék-0-egyenlő-t.\n"
+            "\tpáros_e-ha\n"
+            "\t\tpáros-ba  páros-x-hozzáad-t.\n"
+        )
+        bindings = eval_expr(src)
+        assert bindings.get("páros") == [2, 4, 6]
+
+
+# ---------------------------------------------------------------------------
 # Error handling tests
 # ---------------------------------------------------------------------------
 
@@ -599,3 +658,206 @@ class TestMinta:
     def test_english_alias_resplit(self):
         bindings = eval_expr(r'x-ba  "x  y  z"-resplit-t  "\s+"-val.')
         assert bindings.get("x") == ["x", "y", "z"]
+
+
+# ---------------------------------------------------------------------------
+# képernyő module tests
+# ---------------------------------------------------------------------------
+
+class TestScreen:
+
+    def _import_screen(self):
+        import ragul.stdlib.screen  # noqa: F401
+        from ragul.stdlib.core import SUFFIX_REGISTRY
+        return SUFFIX_REGISTRY
+
+    def test_nyomtat_registered(self):
+        reg = self._import_screen()
+        assert "-nyomtat" in reg
+
+    def test_töröl_registered(self):
+        reg = self._import_screen()
+        assert "-töröl" in reg
+
+    def test_kurzor_registered(self):
+        reg = self._import_screen()
+        assert "-kurzor" in reg
+
+    def test_billentyű_registered(self):
+        reg = self._import_screen()
+        assert "-billentyű" in reg
+
+    def test_rajzol_registered(self):
+        reg = self._import_screen()
+        assert "-rajzol" in reg
+
+    def test_nyomtat_returns_value(self, capsys):
+        from ragul.stdlib.screen import _nyomtat
+        result = _nyomtat("hello")
+        captured = capsys.readouterr()
+        assert captured.out == "hello"
+        assert result == "hello"
+
+    def test_nyomtat_no_newline(self, capsys):
+        from ragul.stdlib.screen import _nyomtat
+        _nyomtat("abc")
+        captured = capsys.readouterr()
+        assert "\n" not in captured.out
+
+    def test_key_returns_str(self):
+        from ragul.stdlib.screen import _billentyű
+        # Non-blocking — no key pressed, should return ''
+        result = _billentyű(0)
+        assert isinstance(result, str)
+
+    def test_rajzol_renders_grid(self, capsys):
+        from ragul.stdlib.screen import _rajzol
+        grid = [["a", "b"], ["c", "d"]]
+        result = _rajzol(grid)
+        captured = capsys.readouterr()
+        assert "ab" in captured.out
+        assert "cd" in captured.out
+        assert result is grid
+
+    def test_töröl_passthrough(self, capsys):
+        from ragul.stdlib.screen import _töröl
+        result = _töröl(42)
+        # We only check return value — OS clear side effect is acceptable
+        assert result == 42
+
+    def test_english_alias_clear(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-clear") == "-töröl"
+
+    def test_english_alias_write(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-write") == "-nyomtat"
+
+    def test_english_alias_key(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-key") == "-billentyű"
+
+    def test_english_alias_render(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-render") == "-rajzol"
+
+
+# ---------------------------------------------------------------------------
+# idő module tests
+# ---------------------------------------------------------------------------
+
+class TestIdő:
+
+    def test_vár_registered(self):
+        import ragul.stdlib.time  # noqa: F401
+        from ragul.stdlib.core import SUFFIX_REGISTRY
+        assert "-vár" in SUFFIX_REGISTRY
+
+    def test_vár_passthrough(self):
+        from ragul.stdlib.time import _vár
+        import time
+        t0 = time.monotonic()
+        result = _vár("hello", 10)  # 10 ms
+        elapsed = time.monotonic() - t0
+        assert result == "hello"
+        assert elapsed >= 0.005  # at least half the requested time
+
+    def test_sleep_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-sleep") == "-vár"
+
+
+# ---------------------------------------------------------------------------
+# lista extensions tests
+# ---------------------------------------------------------------------------
+
+class TestListExtensions:
+
+    def test_beállít_middle(self):
+        from ragul.stdlib.modules import _lista_beállít
+        original = [1, 2, 3, 4]
+        result = _lista_beállít(original, 1, 99)
+        assert result == [1, 99, 3, 4]
+
+    def test_beállít_no_mutation(self):
+        from ragul.stdlib.modules import _lista_beállít
+        original = [1, 2, 3]
+        _lista_beállít(original, 0, 0)
+        assert original == [1, 2, 3]
+
+    def test_beállít_out_of_range(self):
+        from ragul.stdlib.modules import _lista_beállít
+        import pytest
+        with pytest.raises(IndexError):
+            _lista_beállít([1, 2, 3], 10, 0)
+
+    def test_ismét_creates_list(self):
+        from ragul.stdlib.modules import _lista_ismét
+        result = _lista_ismét(" ", 5)
+        assert result == [" ", " ", " ", " ", " "]
+
+    def test_ismét_zero(self):
+        from ragul.stdlib.modules import _lista_ismét
+        assert _lista_ismét("x", 0) == []
+
+    def test_beállít_interpreter(self):
+        bindings = eval_expr("lista-ba  [1,2,3]-t.\nr-ba  lista-beállít-t  1-val  99-val.")
+        assert bindings.get("r") == [1, 99, 3]
+
+    def test_ismét_interpreter(self):
+        bindings = eval_expr('r-ba  " "-ismét-t  4-val.')
+        assert bindings.get("r") == [" ", " ", " ", " "]
+
+    def test_set_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-set") == "-beállít"
+
+    def test_repeat_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-repeat") == "-ismét"
+
+
+# ---------------------------------------------------------------------------
+# szöveg extension tests
+# ---------------------------------------------------------------------------
+
+class TestSzövegExtensions:
+
+    def test_karakterek_splits_to_chars(self):
+        bindings = eval_expr('x-ba  "abc"-karakterek-t.')
+        assert bindings.get("x") == ["a", "b", "c"]
+
+    def test_karakterek_empty_string(self):
+        bindings = eval_expr('x-ba  ""-karakterek-t.')
+        assert bindings.get("x") == []
+
+    def test_karakterek_unicode(self):
+        bindings = eval_expr('x-ba  "héj"-karakterek-t.')
+        assert bindings.get("x") == ["h", "é", "j"]
+
+    def test_chars_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-chars") == "-karakterek"
+
+    def test_karakterek_registered(self):
+        from ragul.stdlib.core import SUFFIX_REGISTRY
+        assert "-karakterek" in SUFFIX_REGISTRY
+
+
+# ---------------------------------------------------------------------------
+# Breakout smoke test — lex + parse only (no terminal I/O)
+# ---------------------------------------------------------------------------
+
+class TestBreakoutSmoke:
+
+    def test_breakout_lexes_and_parses(self):
+        import os
+        from pathlib import Path
+        game_file = Path(__file__).resolve().parent.parent.parent / "examples" / "games" / "breakout.ragul"
+        if not game_file.exists():
+            pytest.skip("breakout.ragul not found")
+        source = game_file.read_text(encoding="utf-8")
+        tokens, lex_bag = lex(source, str(game_file))
+        assert not lex_bag.has_errors, lex_bag.format_all()
+        tree, parse_bag = parse(tokens, str(game_file))
+        assert not parse_bag.has_errors, parse_bag.format_all()

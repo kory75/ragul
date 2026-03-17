@@ -140,6 +140,19 @@ ALIAS_TABLE: dict[str, str] = {
     "-netin":       "-hálózatból",
     "-netout":      "-hálózatra",
     "-hálózatról":  "-hálózatból", # harmonic variant → canonical
+    # képernyő module aliases
+    "-clear":       "-töröl",
+    "-write":       "-nyomtat",
+    "-cursor":      "-kurzor",
+    "-key":         "-billentyű",
+    "-render":      "-rajzol",
+    # idő module aliases
+    "-sleep":       "-vár",
+    # lista additions
+    "-set":         "-beállít",
+    "-repeat":      "-ismét",
+    # szöveg addition
+    "-chars":       "-karakterek",
 }
 
 # Canonical case suffixes (outermost layer)

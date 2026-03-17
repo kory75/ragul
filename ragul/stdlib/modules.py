@@ -43,8 +43,8 @@ _reg("-négyzetgyök", lambda v: math.sqrt(v),         _szam, _szam, module="mat
 _reg("-hatvány",     lambda v, a: v ** a,             _szam, _szam, [_szam], module="matematika")
 _reg("-abszolút",    lambda v: abs(v),                _szam, _szam, module="matematika")
 _reg("-kerekítve",   lambda v: round(v),              _szam, _szam, module="matematika")
-_reg("-padló",       lambda v: math.floor(v),         _szam, _szam, module="matematika")
-_reg("-plafon",      lambda v: math.ceil(v),          _szam, _szam, module="matematika")
+_reg("-padló",       lambda v, a=None: math.floor(v / a) if a is not None else math.floor(v), _szam, _szam, [_szam], module="matematika")
+_reg("-plafon",      lambda v, a=None: math.ceil(v / a) if a is not None else math.ceil(v),   _szam, _szam, [_szam], module="matematika")
 _reg("-log",         lambda v, a: math.log(v, a),     _szam, _szam, [_szam], module="matematika")
 _reg("-sin",         lambda v: math.sin(v),           _szam, _szam, module="matematika")
 _reg("-cos",         lambda v: math.cos(v),           _szam, _szam, module="matematika")
@@ -194,6 +194,35 @@ _reg("-összeg",     _összeg,     _lista_t, _szam,    module="lista")
 
 
 # ---------------------------------------------------------------------------
+# lista additions  (-beállít / -set,  -ismét / -repeat)
+# ---------------------------------------------------------------------------
+
+def _lista_beállít(v: Any, index: Any, value: Any) -> Any:
+    """Return a new list with element at *index* replaced by *value*."""
+    result = list(v)
+    result[int(index)] = value
+    return result
+
+
+def _lista_ismét(v: Any, n: Any) -> Any:
+    """Return a list containing *n* copies of *v*."""
+    return [v] * int(n)
+
+
+def _lista_index(v: Any, index: Any) -> Any:
+    """Return the element at *index* in a list or string."""
+    try:
+        return v[int(index)]
+    except (IndexError, TypeError) as e:
+        return _RagulHiba(str(e))
+
+
+_reg("-beállít", _lista_beállít, _lista_t, _lista_t, [_szam, RagulType.unknown()], module="lista")
+_reg("-ismét",   _lista_ismét,   RagulType.unknown(), _lista_t, [_szam],           module="lista")
+_reg("-index",   _lista_index,   RagulType.unknown(), RagulType.unknown(), [_szam], module="lista")
+
+
+# ---------------------------------------------------------------------------
 # minta module  (regex pattern matching)
 # ---------------------------------------------------------------------------
 
@@ -244,6 +273,17 @@ def _mintafeloszt(v: Any, pattern: Any) -> list:
 
 _vagy_szoveg_hiba2 = RagulType.vagy(RagulType.szoveg(), RagulType.hiba())
 _lista_szoveg      = RagulType.lista(RagulType.szoveg())
+
+# ---------------------------------------------------------------------------
+# szöveg addition  (-karakterek / -chars)
+# ---------------------------------------------------------------------------
+
+def _karakterek(v: Any) -> list:
+    """Split a string into a list of single characters."""
+    return list(str(v))
+
+
+_reg("-karakterek", _karakterek, _szoveg, _lista_szoveg, module="szöveg")
 
 _reg("-minta",       _minta,        _szoveg, _logikai,          [_szoveg], module="minta")
 _reg("-egyezés",     _egyezés,      _szoveg, _vagy_szoveg_hiba2, [_szoveg], module="minta")
@@ -401,3 +441,11 @@ def _netout_stub(value: Any, url: Any) -> Any:
 
 _reg("-hálózatból", _netin_stub,  _szoveg, _vagy_szoveg_hiba, arg_types=[],       module="io")
 _reg("-hálózatra",  _netout_stub, _szoveg, RagulType.unknown(), arg_types=[_szoveg], module="io")
+
+
+# ---------------------------------------------------------------------------
+# Pull in terminal and timing modules so their suffixes register on import
+# ---------------------------------------------------------------------------
+
+import ragul.stdlib.screen  # noqa: E402, F401  — registers képernyő suffixes
+import ragul.stdlib.time    # noqa: E402, F401  — registers idő suffixes

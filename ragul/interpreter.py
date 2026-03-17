@@ -31,6 +31,22 @@ def _interleave(scope: Scope) -> list:
     return items
 
 
+def _loop_body(scope: Scope, start_idx: int = 1) -> list:
+    """
+    Return a loop's body sentences (sentences[start_idx:]) and child scopes
+    interleaved in source order by line number.
+
+    start_idx=1 skips sentences[0], which is reserved as the loop condition
+    (for -míg / -ig) or the element-parameter declaration (for -mindegyik).
+    """
+    items: list = list(scope.sentences[start_idx:])
+    for child in scope.children:
+        if child.is_effect or child.is_conditional or child.is_loop:
+            items.append(child)
+    items.sort(key=lambda x: x.line if isinstance(x, Sentence) else x.line)
+    return items
+
+
 # ---------------------------------------------------------------------------
 # Runtime error types
 # ---------------------------------------------------------------------------
@@ -166,13 +182,8 @@ class Interpreter:
     def run(self) -> int:
         """Execute the program.  Returns exit code (0, 2, or 3)."""
         try:
-            # Execute root-level sentences first
+            # _exec_scope handles root sentences + all child scopes via _interleave
             self._exec_scope(self.root_scope, self.global_env)
-            # Then execute all top-level executable scopes in order:
-            # effect scopes, conditionals, and loops
-            for child in self.root_scope.children:
-                if child.is_effect or child.is_conditional or child.is_loop:
-                    self._exec_scope(child, self.global_env)
             return 0
         except PropagateError as e:
             print(f"Unhandled error: {e.hiba.message}", file=sys.stderr)
@@ -242,7 +253,7 @@ class Interpreter:
             for item in _interleave(scope):
                 if isinstance(item, Sentence):
                     last_value = self._exec_sentence(item, local_env, scope)
-                elif item.is_conditional or item.is_loop:
+                elif item.is_effect or item.is_conditional or item.is_loop:
                     last_value = self._exec_scope(item, local_env)
         except PropagateError as e:
             if scope.error_handler:
@@ -329,12 +340,13 @@ class Interpreter:
     def _exec_while(self, scope: Scope, env: Environment) -> Any:
         """
         -míg loop: execute body while condition is truthy.
-        First sentence is the condition; remaining are body.
+        First sentence is the condition; remaining body sentences and child
+        scopes are interleaved by source line so conditionals fire in order.
         """
         if not scope.sentences:
             return None
         condition_sentence = scope.sentences[0]
-        body_sentences     = scope.sentences[1:]
+        body_items         = _loop_body(scope, start_idx=1)
         last_value: Any    = None
         iterations = 0
 
@@ -348,10 +360,11 @@ class Interpreter:
                     line=scope.sentences[0].line,
                 )
             try:
-                for sentence in body_sentences:
-                    last_value = self._exec_sentence(sentence, env, scope)
-                for child in scope.children:
-                    last_value = self._exec_scope(child, env)
+                for item in body_items:
+                    if isinstance(item, Sentence):
+                        last_value = self._exec_sentence(item, env, scope)
+                    else:
+                        last_value = self._exec_scope(item, env)
             except _BreakSignal:
                 break
         return last_value
@@ -361,7 +374,7 @@ class Interpreter:
         if not scope.sentences:
             return None
         condition_sentence = scope.sentences[0]
-        body_sentences     = scope.sentences[1:]
+        body_items         = _loop_body(scope, start_idx=1)
         last_value: Any    = None
         iterations = 0
 
@@ -373,10 +386,11 @@ class Interpreter:
                     line=scope.sentences[0].line,
                 )
             try:
-                for sentence in body_sentences:
-                    last_value = self._exec_sentence(sentence, env, scope)
-                for child in scope.children:
-                    last_value = self._exec_scope(child, env)
+                for item in body_items:
+                    if isinstance(item, Sentence):
+                        last_value = self._exec_sentence(item, env, scope)
+                    else:
+                        last_value = self._exec_scope(item, env)
             except _BreakSignal:
                 break
             if self._eval_condition_sentence(condition_sentence, env):
@@ -416,31 +430,30 @@ class Interpreter:
                 param_name = word.root
                 break
 
+        body_items      = _loop_body(scope, start_idx=1)
         last_value: Any = None
-        loop_env = Environment(parent=env)   # default for empty iterable
         for element in iterable:
             loop_env = Environment(parent=env)
             loop_env.set(param_name, element)
             try:
-                for sentence in body_sentences:
-                    last_value = self._exec_sentence(sentence, loop_env, scope)
-                for child in scope.children:
-                    last_value = self._exec_scope(child, loop_env)
+                for item in body_items:
+                    if isinstance(item, Sentence):
+                        last_value = self._exec_sentence(item, loop_env, scope)
+                    else:
+                        last_value = self._exec_scope(item, loop_env)
             except _BreakSignal:
+                # Write back before exiting
+                for frame in loop_env._frames:
+                    for key, val in frame.items():
+                        if env.has(key):
+                            env.set(key, val)
                 break
-        # Write back any vars that were mutated through parent env
-        # (foreach writes go to loop_env, not outer env — intentional)
-        # But common pattern is to accumulate into outer scope var.
-        # We handle this by making accumulator writes target the outer env.
-        # The loop_env.parent IS the outer env, so set() on a known outer
-        # key propagates via the parent chain automatically through get().
-        # But set() on loop_env always writes to loop_env._frames[0].
-        # Fix: for each var in loop_env that also exists in outer env,
-        # propagate the final value back.
-        for frame in loop_env._frames:
-            for key, val in frame.items():
-                if env.has(key):
-                    env.set(key, val)
+            # Write back after each iteration so accumulator vars in outer
+            # scope reflect the current state for the next iteration.
+            for frame in loop_env._frames:
+                for key, val in frame.items():
+                    if env.has(key):
+                        env.set(key, val)
 
         return last_value
 

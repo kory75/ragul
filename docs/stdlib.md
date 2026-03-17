@@ -106,6 +106,7 @@ The standard library is loaded automatically — no import needed. All suffixes 
 | `-szelet` | `-slice` | `Szöveg` | `Szám`, `Szám` | `Szöveg` | Slice (start, end) |
 | `-csere` | `-replace` | `Szöveg` | `Szöveg`, `Szöveg` | `Szöveg` | Replace all occurrences |
 | `-számmá` | `-tonum` | `Szöveg` | — | `vagy-Szám-vagy-Hiba` | Parse string as number |
+| `-karakterek` | `-chars` | `Szöveg` | — | `Lista-Szöveg` | Split string into list of single characters |
 
 === "English aliases"
     ```ragul
@@ -140,6 +141,9 @@ The standard library is loaded automatically — no import needed. All suffixes 
 | `-eltávolít` | `-remove` | `Lista-T` | `Lista-T` | Remove element (arg: element) |
 | `-hossz` | `-len` | `Lista-T` | `Szám` | Length |
 | `-tartalmaz` | `-contains` | `Lista-T` | `Logikai` | Contains element |
+| `-beállít` | `-set` | `Lista-T` | `Lista-T` | Replace element at index (non-mutating; args: index, value) |
+| `-ismét` | `-repeat` | any | `Lista-any` | Build a list of N copies of a value (arg: N) |
+| `-index` | `-index` | `Lista-T` | `T` | Element at index; works on strings too (arg: index) |
 
 === "English aliases"
     ```ragul
@@ -221,6 +225,63 @@ The standard library is loaded automatically — no import needed. All suffixes 
         // szétválasztás nem-szókaraktereken
         szavak-ba  szöveg-mintafeloszt-t  "\W+"-val.
         szavak-képernyőre-va.              // ['rendelés', '1042', 'rögzítve', '2026', '03', '16']
+    ```
+
+---
+
+## képernyő — Terminal I/O
+
+Character-mode terminal output, input, and framebuffer rendering. All suffixes are **pass-through** — they return their input value unchanged so they can appear mid-pipeline.
+
+| Hungarian | English | Expects | Arg(s) | Produces | Description |
+|---|---|---|---|---|---|
+| `-töröl` | `-clear` | any | — | any | Exit alternate screen (restores normal terminal); or `\033[2J\033[H` clear if not in alt-screen |
+| `-nyomtat` | `-write` | any | — | any | Write `str(v)` to stdout — **no newline** |
+| `-kurzor` | `-cursor` | any | row, col | any | Move cursor to (row, col) via ANSI escape `\033[row;colH` |
+| `-billentyű` | `-key` | any | — | `Szöveg` | Non-blocking keypress; `''` if none pressed; arrow keys decoded (`"LEFT"`, `"RIGHT"`, `"UP"`, `"DOWN"`) |
+| `-rajzol` | `-render` | `Lista-Lista-Szöveg` | — | `Lista-Lista-Szöveg` | Render a 2-D character framebuffer (`List[List[str]]`); enters alternate screen buffer on first call |
+
+**Alternate screen buffer:** `-rajzol` enters `\033[?1049h` on first call and registers an `atexit` handler to restore the normal terminal. `-töröl` explicitly exits the alternate screen so game-over text appears in the normal shell history.
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        // clear screen, print a message, wait 1 s, then restore
+        0-clear-doing.
+        "Hello from Ragul!\n"-write-doing.
+        0-sleep-it  1000-with.
+        0-clear-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        0-töröl-va.
+        "Helló Ragulból!\n"-nyomtat-va.
+        0-vár-t  1000-val.
+        0-töröl-va.
+    ```
+
+---
+
+## idő — Timing
+
+| Hungarian | English | Expects | Arg | Produces | Description |
+|---|---|---|---|---|---|
+| `-vár` | `-sleep` | any | ms | any | Pause execution for N milliseconds; pass-through (returns input unchanged) |
+
+=== "English aliases"
+    ```ragul
+    "tick"-write-doing.
+    0-sleep-it  500-with.
+    " tock\n"-write-doing.
+    ```
+
+=== "Hungarian"
+    ```ragul
+    "tick"-nyomtat-va.
+    0-vár-t  500-val.
+    " tock\n"-nyomtat-va.
     ```
 
 ---

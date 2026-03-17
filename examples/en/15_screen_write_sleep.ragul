@@ -1,0 +1,33 @@
+// 15_screen_write_sleep.ragul — képernyő: -write, -clear; idő: -sleep
+//
+// -write   writes to stdout without a trailing newline (pass-through)
+// -clear   clears the terminal screen (pass-through)
+// -sleep   pauses execution for N milliseconds (pass-through)
+//
+// This example prints a countdown using -write and -sleep.
+//
+// Run: ragul run examples/en/15_screen_write_sleep.ragul
+
+program-ours-effect
+
+	// -write: no newline — all on one line
+	"Counting: "-write-doing.
+	"3"-write-doing.
+	0-sleep-doing  500-with.
+	" 2"-write-doing.
+	0-sleep-doing  500-with.
+	" 1"-write-doing.
+	0-sleep-doing  500-with.
+	" Go!"-write-doing.
+	"\n"-write-doing.
+
+	// -clear then reprint
+	0-sleep-doing  800-with.
+	0-clear-doing.
+	"Screen cleared. Now reprinting.\n"-write-doing.
+
+	// -write vs print: -write has no newline, print adds one
+	"line A"-write-doing.
+	" (same line) "-write-doing.
+	"line B\n"-write-doing.
+	"line C"-print-doing.          // print adds newline automatically

@@ -73,15 +73,17 @@ Modules are imported using a `-t` / `-it` sentence at the top of the file:
 
 ## Standard Library Modules
 
-The standard library ships four built-in modules. All suffixes are available without any explicit import — the standard library is loaded automatically.
+The standard library ships seven built-in modules. All suffixes are available without any explicit import — the standard library is loaded automatically.
 
 | Module | Hungarian suffixes | English aliases |
 |---|---|---|
 | `matematika` | `-négyzetgyök`, `-hatvány`, `-abszolút`, `-kerekítve`, `-padló`, `-plafon`, `-log`, `-sin`, `-cos` | `-sqrt`, `-pow`, `-abs`, `-round`, `-floor`, `-ceil`, `-log`, `-sin`, `-cos` |
-| `szöveg` | `-hossz`, `-nagybetűs`, `-kisbetűs`, `-tartalmaz`, `-kezdődik`, `-végződik`, `-feloszt`, `-formáz`, `-szelet`, `-csere`, `-számmá` | `-len`, `-upper`, `-lower`, `-contains`, `-startswith`, `-endswith`, `-split`, `-format`, `-slice`, `-replace`, `-tonum` |
-| `lista` | `-rendezve`, `-fordítva`, `-első`, `-utolsó`, `-egyedi`, `-lapítva`, `-szűrve`, `-hozzáad`, `-eltávolít`, `-térképezve`, `-összeg` | `-sorted`, `-reversed`, `-first`, `-last`, `-unique`, `-flat`, `-filter`, `-append`, `-remove`, `-map`, `-sum` |
+| `szöveg` | `-hossz`, `-nagybetűs`, `-kisbetűs`, `-tartalmaz`, `-kezdődik`, `-végződik`, `-feloszt`, `-formáz`, `-szelet`, `-csere`, `-számmá`, `-karakterek` | `-len`, `-upper`, `-lower`, `-contains`, `-startswith`, `-endswith`, `-split`, `-format`, `-slice`, `-replace`, `-tonum`, `-chars` |
+| `lista` | `-rendezve`, `-fordítva`, `-első`, `-utolsó`, `-egyedi`, `-lapítva`, `-szűrve`, `-hozzáad`, `-eltávolít`, `-térképezve`, `-összeg`, `-beállít`, `-ismét`, `-index` | `-sorted`, `-reversed`, `-first`, `-last`, `-unique`, `-flat`, `-filter`, `-append`, `-remove`, `-map`, `-sum`, `-set`, `-repeat`, `-index` |
 | `adatok` | `-json`, `-jsonná`, `-csv`, `-csvné`, `-mező`, `-mezők` | `-json`, `-tojson`, `-csv`, `-tocsv`, `-field`, `-fields` |
 | `minta` | `-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt` | `-match`, `-capture`, `-findall`, `-resub`, `-resplit` |
+| `képernyő` | `-töröl`, `-nyomtat`, `-kurzor`, `-billentyű`, `-rajzol` | `-clear`, `-write`, `-cursor`, `-key`, `-render` |
+| `idő` | `-vár` | `-sleep` |
 
 ---
 

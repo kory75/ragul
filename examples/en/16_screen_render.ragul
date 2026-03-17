@@ -1,0 +1,68 @@
+// 16_screen_render.ragul — képernyő: -render
+//
+// -render draws a List[List[str]] framebuffer to the terminal.
+// It moves the cursor to (1,1) and prints every row joined into one string.
+// Use -clear first to blank the screen, then -render to paint the frame.
+//
+// This example builds a 5×11 box, places an 'O' inside, and animates it.
+//
+// Run: ragul run examples/en/16_screen_render.ragul
+
+idő-ből.
+képernyő-ből.
+
+program-ours-effect
+
+	// --- Build a static 5-row × 11-col box as a list of char lists ----------
+	top-into    "+---------+"-chars-it.
+	empty_row-into  "|         |"-chars-it.
+	bot-into    "+---------+"-chars-it.
+
+	grid-into  []-it.
+	grid-into  grid-top-append-it.
+	grid-into  grid-empty_row-append-it.
+	grid-into  grid-empty_row-append-it.
+	grid-into  grid-empty_row-append-it.
+	grid-into  grid-bot-append-it.
+
+	// --- Animate a ball bouncing left to right in row 2 (index 2) -----------
+	0-clear-doing.
+
+	bx-into  1-it.
+	dx-into  1-it.
+	step-into  0-it.
+
+	anim-ours-while
+		step-20-below-it.
+
+		// Get current row, place ball, put row back
+		brow-into   grid-idx-slice-it  2-with.
+		brow-into   brow-first-it.
+		brow-into   brow-set-it  bx-with  "O"-with.
+		grid-into   grid-set-it  2-with  brow-with.
+
+		// Render
+		grid-render-doing.
+		0-sleep-doing  80-with.
+
+		// Erase ball (restore space)
+		brow-into   grid-idx-slice-it  2-with.
+		brow-into   brow-first-it.
+		brow-into   brow-set-it  bx-with  " "-with.
+		grid-into   grid-set-it  2-with  brow-with.
+
+		// Move ball + bounce
+		bx-into   bx-dx-add-it.
+		left_hit-into   bx-1-atleast-it.
+		right_hit-into  bx-9-atmost-it.
+		in_bounds-into  left_hit-right_hit-and-it.
+		bounce-into     in_bounds-not-it.
+		bounce-ha
+			dx-into  dx-mul-it  -1-with.
+			bx-into  bx-dx-add-it.
+
+		step-into  step-1-add-it.
+
+	// Final message
+	0-clear-doing.
+	"Animation complete.\n"-write-doing.

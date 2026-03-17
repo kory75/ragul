@@ -156,7 +156,7 @@ program-ours-effect
 
 ```ragul
 program-ours-effect
-    content-into  "data.txt"-readfile-doing-?.
+    content-into  "data.txt"-filein-it-?.
     content-print-doing.
     -catch
         hiba-print-doing.
@@ -164,7 +164,7 @@ program-ours-effect
 
 ---
 
-## What's in v0.2.0
+## What's in v0.3.x
 
 | Feature | Status |
 |---|---|
@@ -182,12 +182,18 @@ program-ours-effect
 | English I/O aliases: `stdout`, `stdin`, `stderr`, `filein`, `fileout` | ✅ |
 | `netin` / `netout` channel stubs | ✅ |
 | `adatok` module — JSON + CSV parse/emit, field access | ✅ |
+| `minta` module — 5 regex suffixes (`-match`, `-capture`, `-findall`, `-resub`, `-resplit`) | ✅ |
+| `képernyő` module — terminal I/O: `-write`, `-clear`, `-cursor`, `-key`, `-render` | ✅ |
+| `idő` module — `-sleep` timing suffix | ✅ |
+| `lista` extensions — `-set`, `-repeat`, `-index` | ✅ |
+| `szöveg` extension — `-chars` (split string to character list) | ✅ |
 | Stdlib: arithmetic, comparison, logical, string, list, math | ✅ |
 | CLI: `run`, `check`, `compile`, `repl`, `lsp`, `new` | ✅ |
 | `ragul new project` / `ragul new module` scaffolding | ✅ |
 | Interactive REPL with persistent environment | ✅ |
 | LSP server: diagnostics, hover, completion, go-to-def | ✅ |
 | Agent architecture with Claude AI error analysis | ✅ |
+| Character-mode game — Téglatörő / Brickbash (`examples/games/`) | ✅ |
 | GitHub Actions CI (pytest + mypy on every push) | ✅ |
 | Documentation site (GitHub Pages) | ✅ |
 | Published on PyPI as `ragul-lang` | ✅ |
@@ -208,7 +214,9 @@ ragul/
 ├── main.py           # CLI entry point
 ├── stdlib/
 │   ├── core.py       # Arithmetic, comparison, logical, string concat
-│   └── modules.py    # matematika, szöveg, lista modules
+│   ├── modules.py    # matematika, szöveg, lista, adatok, minta modules
+│   ├── screen.py     # képernyő — terminal I/O (5 suffixes)
+│   └── time.py       # idő — timing (-sleep)
 ├── agents/
 │   ├── orchestrator.py   # Coordinates the pipeline; Claude AI error analysis
 │   ├── task.py           # Task / TaskResult message protocol

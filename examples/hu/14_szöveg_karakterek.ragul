@@ -1,0 +1,26 @@
+// 14_szöveg_karakterek.ragul — szöveg: -karakterek
+//
+// -karakterek szétszedi a szöveget egykarakteres elemek listájává.
+// Hasznos módosítható karakterrácsok (pl. terminálgrafika) felépítésénél.
+//
+// Futtatás: ragul futtat examples/hu/14_szöveg_karakterek.ragul
+
+program-nk-hatás
+
+	// Alap szétszedés
+	szó-ba	"helló"-t.
+	betűk-ba	szó-karakterek-t.
+	betűk-képernyőre-va.                // ['h', 'e', 'l', 'l', 'ó']
+
+	// A lista hossza egyenlő a szöveg hosszával
+	n-ba	betűk-hossz-t.
+	n-képernyőre-va.                    // 5
+
+	// Üres szöveg → üres lista
+	üres-ba	""-karakterek-t.
+	üres-képernyőre-va.                 // []
+
+	// Sor felépítése, majd egy karakter módosítása -beállít-tel
+	sor-ba	"+---------+"-karakterek-t.
+	jelölt-ba	sor-beállít-t  5-val  "*"-val.
+	jelölt-képernyőre-va.               // ['+', '-', '-', '-', '-', '*', '-', '-', '-', '-', '+']

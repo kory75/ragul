@@ -1,0 +1,30 @@
+// 15_képernyő_nyomtat_vár.ragul — képernyő: -nyomtat, -töröl; idő: -vár
+//
+// -nyomtat  sztdoutra ír sortörés nélkül (átmenő)
+// -töröl    törli a terminált (átmenő)
+// -vár      milliszekundum szünet (átmenő)
+//
+// Futtatás: ragul futtat examples/hu/15_képernyő_nyomtat_vár.ragul
+
+program-nk-hatás
+
+	// -nyomtat: nincs sortörés — minden ugyanazon a soron
+	"Visszaszámlálás: "-nyomtat-va.
+	"3"-nyomtat-va.
+	0-vár-t  500-val.
+	" 2"-nyomtat-va.
+	0-vár-t  500-val.
+	" 1"-nyomtat-va.
+	0-vár-t  500-val.
+	" Start!\n"-nyomtat-va.
+
+	// -töröl majd újranyomtatás
+	0-vár-t  800-val.
+	0-töröl-va.
+	"Képernyő törölve. Folytatódik...\n"-nyomtat-va.
+
+	// -nyomtat vs képernyőre: -nyomtat sortörés nélkül, képernyőre sortöréssel
+	"A sor "-nyomtat-va.
+	"(ugyanaz a sor) "-nyomtat-va.
+	"vége\n"-nyomtat-va.
+	"Új sor"-képernyőre-va.             // képernyőre sortörést tesz a végére

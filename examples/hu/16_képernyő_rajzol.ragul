@@ -1,0 +1,67 @@
+// 16_képernyő_rajzol.ragul — képernyő: -rajzol
+//
+// -rajzol  Lista[Lista[str]] képpont-táblát rajzol a terminálra.
+//          Kurzort (1,1)-re viszi, majd soronként kiírja a karaktereket.
+//
+// Ez a példa egy 5×11-es dobozt épít fel és benne animál egy 'O' labdát.
+//
+// Futtatás: ragul futtat examples/hu/16_képernyő_rajzol.ragul
+
+idő-ből.
+képernyő-ből.
+
+program-nk-hatás
+
+	// Statikus 5 sor × 11 oszlop doboz felépítése
+	teteje-ba	"+---------+"-karakterek-t.
+	üres_sor-ba	"|         |"-karakterek-t.
+	alja-ba	"+---------+"-karakterek-t.
+
+	rács-ba	[]-t.
+	rács-ba	rács-teteje-hozzáad-t.
+	rács-ba	rács-üres_sor-hozzáad-t.
+	rács-ba	rács-üres_sor-hozzáad-t.
+	rács-ba	rács-üres_sor-hozzáad-t.
+	rács-ba	rács-alja-hozzáad-t.
+
+	// Labda animáció: balról jobbra a 2. sorban (index 2)
+	0-töröl-va.
+
+	bx-ba	1-t.
+	dx-ba	1-t.
+	lépés-ba	0-t.
+
+	anim-unk-míg
+		lépés-20-alatt-t.
+
+		// Labda kirajzolása az aktuális pozícióba
+		bsor-ba	rács-idx-szelet-t  2-val.
+		bsor-ba	bsor-első-t.
+		bsor-ba	bsor-beállít-t  bx-val  "O"-val.
+		rács-ba	rács-beállít-t  2-val  bsor-val.
+
+		// Rajzolás
+		rács-rajzol-va.
+		0-vár-t  80-val.
+
+		// Labda törlése (szóköz visszaírása)
+		bsor-ba	rács-idx-szelet-t  2-val.
+		bsor-ba	bsor-első-t.
+		bsor-ba	bsor-beállít-t  bx-val  " "-val.
+		rács-ba	rács-beállít-t  2-val  bsor-val.
+
+		// Mozgatás + visszapattanás
+		bx-ba	bx-dx-össze-t.
+		bal_ok-ba	bx-1-legalább-t.
+		jobb_ok-ba	bx-9-legfeljebb-t.
+		belül-ba	bal_ok-jobb_ok-és-t.
+		pattan-ba	belül-nem-t.
+		pattan-ha
+			dx-ba	dx-szoroz-t  -1-val.
+			bx-ba	bx-dx-össze-t.
+
+		lépés-ba	lépés-1-össze-t.
+
+	// Vége
+	0-töröl-va.
+	"Animáció vége.\n"-nyomtat-va.

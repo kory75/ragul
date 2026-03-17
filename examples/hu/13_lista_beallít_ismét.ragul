@@ -1,0 +1,31 @@
+// 13_lista_beallít_ismét.ragul — lista: -beállít és -ismét
+//
+// -ismét   N darab másolatot készít egy értékből (visszaad egy listát)
+// -beállít adott indexen lecseréli az elemet (nem módosít, új listát ad)
+//
+// Futtatás: ragul futtat examples/hu/13_lista_beallít_ismét.ragul
+
+program-nk-hatás
+
+	// -ismét: értékből lista készítés
+	szóközök-ba	" "-ismét-t  5-val.
+	szóközök-képernyőre-va.             // [' ', ' ', ' ', ' ', ' ']
+
+	csillagok-ba	"*"-ismét-t  4-val.
+	csillagok-képernyőre-va.            // ['*', '*', '*', '*']
+
+	nullák-ba	0-ismét-t  6-val.
+	nullák-képernyőre-va.               // [0, 0, 0, 0, 0, 0]
+
+	// -beállít: indexen csere, az eredeti változatlan marad
+	alap-ba	[10, 20, 30, 40, 50]-t.
+	alap-képernyőre-va.                 // [10, 20, 30, 40, 50]
+
+	megváltozott-ba	alap-beállít-t  2-val  99-val.
+	megváltozott-képernyőre-va.         // [10, 20, 99, 40, 50]
+	alap-képernyőre-va.                 // [10, 20, 30, 40, 50]  — eredeti megmaradt
+
+	// lánc: sor felépítése, majd jelölés közepére
+	sor-ba	"."-ismét-t  10-val.
+	sor-ba	sor-beállít-t  5-val  "X"-val.
+	sor-képernyőre-va.                  // ['.', '.', '.', '.', '.', 'X', '.', '.', '.', '.']

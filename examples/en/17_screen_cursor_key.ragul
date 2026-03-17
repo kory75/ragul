@@ -1,0 +1,60 @@
+// 17_screen_cursor_key.ragul — képernyő: -cursor, -key
+//
+// -cursor  moves the terminal cursor to (row, col) — 1-based
+// -key     non-blocking keypress; returns '' if no key is waiting
+//
+// This example draws labels at specific positions, then shows a
+// 3-second key-read loop with what keys are pressed.
+//
+// Run: ragul run examples/en/17_screen_cursor_key.ragul
+
+idő-ből.
+képernyő-ből.
+
+program-ours-effect
+
+	0-clear-doing.
+
+	// -cursor: draw labels at fixed positions
+	0-cursor-doing  1-with  1-with.
+	"Row 1, Col 1"-write-doing.
+
+	0-cursor-doing  3-with  5-with.
+	"Row 3, Col 5"-write-doing.
+
+	0-cursor-doing  5-with  10-with.
+	"Row 5, Col 10"-write-doing.
+
+	// Move to row 7 and show key-read instructions
+	0-cursor-doing  7-with  1-with.
+	"Press any key (3 seconds)... "-write-doing.
+
+	// Poll for a key for up to 3 seconds (30 × 100 ms)
+	tries-into   0-it.
+	pressed-into  ""-it.
+
+	poll-ours-while
+		tries-30-below-it.
+		k-into   0-key-it.
+		got_key-into  k-""-neq-it.
+		got_key-ha
+			pressed-into  k-it.
+			tries-into    30-it.   // exit loop
+
+		tries-into  tries-1-add-it.
+		0-sleep-doing  100-with.
+
+	// Show result at row 8
+	0-cursor-doing  8-with  1-with.
+	empty-into  pressed-""-eq-it.
+	empty-ha
+		"(no key pressed)"-write-doing.
+
+	notempty-into  pressed-""-neq-it.
+	notempty-ha
+		"You pressed: "-write-doing.
+		pressed-write-doing.
+
+	// End at row 10
+	0-cursor-doing  10-with  1-with.
+	"\n"-write-doing.

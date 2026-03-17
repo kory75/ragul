@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-16 (updated — v0.2.1 released)
+**Date:** 2026-03-17 (updated — v0.3.x in progress)
 
 ---
 
@@ -39,6 +39,7 @@ This report compares what those documents specify against what is currently impl
 | **v0.2.0** | **2026-03-16** | E006/E007 type checker errors; bilingual error messages; English I/O aliases; `adatok` module (JSON/CSV); `true`/`false` root aliases; `netin`/`netout` stubs; lexer arithmetic fix; error-code example files; docs overhaul |
 | **v0.2.1** | **2026-03-16** | `-val` binding resolution; fold-as-suffix call; 8 new `-val` tests; `-with`/`-val` example files + docs page |
 | **v0.3.0** | **2026-03-16** | `minta` module — 5 regex suffixes (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`); 5 English aliases; 16 new tests; bilingual example files |
+| **v0.3.x** | **2026-03-17** | `képernyő` module (5 terminal suffixes); `idő` module (`-vár`); lista `-beállít`/`-ismét`/`-index`; szöveg `-karakterek`; 11 aliases; character-mode Téglatörő/Brickbash game (HU+EN); architecture doc |
 
 All versions published to PyPI as `ragul-lang`.
 
@@ -107,6 +108,8 @@ Tree-walking interpreter with full support for:
 - Network stubs: `netin`, `netout`
 - User-defined scope calls as suffix functions
 - `-megszakít` break signal
+- **Interleaved loop bodies** — `_loop_body()` helper sorts body sentences and child scopes by source line so conditionals inside loops fire in written order (not all sentences then all scopes)
+- **Per-iteration foreach write-back** — outer-scope accumulators updated after each element so subsequent iterations see the updated value
 
 **CLI (`ragul/main.py`)**
 All five subcommands wired up. Hungarian command names are primary; English aliases accepted silently. UTF-8 stdout/stderr reconfiguration at startup; `rich` legacy Windows renderer disabled to prevent Unicode crashes on non-ASCII diagnostic characters.
@@ -123,10 +126,12 @@ pygls-based LSP server with:
 
 **Standard Library**
 - `stdlib/core.py` — arithmetic, comparison, equality, logical, string concat
-- `stdlib/modules.py` — matematika (9 functions), szöveg (10 functions including `-számmá`/`-tonum`), lista (polymorphic filter/compare/fold), adatok (`-json`/`-jsonná`/`-csv`/`-csvné`/`-mezők`), minta (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`)
+- `stdlib/modules.py` — matematika (9 functions), szöveg (11 functions incl. `-karakterek`), lista (polymorphic filter/compare/fold/set/repeat), adatok (`-json`/`-jsonná`/`-csv`/`-csvné`/`-mezők`), minta (5 regex suffixes)
+- `stdlib/screen.py` — `képernyő` module: `-töröl`/`-clear`, `-nyomtat`/`-write`, `-kurzor`/`-cursor`, `-billentyű`/`-key`, `-rajzol`/`-render`; alternate screen buffer management (`\033[?1049h`/`l`) via `atexit`
+- `stdlib/time.py` — `idő` module: `-vár`/`-sleep`
 
 **Tests (`ragul/tests/test_ragul.py`)**
-88 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling, `-val` argument binding (8 new tests in `TestValArgs`), regex/minta module (16 new tests in `TestMinta`).
+123 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling, `-val` argument binding (`TestValArgs`), regex/minta module (`TestMinta`), screen/time modules (`TestScreen`, `TestIdő`), list/string extensions (`TestListExtensions`, `TestSzövegExtensions`), game smoke (`TestBreakoutSmoke`), and loop-interleave correctness (`TestLoopInterleave`).
 
 **Error-Code Example Files (`examples/error-codes/`)**
 8 standalone `.ragul` files, one per diagnostic, each verified to produce the expected `ragul check` output:
@@ -146,7 +151,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 - Tooling & CLI guide (all commands, error codes, editor integration)
 - `error-codes.md` — one-page summary with code sample, expected output, and fix for every error code
 - Glossary (Hungarian ↔ English suffix/keyword map)
-- 11 bilingual example pages (English alias / Hungarian tabs), including `-with`/`-val` arguments and regex patterns
+- 12 bilingual example pages (English alias / Hungarian tabs), including `-with`/`-val` arguments, regex patterns, and terminal/game features (képernyő, idő, framebuffer grid)
 
 **Agent Architecture (`ragul/agents/`)**
 - `task.py`, `base.py`, `orchestrator.py` — pipeline with optional Claude Opus 4.6 AI analysis
@@ -178,6 +183,16 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 ---
 
 ## Bug Fixes Log
+
+### v0.3.x (2026-03-17)
+
+| Bug | Fix |
+|---|---|
+| `-mindegyik` foreach write-back only ran after the full loop from the last `loop_env` | Write-back moved inside the iteration loop so outer-scope accumulators (e.g. `rács` during level loading) are updated after every element and subsequent iterations see the current value |
+| `run()` double-executed all top-level loops and conditionals | Removed the outer `for child in root_scope.children` loop in `run()`; `_exec_scope(root_scope)` already processes all children via `_interleave` |
+| Pure/function scope branch silently skipped `is_effect` children | Extended the dispatch condition from `is_conditional or is_loop` to `is_effect or is_conditional or is_loop`; top-level effect scopes (e.g. `program-nk-hatás`) are now handled by `_exec_scope` rather than the now-removed outer loop |
+| `-rajzol` drew to the scroll-back buffer, not the visible viewport | `_rajzol` now enters the **alternate screen buffer** (`\033[?1049h`) on first call; `\033[H` in the alt-screen always addresses the visible top-left; `atexit` restores the normal screen; `-töröl` exits the alt-screen back to the normal terminal |
+| `-töröl` used `os.system("cls")` (subprocess, unreliable in PowerShell) | Replaced with `\033[2J\033[H` ANSI sequence throughout; in game context, `-töröl` now exits the alternate screen which implicitly restores the previous terminal content |
 
 ### v0.2.1 (2026-03-16)
 
@@ -212,13 +227,25 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 
 ## Recommended Next Steps
 
-### v0.3.0 — Planned
+### v0.3.0 — Released
 
 - [x] `minta` module — regex pattern matching (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`)
+
+### v0.3.x — In Progress
+
+- [x] `képernyő` module — 5 terminal I/O suffixes (`-töröl`, `-nyomtat`, `-kurzor`, `-billentyű`, `-rajzol`) with EN aliases
+- [x] `idő` module — `-vár` / `-sleep` timing suffix
+- [x] lista extensions — `-beállít` (set-at-index) and `-ismét` (repeat-value)
+- [x] szöveg extension — `-karakterek` / `-chars` (split string to char list)
+- [x] 9 new English aliases added to `ALIAS_TABLE`
+- [x] lista `-index` (element-at-index; works on strings too)
+- [x] Character-mode Téglatörő/Brickbash — `examples/games/téglatörő.ragul` (HU) + `examples/games/en/brickbash.ragul` (EN) + `level1.txt`
+- [x] Architecture documentation — `Project Documents/ragul-game-architecture.md`
 - [ ] `dátum` module — date/time operations
 - [ ] OOP / record-update syntax for E009 to become triggerable
 - [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)
 - [ ] Split `stdlib/modules.py` into separate per-module files (`stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py`, `stdlib/minta.py`, etc.) — easier to maintain and extend
+- [ ] English aliases for module names — add entries to `ROOT_ALIASES` in `model.py` so `pattern-from.` works as an alias for `minta-ból.`, `math-from.` for `matematika-ból.`, etc.
 
 ---
 

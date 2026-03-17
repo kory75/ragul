@@ -1,0 +1,26 @@
+// 14_string_chars.ragul — szöveg: -chars
+//
+// -chars splits a string into a list of single characters.
+// Useful for building mutable character grids.
+//
+// Run: ragul run examples/en/14_string_chars.ragul
+
+program-ours-effect
+
+	// Basic split
+	word-into  "hello"-it.
+	letters-into  word-chars-it.
+	letters-print-doing.           // ['h', 'e', 'l', 'l', 'o']
+
+	// Length of the resulting list equals the string length
+	n-into  letters-len-it.
+	n-print-doing.                 // 5
+
+	// Empty string → empty list
+	empty-into  ""-chars-it.
+	empty-print-doing.             // []
+
+	// Then mutate a character in the list with -set
+	row-into   "+---------+"-chars-it.
+	marked-into  row-set-it  5-with  "*"-with.
+	marked-print-doing.            // ['+', '-', '-', '-', '-', '*', '-', '-', '-', '-', '+']

@@ -1,0 +1,223 @@
+// téglatörő.ragul — character-mode Téglatörő (Brick Basher) in Ragul
+// First program in Ragul: a proper game.
+//
+// Controls:
+//   a / LEFT  — move paddle left
+//   d / RIGHT — move paddle right
+//   q         — quit
+//
+// Layout: 22 × 17 terminal cells
+//   Row  0  : top border
+//   Rows 1–4: bricks (8 bricks × 2 chars wide = 16 chars, padded to 20)
+//   Rows 5–13: open play field
+//   Row 14  : paddle (====)
+//   Row 15  : ball zone / lose line
+//   Row 16  : bottom border
+//
+// Suffix order: possession (-unk) before scope modifier (-ha, -míg, -mindegyik)
+// Indentation: TAB characters
+
+képernyő-ből.
+idő-ből.
+matematika-ból  padló-val.
+
+program-nk-hatás
+
+	// -----------------------------------------------------------------------
+	// Load level: each line of the file → list of chars → rács
+	// -----------------------------------------------------------------------
+	szoveg-ba	"examples/games/level1.txt"-fájlból-t.
+	sorok-ba	szoveg-feloszt-t  "\n"-val.
+
+	rács-ba	[]-t.
+	sorok-unk-mindegyik
+		sor-d.
+		betuk-ba	sor-karakterek-t.
+		rács-ba	rács-betuk-hozzáad-t.
+
+	// -----------------------------------------------------------------------
+	// Brick liveness: 32 ints (4 rows × 8 bricks), 1 = alive, 0 = dead
+	// -----------------------------------------------------------------------
+	téglák-ba	1-ismét-t  32-val.
+
+	// -----------------------------------------------------------------------
+	// Initial game state
+	// -----------------------------------------------------------------------
+	sx-ba	9-t.
+	sy-ba	12-t.
+	dx-ba	1-t.
+	dy-ba	-1-t.
+	px-ba	8-t.
+	prev_sx-ba	9-t.
+	prev_sy-ba	12-t.
+	prev_px-ba	8-t.
+	pontszam-ba	0-t.
+	elet-ba	3-t.
+	fut-ba	igaz-t.
+
+	// -----------------------------------------------------------------------
+	// Game loop: first sentence = condition, rest = body
+	// -----------------------------------------------------------------------
+	játék-unk-míg
+		fut-t.
+
+		// --- Save previous positions -----------------------------------------
+		prev_sx-ba	sx-t.
+		prev_sy-ba	sy-t.
+		prev_px-ba	px-t.
+
+		// --- Input -----------------------------------------------------------
+		betu-ba	0-billentyű-t.
+
+		// Paddle left
+		balra-ba	betu-"a"-egyenlő-t.
+		nyilbalra-ba	betu-"LEFT"-egyenlő-t.
+		mozdul_b-ba	balra-nyilbalra-vagy-t.
+		mozdul_b-ha
+			uj_px-ba	px-1-kivon-t.
+			feri-ba	uj_px-1-legalább-t.
+			feri-ha
+				px-ba	uj_px-t.
+
+		// Paddle right
+		jobbra-ba	betu-"d"-egyenlő-t.
+		nyiljobbra-ba	betu-"RIGHT"-egyenlő-t.
+		mozdul_j-ba	jobbra-nyiljobbra-vagy-t.
+		mozdul_j-ha
+			uj_px-ba	px-1-össze-t.
+			jobb_el-ba	uj_px-3-össze-t.
+			belfj-ba	jobb_el-19-legfeljebb-t.
+			belfj-ha
+				px-ba	uj_px-t.
+
+		// Quit
+		kilepes-ba	betu-"q"-egyenlő-t.
+		kilepes-ha
+			fut-ba	hamis-t.
+
+		// --- Move ball -------------------------------------------------------
+		sx-ba	sx-dx-össze-t.
+		sy-ba	sy-dy-össze-t.
+
+		// --- Wall bounces ----------------------------------------------------
+		bal_fal-ba	sx-1-legfeljebb-t.
+		bal_fal-ha
+			sx-ba	1-t.
+			dx-ba	dx-szoroz-t  -1-val.
+
+		jobb_fal-ba	sx-19-legalább-t.
+		jobb_fal-ha
+			sx-ba	19-t.
+			dx-ba	dx-szoroz-t  -1-val.
+
+		felso_fal-ba	sy-1-legfeljebb-t.
+		felso_fal-ha
+			sy-ba	1-t.
+			dy-ba	dy-szoroz-t  -1-val.
+
+		// --- Ball lost -------------------------------------------------------
+		kiesett-ba	sy-15-legalább-t.
+		kiesett-ha
+			elet-ba	elet-1-kivon-t.
+			sx-ba	9-t.
+			sy-ba	12-t.
+			dy-ba	-1-t.
+			game_over-ba	elet-0-legfeljebb-t.
+			game_over-ha
+				fut-ba	hamis-t.
+
+		// --- Paddle hit ------------------------------------------------------
+		labda_sor-ba	sy-14-egyenlő-t.
+		labda_jobb-ba	sx-px-legalább-t.
+		px_veg-ba	px-3-össze-t.
+		labda_bal-ba	sx-px_veg-legfeljebb-t.
+		utott1-ba	labda_sor-labda_jobb-és-t.
+		utott-ba	utott1-labda_bal-és-t.
+		utott-ha
+			dy-ba	dy-szoroz-t  -1-val.
+			sy-ba	13-t.
+
+		// --- Brick hit -------------------------------------------------------
+		tegla_sor-ba	sy-1-legalább-t.
+		tegla_sor2-ba	sy-4-legfeljebb-t.
+		tegla_ter-ba	tegla_sor-tegla_sor2-és-t.
+		tegla_ter-ha
+			sor_idx-ba	sy-1-kivon-t.
+			osl_raw-ba	sx-1-kivon-t.
+			osl-ba	osl_raw-padló-t  2-val.
+			osl_ok-ba	osl-7-legfeljebb-t.
+			sor_resz-ba	sor_idx-8-szoroz-t.
+			teg_idx-ba	sor_resz-osl-össze-t.
+			teg_ert-ba	téglák-index-t  teg_idx-val.
+			el_raw-ba	teg_ert-1-egyenlő-t.
+			el-ba	el_raw-osl_ok-és-t.
+			el-ha
+				téglák-ba	téglák-beállít-t  teg_idx-val  0-val.
+				pontszam-ba	pontszam-10-össze-t.
+				dy-ba	dy-szoroz-t  -1-val.
+				// Erase brick in rács (2 chars wide)
+				gr_sor-ba	sy-t.
+				lc-ba	osl-2-szoroz-t.
+				lc-ba	lc-1-össze-t.
+				rc-ba	lc-1-össze-t.
+				tsor-ba	rács-index-t  gr_sor-val.
+				tsor-ba	tsor-beállít-t  lc-val  " "-val.
+				tsor-ba	tsor-beállít-t  rc-val  " "-val.
+				rács-ba	rács-beállít-t  gr_sor-val  tsor-val.
+
+		// --- Win check -------------------------------------------------------
+		osszeg-ba	téglák-összeg-t.
+		nyert-ba	osszeg-0-egyenlő-t.
+		nyert-ha
+			fut-ba	hamis-t.
+
+		// --- Clear previous ball position ------------------------------------
+		pcl_sor-ba	rács-index-t  prev_sy-val.
+		pcl_sor-ba	pcl_sor-beállít-t  prev_sx-val  " "-val.
+		rács-ba	rács-beállít-t  prev_sy-val  pcl_sor-val.
+
+		// --- Clear previous paddle -------------------------------------------
+		ppdl-ba	rács-index-t  14-val.
+		ppx0-ba	prev_px-t.
+		ppx1-ba	prev_px-1-össze-t.
+		ppx2-ba	prev_px-2-össze-t.
+		ppx3-ba	prev_px-3-össze-t.
+		ppdl-ba	ppdl-beállít-t  ppx0-val  " "-val.
+		ppdl-ba	ppdl-beállít-t  ppx1-val  " "-val.
+		ppdl-ba	ppdl-beállít-t  ppx2-val  " "-val.
+		ppdl-ba	ppdl-beállít-t  ppx3-val  " "-val.
+		rács-ba	rács-beállít-t  14-val  ppdl-val.
+
+		// --- Draw ball -------------------------------------------------------
+		bsor-ba	rács-index-t  sy-val.
+		bsor-ba	bsor-beállít-t  sx-val  "O"-val.
+		rács-ba	rács-beállít-t  sy-val  bsor-val.
+
+		// --- Draw paddle -----------------------------------------------------
+		pdl-ba	rács-index-t  14-val.
+		pdl1-ba	px-1-össze-t.
+		pdl2-ba	px-2-össze-t.
+		pdl3-ba	px-3-össze-t.
+		pdl-ba	pdl-beállít-t  px-val  "="-val.
+		pdl-ba	pdl-beállít-t  pdl1-val  "="-val.
+		pdl-ba	pdl-beállít-t  pdl2-val  "="-val.
+		pdl-ba	pdl-beállít-t  pdl3-val  "="-val.
+		rács-ba	rács-beállít-t  14-val  pdl-val.
+
+		// --- Render ----------------------------------------------------------
+		rács-rajzol-va.
+		pont_s-ba	"Score: "-pontszam-összefűz-t.
+		elet_s-ba	"  Lives: "-elet-összefűz-t.
+		info-ba	pont_s-elet_s-összefűz-t.
+		info-nyomtat-va.
+
+		// --- Frame delay ~80 ms ----------------------------------------------
+		0-vár-t  80-val.
+
+	// -----------------------------------------------------------------------
+	// Game over
+	// -----------------------------------------------------------------------
+	0-töröl-va.
+	vege-ba	"Game over.  Score: "-pontszam-összefűz-t.
+	vege-nyomtat-va.
+	10-vár-t  1500-val.
