@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-17 (updated — v0.3.x in progress)
+**Date:** 2026-03-21 (updated — v0.3.x in progress)
 
 ---
 
@@ -241,6 +241,8 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 - [x] lista `-index` (element-at-index; works on strings too)
 - [x] Character-mode Téglatörő/Brickbash — `examples/games/téglatörő.ragul` (HU) + `examples/games/en/brickbash.ragul` (EN) + `level1.txt`
 - [x] Architecture documentation — `Project Documents/ragul-game-architecture.md`
+- [x] Fix typo: `pozitív-e-nk-ha` / `pozitív-e-ours-if` in `docs/control.md` and `ragul-spec.md` — stray `-e` (error-propagation suffix) removed from scope name; correct form is `pozitív-nk-ha` / `pozitív-ours-if`
+- [x] Fix typo: `-szöteggé` → `-szöveggé` throughout — renamed in `stdlib/modules.py`, `model.py`, `typechecker.py`, `errors.py`, `docs/stdlib.md`, `docs/glossary.md`, `docs/types.md`, `ragul-spec.md`, and example files
 - [ ] `dátum` module — date/time operations
 - [ ] OOP / record-update syntax for E009 to become triggerable
 - [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)

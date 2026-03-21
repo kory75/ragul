@@ -117,7 +117,7 @@ Each suffix declares what it expects and what it produces:
 | `-szűrve` | `-filter` | `Lista-T` | `Lista-T` | condition |
 | `-fordítva` | `-reversed` | `Lista-T` | `Lista-T` | — |
 | `-hossz` | `-len` | `Lista-T` or `Szöveg` | `Szám` | — |
-| `-szöteggé` | `-tostr` | `Szám` | `Szöveg` | — *(bridge)* |
+| `-szöveggé` | `-tostr` | `Szám` | `Szöveg` | — *(bridge)* |
 | `-számmá` | `-tonum` | `Szöveg` | `vagy-Szám-vagy-Hiba` | — *(bridge, fallible)* |
 
 **Bridge suffixes** explicitly convert between types and must be used when chaining across type boundaries.

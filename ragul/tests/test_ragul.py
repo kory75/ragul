@@ -518,7 +518,7 @@ class TestTypeChecker:
         from ragul.lexer import lex
         from ragul.parser import parse
         from ragul.typechecker import TypeChecker
-        # szöveg-szöteggé goes Szám→Szöveg (bridge), no W001
+        # szöveg-szöveggé goes Szám→Szöveg (bridge), no W001
         # but a raw type cross without bridge should warn
         source = 'x-ba  3-t.\ny-ba  x-nagybetűs-t.'  # Szám → szöveg op
         tokens, _ = lex(source, "<test>")

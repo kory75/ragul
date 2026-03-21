@@ -88,7 +88,7 @@ def E001(file: str, line: int, suffix: str, expected_type: str, got_type: str,
         suggestion=(
             f"Use a {expected_type} root, or add a bridge suffix to convert "
             f"{got_type} to {expected_type} first "
-            f"(e.g. -tonum (-számmá) for String→Number, -tostr (-szöteggé) for Number→String)."
+            f"(e.g. -tonum (-számmá) for String→Number, -tostr (-szöveggé) for Number→String)."
         ),
     )
 
@@ -226,7 +226,7 @@ def W001(file: str, line: int, from_type: str, to_type: str, offending: str = ""
         offending=offending,
         detail=f"Type transition: {from_type} → {to_type}",
         suggestion=(
-            f"Add a bridge suffix (e.g. -tostr (-szöteggé), -tonum (-számmá)) to make the "
+            f"Add a bridge suffix (e.g. -tostr (-szöveggé), -tonum (-számmá)) to make the "
             f"type conversion explicit."
         ),
     )

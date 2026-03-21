@@ -49,7 +49,7 @@ EFFECT_SUFFIX_NAMES = frozenset({
 FALLIBLE_SUFFIXES = frozenset({"-számmá", "-fájlolvasó", "-fájlból", "-fájlra"})
 
 # Bridge suffixes that change element type
-BRIDGE_SUFFIXES = frozenset({"-szöteggé", "-számmá", "-szöveggé"})
+BRIDGE_SUFFIXES = frozenset({"-szöveggé", "-számmá"})
 
 # Built-in stdlib module names — always resolve without E007
 STDLIB_MODULES = frozenset({

@@ -104,7 +104,7 @@ ALIAS_TABLE: dict[str, str] = {
     "-round":       "-kerekítve",
     "-floor":       "-padló",
     "-ceil":        "-plafon",
-    "-tostr":       "-szöteggé",
+    "-tostr":       "-szöveggé",
     # List suffix aliases (lista module)
     "-sorted":      "-rendezve",
     "-reversed":    "-fordítva",

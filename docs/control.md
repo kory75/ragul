@@ -12,7 +12,7 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
 
 === "English aliases"
     ```ragul
-    pozitív-e-ours-if
+    pozitív-ours-if
         szám-yours.
         szám-0-above-if
             szám-kétszeres-it.
@@ -20,7 +20,7 @@ A conditional is a named scope suffixed with `-ha` / `-if` (if / given that).
 
 === "Hungarian"
     ```ragul
-    pozitív-e-nk-ha
+    pozitív-nk-ha
         szám-d.
         szám-0-felett-ha
             szám-kétszeres-t.

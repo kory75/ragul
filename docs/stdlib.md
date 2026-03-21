@@ -292,7 +292,7 @@ Bridge suffixes convert between types and must be used when chaining across type
 
 | Hungarian | English | From | To | Fallible |
 |---|---|---|---|---|
-| `-szöteggé` | `-tostr` | `Szám` | `Szöveg` | No |
+| `-szöveggé` | `-tostr` | `Szám` | `Szöveg` | No |
 | `-számmá` | `-tonum` | `Szöveg` | `vagy-Szám-vagy-Hiba` | Yes |
 
 === "English aliases"
@@ -306,7 +306,7 @@ Bridge suffixes convert between types and must be used when chaining across type
 === "Hungarian"
     ```ragul
     x-be  42-t.
-    s-be  x-szöteggé-t.         // "42"
+    s-be  x-szöveggé-t.         // "42"
 
     n-be  "123"-számmá-va-e.    // 123, or propagate error
     ```

@@ -10,7 +10,7 @@
 // Expected output:
 //   WARN  W001  Suffix chain crosses type boundary from String (Szöveg) to
 //               List[String (Szöveg)] without a bridge suffix.
-//   → Add a bridge suffix (e.g. -tostr (-szöteggé), -tonum (-számmá)) to make
+//   → Add a bridge suffix (e.g. -tostr (-szöveggé), -tonum (-számmá)) to make
 //     the type conversion explicit.
 
 program-ours-effect

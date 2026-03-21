@@ -23,7 +23,7 @@ program-nk-hatás
 	osszeg-képernyőre-va.            // 255
 
 	// 3. lépés: eredmény kiírása új fájlba
-	eredmeny-ba  osszeg-szöteggé-t.
+	eredmeny-ba  osszeg-szöveggé-t.
 	eredmeny-"eredmeny.txt"-fájlra-va.
 	"Eredmény elmentve: eredmeny.txt"-képernyőre-va.
 

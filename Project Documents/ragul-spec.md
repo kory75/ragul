@@ -164,7 +164,7 @@ A suffix that changes element type declares the new type explicitly in its contr
 
 ```
 // -szöveggé on a Lista maps each element — returns Lista-Szöveg
-számok-szöteggé-ből  kimenet-be  ír-va.  // Lista-Szöveg
+számok-szöveggé-ből  kimenet-be  ír-va.  // Lista-Szöveg
 ```
 
 ### 3.4 The `vagy` Compound Type
@@ -562,7 +562,7 @@ A conditional is a named scope suffixed with `-ha` (if / given that). The `-ha` 
 
 **Simple if:**
 ```
-pozitív-e-nk-ha
+pozitív-nk-ha
     szám-d.
     szám-0-felett-ha
         szám-kétszeres-t.

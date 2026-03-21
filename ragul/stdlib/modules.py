@@ -48,7 +48,7 @@ _reg("-plafon",      lambda v, a=None: math.ceil(v / a) if a is not None else ma
 _reg("-log",         lambda v, a: math.log(v, a),     _szam, _szam, [_szam], module="matematika")
 _reg("-sin",         lambda v: math.sin(v),           _szam, _szam, module="matematika")
 _reg("-cos",         lambda v: math.cos(v),           _szam, _szam, module="matematika")
-_reg("-szöteggé",    lambda v: str(v),                _szam, _szoveg, module="matematika")  # bridge
+_reg("-szöveggé",    lambda v: str(v),                _szam, _szoveg, module="matematika")  # bridge
 
 # ---------------------------------------------------------------------------
 # szöveg module

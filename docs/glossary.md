@@ -172,7 +172,7 @@ Operate on `Logikai` (boolean) values.
 | `-log` | `-log` | base | `Szám` | Logarithm |
 | `-sin` | `-sin` | — | `Szám` | Sine |
 | `-cos` | `-cos` | — | `Szám` | Cosine |
-| `-szöteggé` | `-tostr` | — | `Szöveg` | Convert number to string |
+| `-szöveggé` | `-tostr` | — | `Szöveg` | Convert number to string |
 
 ---
 
