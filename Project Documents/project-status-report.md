@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-21 (updated — v0.3.x in progress)
+**Date:** 2026-03-22 (updated — v0.3.x)
 
 ---
 
@@ -40,6 +40,7 @@ This report compares what those documents specify against what is currently impl
 | **v0.2.1** | **2026-03-16** | `-val` binding resolution; fold-as-suffix call; 8 new `-val` tests; `-with`/`-val` example files + docs page |
 | **v0.3.0** | **2026-03-16** | `minta` module — 5 regex suffixes (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`); 5 English aliases; 16 new tests; bilingual example files |
 | **v0.3.x** | **2026-03-17** | `képernyő` module (5 terminal suffixes); `idő` module (`-vár`); lista `-beállít`/`-ismét`/`-index`; szöveg `-karakterek`; 11 aliases; character-mode Téglatörő/Brickbash game (HU+EN); architecture doc |
+| **v0.3.x** | **2026-03-22** | `dátum` module (15 date/time suffixes, PHP-style formatting); 15 EN aliases; 41 new tests (171 total); bilingual example files; full docs page (`docs/examples/14_date.md`); README updated |
 
 All versions published to PyPI as `ragul-lang`.
 
@@ -129,9 +130,10 @@ pygls-based LSP server with:
 - `stdlib/modules.py` — matematika (9 functions), szöveg (11 functions incl. `-karakterek`), lista (polymorphic filter/compare/fold/set/repeat), adatok (`-json`/`-jsonná`/`-csv`/`-csvné`/`-mezők`), minta (5 regex suffixes)
 - `stdlib/screen.py` — `képernyő` module: `-töröl`/`-clear`, `-nyomtat`/`-write`, `-kurzor`/`-cursor`, `-billentyű`/`-key`, `-rajzol`/`-render`; alternate screen buffer management (`\033[?1049h`/`l`) via `atexit`
 - `stdlib/time.py` — `idő` module: `-vár`/`-sleep`
+- `stdlib/datum.py` — `dátum` module: 15 suffixes — `-most`/`-now`, `-dátumformáz`/`-dateformat`, `-dátumértelmez`/`-parse`, `-év`/`-year`, `-hónap`/`-month`, `-nap`/`-day`, `-óra`/`-hour`, `-perc`/`-minute`, `-másodperc`/`-second`, `-hétfőnap`/`-weekday`, `-időbélyeg`/`-timestamp`, `-időpontból`/`-fromseconds`, `-napok`/`-adddays`, `-órák`/`-addhours`, `-különbség`/`-diffseconds`; PHP char dispatch loop; lazy `RagulHiba` import to avoid circular dependency
 
 **Tests (`ragul/tests/test_ragul.py`)**
-123 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling, `-val` argument binding (`TestValArgs`), regex/minta module (`TestMinta`), screen/time modules (`TestScreen`, `TestIdő`), list/string extensions (`TestListExtensions`, `TestSzövegExtensions`), game smoke (`TestBreakoutSmoke`), and loop-interleave correctness (`TestLoopInterleave`).
+171 tests covering: lexer, parser, interpreter, stdlib, type checker (including E006/E007), error handling, `-val` argument binding (`TestValArgs`), regex/minta module (`TestMinta`), screen/time modules (`TestScreen`, `TestIdő`), date/time module (`TestDátum` — 41 tests), list/string extensions (`TestListExtensions`, `TestSzövegExtensions`), game smoke (`TestBreakoutSmoke`), and loop-interleave correctness (`TestLoopInterleave`).
 
 **Error-Code Example Files (`examples/error-codes/`)**
 8 standalone `.ragul` files, one per diagnostic, each verified to produce the expected `ragul check` output:
@@ -151,7 +153,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 - Tooling & CLI guide (all commands, error codes, editor integration)
 - `error-codes.md` — one-page summary with code sample, expected output, and fix for every error code
 - Glossary (Hungarian ↔ English suffix/keyword map)
-- 12 bilingual example pages (English alias / Hungarian tabs), including `-with`/`-val` arguments, regex patterns, and terminal/game features (képernyő, idő, framebuffer grid)
+- 13 bilingual example pages (English alias / Hungarian tabs), including `-with`/`-val` arguments, regex patterns, terminal/game features (képernyő, idő, framebuffer grid), and date/time (`dátum` module)
 
 **Agent Architecture (`ragul/agents/`)**
 - `task.py`, `base.py`, `orchestrator.py` — pipeline with optional Claude Opus 4.6 AI analysis
