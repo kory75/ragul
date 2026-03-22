@@ -286,6 +286,87 @@ Character-mode terminal output, input, and framebuffer rendering. All suffixes a
 
 ---
 
+## dátum — Date/Time
+
+PHP-style date formatting. The canonical pipeline start is `0-most-t.` — the `0` is a dummy value discarded by `-most`.
+
+| Hungarian | English | Expects | Arg(s) | Produces | Description |
+|---|---|---|---|---|---|
+| `-most` | `-now` | any | — | datetime | Current local datetime (input ignored) |
+| `-dátumformáz` | `-dateformat` | datetime | `Szöveg` | `Szöveg` | Format using PHP-style format string |
+| `-dátumértelmez` | `-parse` | `Szöveg` | `Szöveg` | datetime\|`Hiba` | Parse string → datetime using PHP-style format; returns `Hiba` on failure or unsupported chars |
+| `-év` | `-year` | datetime | — | `Szám` | Year (4-digit integer) |
+| `-hónap` | `-month` | datetime | — | `Szám` | Month 1–12 |
+| `-nap` | `-day` | datetime | — | `Szám` | Day 1–31 |
+| `-óra` | `-hour` | datetime | — | `Szám` | Hour 0–23 |
+| `-perc` | `-minute` | datetime | — | `Szám` | Minute 0–59 |
+| `-másodperc` | `-second` | datetime | — | `Szám` | Second 0–59 |
+| `-hétfőnap` | `-weekday` | datetime | — | `Szám` | ISO weekday: Mon=1 … Sun=7 |
+| `-időbélyeg` | `-timestamp` | datetime | — | `Szám` | Unix timestamp (float) |
+| `-időpontból` | `-fromseconds` | `Szám` | — | datetime | Local datetime from Unix timestamp |
+| `-napok` | `-adddays` | datetime | `Szám` | datetime | Add N days (negative = subtract) |
+| `-órák` | `-addhours` | datetime | `Szám` | datetime | Add N hours |
+| `-különbség` | `-diffseconds` | datetime | datetime | `Szám` | `(arg − self)` in seconds; positive when arg is later |
+
+**PHP format characters** (for `-dátumformáz` and `-dátumértelmez`):
+
+| Char | Meaning | Example |
+|---|---|---|
+| `Y` | 4-digit year | `2026` |
+| `y` | 2-digit year | `26` |
+| `m` | Month, zero-padded | `03` |
+| `n` | Month, no padding | `3` |
+| `d` | Day, zero-padded | `07` |
+| `j` | Day, no padding | `7` |
+| `H` | Hour 0–23, zero-padded | `09` |
+| `G` | Hour 0–23, no padding | `9` |
+| `h` | Hour 1–12, zero-padded | `09` |
+| `g` | Hour 1–12, no padding | `9` |
+| `i` | Minute, zero-padded | `05` |
+| `s` | Second, zero-padded | `07` |
+| `A` | AM/PM | `AM` |
+| `a` | am/pm | `am` |
+| `D` | Day abbreviation | `Sat` |
+| `l` | Full day name | `Saturday` |
+| `M` | Month abbreviation | `Mar` |
+| `F` | Full month name | `March` |
+| `N` | ISO weekday (Mon=1, Sun=7) | `6` |
+| `w` | PHP weekday (Sun=0, Sat=6) | `6` |
+| `W` | ISO week number, zero-padded | `12` |
+| `z` | Day of year, 0-based | `79` |
+| `U` | Unix timestamp | `1742547907` |
+| `t` | Days in the month | `31` |
+| `L` | Leap year (`1`/`0`) | `0` |
+| `\X` | Literal character `X` | `\Y` → `Y` |
+
+**Parsing limitation:** `-dátumértelmez` supports `Y y m d H h i s A a D l M F` only. Characters `n G j w W z U t L` return `Hiba` when used as parse formats.
+
+=== "English aliases"
+    ```ragul
+    program-ours-effect
+        dt-into  0-now-it.
+        dt-dateformat-it  "Y-m-d H:i:s"-with-print-doing.
+        // → 2026-03-21 09:05:07
+
+        tomorrow-into  dt-adddays-it  1-with.
+        tomorrow-dateformat-it  "l, F j, Y"-with-print-doing.
+        // → Sunday, March 22, 2026
+    ```
+
+=== "Hungarian"
+    ```ragul
+    program-nk-hatás
+        dt-be  0-most-t.
+        dt-dátumformáz-t  "Y-m-d H:i:s"-val-képernyőre-va.
+        // → 2026-03-21 09:05:07
+
+        holnap-ba  dt-napok-t  1-val.
+        holnap-dátumformáz-t  "l, F j, Y"-val-képernyőre-va.
+        // → Sunday, March 22, 2026
+    ```
+
+---
+
 ## Bridge Suffixes
 
 Bridge suffixes convert between types and must be used when chaining across type boundaries:

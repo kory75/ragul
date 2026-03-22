@@ -449,3 +449,4 @@ _reg("-hálózatra",  _netout_stub, _szoveg, RagulType.unknown(), arg_types=[_sz
 
 import ragul.stdlib.screen  # noqa: E402, F401  — registers képernyő suffixes
 import ragul.stdlib.time    # noqa: E402, F401  — registers idő suffixes
+import ragul.stdlib.datum   # noqa: E402, F401  — registers dátum suffixes

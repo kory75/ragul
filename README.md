@@ -152,6 +152,29 @@ program-ours-effect
 // 15
 ```
 
+### Date and time
+
+```ragul
+program-ours-effect
+    now-into   0-now-it.
+
+    // Format with PHP-style codes
+    iso-into   now-dateformat-it  "Y-m-d H:i:s"-with.
+    long-into  now-dateformat-it  "l, F j, Y"-with.
+    iso-print-doing.     // 2026-03-22 09:05:07
+    long-print-doing.    // Sunday, March 22, 2026
+
+    // Arithmetic
+    nextweek-into  now-7-adddays-it.
+    nw-into  nextweek-dateformat-it  "Y-m-d"-with.
+    nw-print-doing.      // 2026-03-29
+
+    // Parse a date string
+    parsed-into  "2000-01-01"-parse-it  "Y-m-d"-with.
+    yr-into      parsed-year-it.
+    yr-print-doing.      // 2000
+```
+
 ### Error handling
 
 ```ragul
@@ -185,6 +208,7 @@ program-ours-effect
 | `minta` module — 5 regex suffixes (`-match`, `-capture`, `-findall`, `-resub`, `-resplit`) | ✅ |
 | `képernyő` module — terminal I/O: `-write`, `-clear`, `-cursor`, `-key`, `-render` | ✅ |
 | `idő` module — `-sleep` timing suffix | ✅ |
+| `dátum` module — 15 date/time suffixes: PHP-style format, parse, arithmetic, timestamps | ✅ |
 | `lista` extensions — `-set`, `-repeat`, `-index` | ✅ |
 | `szöveg` extension — `-chars` (split string to character list) | ✅ |
 | Stdlib: arithmetic, comparison, logical, string, list, math | ✅ |
@@ -216,7 +240,8 @@ ragul/
 │   ├── core.py       # Arithmetic, comparison, logical, string concat
 │   ├── modules.py    # matematika, szöveg, lista, adatok, minta modules
 │   ├── screen.py     # képernyő — terminal I/O (5 suffixes)
-│   └── time.py       # idő — timing (-sleep)
+│   ├── time.py       # idő — timing (-sleep)
+│   └── datum.py      # dátum — date/time (15 suffixes)
 ├── agents/
 │   ├── orchestrator.py   # Coordinates the pipeline; Claude AI error analysis
 │   ├── task.py           # Task / TaskResult message protocol

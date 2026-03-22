@@ -61,3 +61,4 @@ nav:
     - "-with / -val Arguments": examples/11_with_arguments.md
     - "Regex Patterns (minta)": examples/12_regex_patterns.md
     - "Terminal & Game": examples/13_terminal_game.md
+    - "Date & Time (dátum)": examples/14_date.md

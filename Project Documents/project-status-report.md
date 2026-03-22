@@ -243,7 +243,7 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 - [x] Architecture documentation — `Project Documents/ragul-game-architecture.md`
 - [x] Fix typo: `pozitív-e-nk-ha` / `pozitív-e-ours-if` in `docs/control.md` and `ragul-spec.md` — stray `-e` (error-propagation suffix) removed from scope name; correct form is `pozitív-nk-ha` / `pozitív-ours-if`
 - [x] Fix typo: `-szöteggé` → `-szöveggé` throughout — renamed in `stdlib/modules.py`, `model.py`, `typechecker.py`, `errors.py`, `docs/stdlib.md`, `docs/glossary.md`, `docs/types.md`, `ragul-spec.md`, and example files
-- [ ] `dátum` module — date/time operations
+- [x] `dátum` module — date/time operations (PHP-style formatting, 15 suffixes)
 - [ ] OOP / record-update syntax for E009 to become triggerable
 - [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)
 - [ ] Split `stdlib/modules.py` into separate per-module files (`stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py`, `stdlib/minta.py`, etc.) — easier to maintain and extend

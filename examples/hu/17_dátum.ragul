@@ -1,0 +1,123 @@
+// 17_dátum.ragul — dátum modul: dátum/idő formázás és számítás
+//
+// -most          aktuális helyi dátum/idő (bemenet figyelmen kívül marad)
+// -dátumformáz   PHP-stílusú formátumstring → szöveg  pl.  most-dátumformáz-t  "Y-m-d"-val.
+// -dátumértelmez szöveg + formátum → dátum | Hiba    pl.  "2000-01-01"-dátumértelmez-t  "Y-m-d"-val.
+// -év/-hónap/-nap/-óra/-perc/-másodperc/-hétfőnap  mezők kinyerése (H=1…V=7)
+// -időbélyeg     dátum → Unix időbélyeg (tört szám)
+// -időpontból    Unix időbélyeg → helyi dátum
+// -napok         N nap hozzáadása
+// -órák          N óra hozzáadása
+// -különbség     (arg − self) másodpercben; pozitív, ha arg a későbbi
+//
+// Futtatás: ragul futtat examples/hu/17_dátum.ragul
+
+program-nk-hatás
+
+	// ---------------------------------------------------------------
+	// 1. Aktuális dátum/idő lekérése és formázása
+	// ---------------------------------------------------------------
+	most-ba  0-most-t.
+
+	// Teljes ISO időbélyeg: "2026-03-21 09:05:07"
+	iso-ba  most-dátumformáz-t  "Y-m-d H:i:s"-val.
+	iso-képernyőre-va.
+
+	// Emberi olvasható alak: "Saturday, March 21, 2026"
+	hosszú-ba  most-dátumformáz-t  "l, F j, Y"-val.
+	hosszú-képernyőre-va.
+
+	// 12 órás óra AM/PM jelzéssel: "9:05 AM"
+	órajelzés-be  most-dátumformáz-t  "g:i A"-val.
+	órajelzés-képernyőre-va.
+
+	// ISO hétszám: "12"
+	hétszám-ba  most-dátumformáz-t  "W"-val.
+	"Hét: "-nyomtat-va.  hétszám-képernyőre-va.
+
+	"\n"-nyomtat-va.
+
+	// ---------------------------------------------------------------
+	// 2. Egyes mezők kinyerése
+	// ---------------------------------------------------------------
+	év-be       most-év-t.
+	hónap-ba    most-hónap-t.
+	nap-ba      most-nap-t.
+	óra-ba      most-óra-t.
+	perc-be     most-perc-t.
+	mperc-be    most-másodperc-t.
+	hétfőnap-ba most-hétfőnap-t.    // H=1 … V=7
+
+	"Év:       "-nyomtat-va.  év-képernyőre-va.
+	"Hónap:    "-nyomtat-va.  hónap-képernyőre-va.
+	"Nap:      "-nyomtat-va.  nap-képernyőre-va.
+	"Óra:      "-nyomtat-va.  óra-képernyőre-va.
+	"Perc:     "-nyomtat-va.  perc-képernyőre-va.
+	"Mperc:    "-nyomtat-va.  mperc-képernyőre-va.
+	"Hétfőnap: "-nyomtat-va.  hétfőnap-képernyőre-va.    // 6 = szombat
+
+	"\n"-nyomtat-va.
+
+	// ---------------------------------------------------------------
+	// 3. Dátum-számítás
+	// ---------------------------------------------------------------
+	holnap-ba      most-1-napok-t.
+	jövőhéten-ba   most-7-napok-t.
+	három-órán-ba  most-3-órák-t.
+
+	// A formátumstringet külön -val szóként adjuk át
+	hf-ba  holnap-dátumformáz-t     "Y-m-d"-val.
+	jh-ba  jövőhéten-dátumformáz-t  "Y-m-d"-val.
+	ho-ba  három-órán-dátumformáz-t  "H:i"-val.
+
+	"Holnap:       "-nyomtat-va.  hf-képernyőre-va.
+	"Jövő héten:   "-nyomtat-va.  jh-képernyőre-va.
+	"3 óra múlva:  "-nyomtat-va.  ho-képernyőre-va.
+	// Napok kivonásához számíts negatív értéket előbb:
+	//   mínusz-ba  0-1-kivon-t.   tegnap-ba  most-mínusz-napok-t.
+
+	"\n"-nyomtat-va.
+
+	// ---------------------------------------------------------------
+	// 4. Unix időbélyeg körforgás
+	// ---------------------------------------------------------------
+	bélyeg-be        most-időbélyeg-t.
+	"Unix időbélyeg: "-nyomtat-va.  bélyeg-képernyőre-va.
+
+	visszaállított-ba  bélyeg-időpontból-t.
+	vf-ba              visszaállított-dátumformáz-t  "Y-m-d"-val.
+	"Visszaállított:  "-nyomtat-va.  vf-képernyőre-va.
+
+	"\n"-nyomtat-va.
+
+	// ---------------------------------------------------------------
+	// 5. Két dátum különbsége
+	// ---------------------------------------------------------------
+	// (arg − self) másodpercben; jövőhéten a későbbi → pozitív eredmény
+	különbség-be  most-jövőhéten-különbség-t.
+	"Másodperc jövő hétig: "-nyomtat-va.  különbség-képernyőre-va.
+
+	"\n"-nyomtat-va.
+
+	// ---------------------------------------------------------------
+	// 6. Dátumszöveg értelmezése
+	// ---------------------------------------------------------------
+	// Sikeresnél dátumot ad, hibásnál Hiba értéket.
+	értelmezett-ba  "2000-01-01"-dátumértelmez-t  "Y-m-d"-val.
+	ezredév-be      értelmezett-év-t.
+	"Ezredév éve: "-nyomtat-va.  ezredév-képernyőre-va.    // 2000
+
+	// Hibás bemenet → Hiba objektum kiírása
+	rossz-ba  "nem-dátum"-dátumértelmez-t  "Y-m-d"-val.
+	"Hibás értelmezés: "-nyomtat-va.  rossz-képernyőre-va.
+
+	"\n"-nyomtat-va.
+
+	// ---------------------------------------------------------------
+	// 7. Szökőév és hónap hossza
+	// ---------------------------------------------------------------
+	szökőév-be       most-dátumformáz-t  "L"-val.
+	hónap-hossza-ba  most-dátumformáz-t  "t"-val.
+	"Szökőév?       "-nyomtat-va.  szökőév-képernyőre-va.      // "1" ha szökőév, "0" ha nem
+	"Hónap hossza:  "-nyomtat-va.  hónap-hossza-képernyőre-va. // pl. "31" márciusban
+

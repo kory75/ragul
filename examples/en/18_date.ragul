@@ -1,0 +1,123 @@
+// 18_date.ragul — dátum module: date/time formatting and arithmetic
+//
+// -now          returns the current local datetime (input is ignored)
+// -dateformat   PHP-style format string → text   e.g.  now-dateformat-it  "Y-m-d"-with.
+// -parse        text + format → datetime | Hiba  e.g.  "2000-01-01"-parse-it  "Y-m-d"-with.
+// -year/-month/-day/-hour/-minute/-second/-weekday  extract fields (Mon=1…Sun=7)
+// -timestamp    datetime → Unix timestamp (float)
+// -fromseconds  Unix timestamp → local datetime
+// -adddays      add N days
+// -addhours     add N hours
+// -diffseconds  (arg − self) in seconds; positive when arg is later
+//
+// Run: ragul run examples/en/18_date.ragul
+
+program-ours-effect
+
+	// ---------------------------------------------------------------
+	// 1. Get the current datetime and format it
+	// ---------------------------------------------------------------
+	now-into  0-now-it.
+
+	// Full ISO timestamp: "2026-03-21 09:05:07"
+	iso-into  now-dateformat-it  "Y-m-d H:i:s"-with.
+	iso-print-doing.
+
+	// Human-readable: "Saturday, March 21, 2026"
+	long-into  now-dateformat-it  "l, F j, Y"-with.
+	long-print-doing.
+
+	// 12-hour clock with AM/PM: "9:05 AM"
+	clock-into  now-dateformat-it  "g:i A"-with.
+	clock-print-doing.
+
+	// ISO week number: "12"
+	wk-into  now-dateformat-it  "W"-with.
+	"Week: "-write-doing.  wk-print-doing.
+
+	"\n"-write-doing.
+
+	// ---------------------------------------------------------------
+	// 2. Extract individual fields
+	// ---------------------------------------------------------------
+	yr-into  now-year-it.
+	mo-into  now-month-it.
+	dy-into  now-day-it.
+	hr-into  now-hour-it.
+	mn-into  now-minute-it.
+	sc-into  now-second-it.
+	wd-into  now-weekday-it.    // Mon=1 … Sun=7
+
+	"Year:    "-write-doing.  yr-print-doing.
+	"Month:   "-write-doing.  mo-print-doing.
+	"Day:     "-write-doing.  dy-print-doing.
+	"Hour:    "-write-doing.  hr-print-doing.
+	"Minute:  "-write-doing.  mn-print-doing.
+	"Second:  "-write-doing.  sc-print-doing.
+	"Weekday: "-write-doing.  wd-print-doing.    // 6 = Saturday
+
+	"\n"-write-doing.
+
+	// ---------------------------------------------------------------
+	// 3. Date arithmetic
+	// ---------------------------------------------------------------
+	tomorrow-into  now-1-adddays-it.
+	nextweek-into  now-7-adddays-it.
+	in3hrs-into    now-3-addhours-it.
+
+	// Pass the format string as a -with argument word
+	tm-fmt-into  tomorrow-dateformat-it  "Y-m-d"-with.
+	nw-fmt-into  nextweek-dateformat-it  "Y-m-d"-with.
+	hr-fmt-into  in3hrs-dateformat-it    "H:i"-with.
+
+	"Tomorrow:  "-write-doing.  tm-fmt-print-doing.
+	"Next week: "-write-doing.  nw-fmt-print-doing.
+	"In 3 hrs:  "-write-doing.  hr-fmt-print-doing.
+	// To subtract days, pass a negative via 0-N-sub-it first:
+	//   ago-into  0-1-sub-it.   yesterday-into  now-ago-adddays-it.
+
+	"\n"-write-doing.
+
+	// ---------------------------------------------------------------
+	// 4. Unix timestamp round-trip
+	// ---------------------------------------------------------------
+	ts-into         now-timestamp-it.
+	"Unix timestamp: "-write-doing.  ts-print-doing.
+
+	recovered-into  ts-fromseconds-it.
+	rec-fmt-into    recovered-dateformat-it  "Y-m-d"-with.
+	"Recovered date: "-write-doing.  rec-fmt-print-doing.
+
+	"\n"-write-doing.
+
+	// ---------------------------------------------------------------
+	// 5. Difference between two datetimes
+	// ---------------------------------------------------------------
+	// (arg − self) in seconds; nextweek is later, so result is positive
+	diff-into  now-nextweek-diffseconds-it.
+	"Seconds until next week: "-write-doing.  diff-print-doing.
+
+	"\n"-write-doing.
+
+	// ---------------------------------------------------------------
+	// 6. Parse a date string
+	// ---------------------------------------------------------------
+	// On success returns a datetime; on failure returns a Hiba value.
+	parsed-into  "2000-01-01"-parse-it  "Y-m-d"-with.
+	yr2k-into    parsed-year-it.
+	"Millennium year: "-write-doing.  yr2k-print-doing.    // 2000
+
+	// Bad input → Hiba (prints the error object)
+	bad-into  "not-a-date"-parse-it  "Y-m-d"-with.
+	"Bad parse result: "-write-doing.  bad-print-doing.
+
+	"\n"-write-doing.
+
+	// ---------------------------------------------------------------
+	// 7. Leap-year and month-length format chars
+	// ---------------------------------------------------------------
+	leap-into  now-dateformat-it  "L"-with.
+	days-into  now-dateformat-it  "t"-with.
+	"Leap year?     "-write-doing.  leap-print-doing.    // "1" if leap, "0" if not
+	"Days in month: "-write-doing.  days-print-doing.    // e.g. "31" for March
+

@@ -845,6 +845,253 @@ class TestSzövegExtensions:
 
 
 # ---------------------------------------------------------------------------
+# dátum module tests
+# ---------------------------------------------------------------------------
+
+class TestDátum:
+    """Tests for the dátum date/time module."""
+
+    # fixed datetime: 2026-03-21 09:05:07  (Saturday, ISO weekday 6)
+    _DT = __import__("datetime").datetime(2026, 3, 21, 9, 5, 7)
+
+    def _fn(self, suffix: str):
+        import ragul.stdlib.datum  # noqa: F401
+        from ragul.stdlib.core import SUFFIX_REGISTRY
+        return SUFFIX_REGISTRY[suffix]["fn"]
+
+    # ------------------------------------------------------------------
+    # Registration
+    # ------------------------------------------------------------------
+
+    def test_most_registered(self):
+        import ragul.stdlib.datum  # noqa: F401
+        from ragul.stdlib.core import SUFFIX_REGISTRY
+        assert "-most" in SUFFIX_REGISTRY
+
+    def test_now_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-now") == "-most"
+
+    def test_dateformat_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-dateformat") == "-dátumformáz"
+
+    def test_year_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-year") == "-év"
+
+    def test_diffseconds_alias(self):
+        from ragul.model import ALIAS_TABLE
+        assert ALIAS_TABLE.get("-diffseconds") == "-különbség"
+
+    # ------------------------------------------------------------------
+    # -most returns a datetime
+    # ------------------------------------------------------------------
+
+    def test_most_returns_datetime(self):
+        from datetime import datetime as _dt
+        fn = self._fn("-most")
+        result = fn(0)
+        assert isinstance(result, _dt)
+
+    # ------------------------------------------------------------------
+    # -dátumformáz — PHP format chars
+    # ------------------------------------------------------------------
+
+    def test_format_Y(self):
+        assert self._fn("-dátumformáz")(self._DT, "Y") == "2026"
+
+    def test_format_y(self):
+        assert self._fn("-dátumformáz")(self._DT, "y") == "26"
+
+    def test_format_m(self):
+        assert self._fn("-dátumformáz")(self._DT, "m") == "03"
+
+    def test_format_n(self):
+        assert self._fn("-dátumformáz")(self._DT, "n") == "3"
+
+    def test_format_d(self):
+        assert self._fn("-dátumformáz")(self._DT, "d") == "21"
+
+    def test_format_j(self):
+        assert self._fn("-dátumformáz")(self._DT, "j") == "21"
+
+    def test_format_H(self):
+        assert self._fn("-dátumformáz")(self._DT, "H") == "09"
+
+    def test_format_G(self):
+        assert self._fn("-dátumformáz")(self._DT, "G") == "9"
+
+    def test_format_h(self):
+        assert self._fn("-dátumformáz")(self._DT, "h") == "09"
+
+    def test_format_g(self):
+        assert self._fn("-dátumformáz")(self._DT, "g") == "9"
+
+    def test_format_i(self):
+        assert self._fn("-dátumformáz")(self._DT, "i") == "05"
+
+    def test_format_s(self):
+        assert self._fn("-dátumformáz")(self._DT, "s") == "07"
+
+    def test_format_A(self):
+        assert self._fn("-dátumformáz")(self._DT, "A") == "AM"
+
+    def test_format_a(self):
+        assert self._fn("-dátumformáz")(self._DT, "a") == "am"
+
+    def test_format_N(self):
+        # 2026-03-21 is a Saturday → ISO weekday 6
+        assert self._fn("-dátumformáz")(self._DT, "N") == "6"
+
+    def test_format_w(self):
+        # PHP: Sun=0, Mon=1 … Sat=6
+        assert self._fn("-dátumformáz")(self._DT, "w") == "6"
+
+    def test_format_W(self):
+        # ISO week of 2026-03-21
+        import datetime
+        expected = f"{datetime.date(2026, 3, 21).isocalendar()[1]:02d}"
+        assert self._fn("-dátumformáz")(self._DT, "W") == expected
+
+    def test_format_L_non_leap(self):
+        assert self._fn("-dátumformáz")(self._DT, "L") == "0"
+
+    def test_format_L_leap(self):
+        import datetime
+        dt2024 = datetime.datetime(2024, 6, 1)
+        assert self._fn("-dátumformáz")(dt2024, "L") == "1"
+
+    def test_format_t(self):
+        # March has 31 days
+        assert self._fn("-dátumformáz")(self._DT, "t") == "31"
+
+    def test_format_z(self):
+        # day-of-year, 0-based; 2026-03-21 is day 80 (31+28+21=80) → index 79
+        assert self._fn("-dátumformáz")(self._DT, "z") == "79"
+
+    def test_format_backslash_escape(self):
+        # \Y should emit literal 'Y'
+        assert self._fn("-dátumformáz")(self._DT, r"\Y") == "Y"
+
+    def test_format_combined(self):
+        assert self._fn("-dátumformáz")(self._DT, "Y-m-d H:i:s") == "2026-03-21 09:05:07"
+
+    def test_format_non_datetime_returns_hiba(self):
+        from ragul.stdlib.modules import RagulHiba
+        result = self._fn("-dátumformáz")("not a date", "Y")
+        assert isinstance(result, RagulHiba)
+
+    # ------------------------------------------------------------------
+    # Extraction suffixes
+    # ------------------------------------------------------------------
+
+    def test_év(self):
+        assert self._fn("-év")(self._DT) == 2026
+
+    def test_hónap(self):
+        assert self._fn("-hónap")(self._DT) == 3
+
+    def test_nap(self):
+        assert self._fn("-nap")(self._DT) == 21
+
+    def test_óra(self):
+        assert self._fn("-óra")(self._DT) == 9
+
+    def test_perc(self):
+        assert self._fn("-perc")(self._DT) == 5
+
+    def test_másodperc(self):
+        assert self._fn("-másodperc")(self._DT) == 7
+
+    def test_hétfőnap(self):
+        # Saturday = ISO 6
+        assert self._fn("-hétfőnap")(self._DT) == 6
+
+    def test_extraction_non_datetime_returns_hiba(self):
+        from ragul.stdlib.modules import RagulHiba
+        result = self._fn("-év")(42)
+        assert isinstance(result, RagulHiba)
+
+    # ------------------------------------------------------------------
+    # -időbélyeg / -időpontból round-trip
+    # ------------------------------------------------------------------
+
+    def test_időbélyeg_returns_float(self):
+        ts = self._fn("-időbélyeg")(self._DT)
+        assert isinstance(ts, float)
+
+    def test_időpontból_round_trip(self):
+        from datetime import datetime as _dt
+        ts = self._fn("-időbélyeg")(self._DT)
+        recovered = self._fn("-időpontból")(ts)
+        assert isinstance(recovered, _dt)
+        assert recovered.year == self._DT.year
+        assert recovered.month == self._DT.month
+        assert recovered.day == self._DT.day
+
+    # ------------------------------------------------------------------
+    # -napok / -órák
+    # ------------------------------------------------------------------
+
+    def test_napok_positive(self):
+        result = self._fn("-napok")(self._DT, 1)
+        assert result.day == 22
+
+    def test_napok_negative(self):
+        result = self._fn("-napok")(self._DT, -1)
+        assert result.day == 20
+
+    def test_órák_positive(self):
+        result = self._fn("-órák")(self._DT, 3)
+        assert result.hour == 12
+
+    def test_órák_crosses_day(self):
+        result = self._fn("-órák")(self._DT, 15)
+        assert result.day == 22
+
+    # ------------------------------------------------------------------
+    # -különbség
+    # ------------------------------------------------------------------
+
+    def test_különbség_positive_when_arg_later(self):
+        import datetime
+        later = self._DT + datetime.timedelta(seconds=60)
+        diff = self._fn("-különbség")(self._DT, later)
+        assert diff == pytest.approx(60.0)
+
+    def test_különbség_negative_when_arg_earlier(self):
+        import datetime
+        earlier = self._DT - datetime.timedelta(seconds=30)
+        diff = self._fn("-különbség")(self._DT, earlier)
+        assert diff == pytest.approx(-30.0)
+
+    # ------------------------------------------------------------------
+    # -dátumértelmez
+    # ------------------------------------------------------------------
+
+    def test_dátumértelmez_round_trip(self):
+        from datetime import datetime as _dt
+        formatted = self._fn("-dátumformáz")(self._DT, "Y-m-d")
+        parsed = self._fn("-dátumértelmez")(formatted, "Y-m-d")
+        assert isinstance(parsed, _dt)
+        assert parsed.year == 2026
+        assert parsed.month == 3
+        assert parsed.day == 21
+
+    def test_dátumértelmez_bad_input_returns_hiba(self):
+        from ragul.stdlib.modules import RagulHiba
+        result = self._fn("-dátumértelmez")("not-a-date", "Y-m-d")
+        assert isinstance(result, RagulHiba)
+
+    def test_dátumértelmez_unsupported_char_returns_hiba(self):
+        from ragul.stdlib.modules import RagulHiba
+        # 'U' (unix timestamp) is unsupported for parsing
+        result = self._fn("-dátumértelmez")("1234567890", "U")
+        assert isinstance(result, RagulHiba)
+
+
+# ---------------------------------------------------------------------------
 # Breakout smoke test — lex + parse only (no terminal I/O)
 # ---------------------------------------------------------------------------
 

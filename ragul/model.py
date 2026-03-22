@@ -148,6 +148,22 @@ ALIAS_TABLE: dict[str, str] = {
     "-render":      "-rajzol",
     # idő module aliases
     "-sleep":       "-vár",
+    # dátum module aliases
+    "-now":          "-most",
+    "-dateformat":   "-dátumformáz",
+    "-parse":        "-dátumértelmez",
+    "-year":         "-év",
+    "-month":        "-hónap",
+    "-day":          "-nap",
+    "-hour":         "-óra",
+    "-minute":       "-perc",
+    "-second":       "-másodperc",
+    "-weekday":      "-hétfőnap",
+    "-timestamp":    "-időbélyeg",
+    "-fromseconds":  "-időpontból",
+    "-adddays":      "-napok",
+    "-addhours":     "-órák",
+    "-diffseconds":  "-különbség",
     # lista additions
     "-set":         "-beállít",
     "-repeat":      "-ismét",

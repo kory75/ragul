@@ -84,6 +84,7 @@ The standard library ships seven built-in modules. All suffixes are available wi
 | `minta` | `-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt` | `-match`, `-capture`, `-findall`, `-resub`, `-resplit` |
 | `képernyő` | `-töröl`, `-nyomtat`, `-kurzor`, `-billentyű`, `-rajzol` | `-clear`, `-write`, `-cursor`, `-key`, `-render` |
 | `idő` | `-vár` | `-sleep` |
+| `dátum` | `-most`, `-dátumformáz`, `-dátumértelmez`, `-év`, `-hónap`, `-nap`, `-óra`, `-perc`, `-másodperc`, `-hétfőnap`, `-időbélyeg`, `-időpontból`, `-napok`, `-órák`, `-különbség` | `-now`, `-dateformat`, `-parse`, `-year`, `-month`, `-day`, `-hour`, `-minute`, `-second`, `-weekday`, `-timestamp`, `-fromseconds`, `-adddays`, `-addhours`, `-diffseconds` |
 
 ---
 
