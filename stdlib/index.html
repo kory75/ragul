@@ -1,0 +1,2788 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An agglutinative programming language modelled on Hungarian suffix stacking">
+      
+      
+        <meta name="author" content="Kornel Farkas">
+      
+      
+      
+        <link rel="prev" href="../modules/">
+      
+      
+        <link rel="next" href="../tooling/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Standard Library - Ragul</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#standard-library" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Ragul" class="md-header__button md-logo" aria-label="Ragul" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ragul
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Standard Library
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kory75/ragul" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../syntax/" class="md-tabs__link">
+          
+  
+  
+  Language
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../examples/01_hello/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Ragul" class="md-nav__button md-logo" aria-label="Ragul" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Ragul
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kory75/ragul" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Functions & Scopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Effects & I/O
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-arithmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — Arithmetic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-logical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — Logical
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — String
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matematika-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        matematika — Math
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#szoveg-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        szöveg — Strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lista-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lista — Lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minta-regex-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        minta — Regex Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kepernyo-terminal-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        képernyő — Terminal I/O
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ido-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        idő — Timing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datum-datetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dátum — Date/Time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bridge-suffixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge Suffixes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling & CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Code Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/01_hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hello World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/02_arithmetic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arithmetic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/03_filter_sort/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Filter & Sort
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/04_strings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    String Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/05_booleans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Booleans & Comparisons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/06_list_operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    List Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/07_error_handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/08_json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON Parsing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/09_csv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSV Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/11_with_arguments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -with / -val Arguments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/12_regex_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regex Patterns (minta)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/13_terminal_game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terminal & Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/14_date/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Date & Time (dátum)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-arithmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — Arithmetic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-logical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — Logical
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core — String
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matematika-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        matematika — Math
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#szoveg-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        szöveg — Strings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lista-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lista — Lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minta-regex-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        minta — Regex Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kepernyo-terminal-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        képernyő — Terminal I/O
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ido-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        idő — Timing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datum-datetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dátum — Date/Time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bridge-suffixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bridge Suffixes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="standard-library">Standard Library</h1>
+<p>The standard library is loaded automatically — no import needed. All suffixes below are available in every Ragul program.</p>
+<hr />
+<h2 id="core-arithmetic">Core — Arithmetic</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-össze</code></td>
+<td><code>-add</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Add</td>
+</tr>
+<tr>
+<td><code>-kivon</code></td>
+<td><code>-sub</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Subtract</td>
+</tr>
+<tr>
+<td><code>-szoroz</code></td>
+<td><code>-mul</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Multiply</td>
+</tr>
+<tr>
+<td><code>-oszt</code></td>
+<td><code>-div</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Divide</td>
+</tr>
+<tr>
+<td><code>-maradék</code></td>
+<td><code>-rem</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Modulo (remainder)</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">English aliases</label><label for="__tabbed_1_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>x-into  10-it.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>y-into  x-3-add-it.            // 13
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>z-into  x-3-mul-2-add-it.      // 32
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>x-be  10-t.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>y-be  x-3-össze-t.           // 13
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>z-be  x-3-szoroz-2-össze-t.  // 32
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="core-comparison">Core — Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-felett</code></td>
+<td><code>-above</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Logikai</code></td>
+<td>Greater than</td>
+</tr>
+<tr>
+<td><code>-alatt</code></td>
+<td><code>-below</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Logikai</code></td>
+<td>Less than</td>
+</tr>
+<tr>
+<td><code>-legalább</code></td>
+<td><code>-atleast</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Logikai</code></td>
+<td>Greater than or equal</td>
+</tr>
+<tr>
+<td><code>-legfeljebb</code></td>
+<td><code>-atmost</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td><code>Logikai</code></td>
+<td>Less than or equal</td>
+</tr>
+<tr>
+<td><code>-egyenlő</code></td>
+<td><code>-eq</code></td>
+<td>any</td>
+<td>any</td>
+<td><code>Logikai</code></td>
+<td>Equality</td>
+</tr>
+<tr>
+<td><code>-nemegyenlő</code></td>
+<td><code>-neq</code></td>
+<td>any</td>
+<td>any</td>
+<td><code>Logikai</code></td>
+<td>Not equal</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="core-logical">Core — Logical</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-nem</code></td>
+<td><code>-not</code></td>
+<td><code>Logikai</code></td>
+<td>—</td>
+<td><code>Logikai</code></td>
+<td>Logical NOT</td>
+</tr>
+<tr>
+<td><code>-és</code></td>
+<td><code>-and</code></td>
+<td><code>Logikai</code></td>
+<td><code>Logikai</code></td>
+<td><code>Logikai</code></td>
+<td>Logical AND</td>
+</tr>
+<tr>
+<td><code>-vagy</code></td>
+<td><code>-or</code></td>
+<td><code>Logikai</code></td>
+<td><code>Logikai</code></td>
+<td><code>Logikai</code></td>
+<td>Logical OR</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="core-string">Core — String</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-összefűz</code></td>
+<td><code>-concat</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td>Concatenate strings</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="matematika-math">matematika — Math</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-négyzetgyök</code></td>
+<td><code>-sqrt</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Square root</td>
+</tr>
+<tr>
+<td><code>-hatvány</code></td>
+<td><code>-pow</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Power (arg: exponent)</td>
+</tr>
+<tr>
+<td><code>-abszolút</code></td>
+<td><code>-abs</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Absolute value</td>
+</tr>
+<tr>
+<td><code>-kerekítve</code></td>
+<td><code>-round</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Round to nearest integer</td>
+</tr>
+<tr>
+<td><code>-padló</code></td>
+<td><code>-floor</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Floor</td>
+</tr>
+<tr>
+<td><code>-plafon</code></td>
+<td><code>-ceil</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Ceiling</td>
+</tr>
+<tr>
+<td><code>-log</code></td>
+<td><code>-log</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Logarithm (arg: base)</td>
+</tr>
+<tr>
+<td><code>-sin</code></td>
+<td><code>-sin</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Sine (radians)</td>
+</tr>
+<tr>
+<td><code>-cos</code></td>
+<td><code>-cos</code></td>
+<td><code>Szám</code></td>
+<td><code>Szám</code></td>
+<td>Cosine (radians)</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">English aliases</label><label for="__tabbed_2_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>x-into  16-it.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>y-into  x-sqrt-it.           // 4.0
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>z-into  x-pow-it  2-with.    // 256
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>x-be  16-t.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>y-be  x-négyzetgyök-t.     // 4.0
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>z-be  x-hatvány-t  2-val.  // 256
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="szoveg-strings">szöveg — Strings</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-hossz</code></td>
+<td><code>-len</code></td>
+<td><code>Szöveg</code></td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Length</td>
+</tr>
+<tr>
+<td><code>-nagybetűs</code></td>
+<td><code>-upper</code></td>
+<td><code>Szöveg</code></td>
+<td>—</td>
+<td><code>Szöveg</code></td>
+<td>Uppercase</td>
+</tr>
+<tr>
+<td><code>-kisbetűs</code></td>
+<td><code>-lower</code></td>
+<td><code>Szöveg</code></td>
+<td>—</td>
+<td><code>Szöveg</code></td>
+<td>Lowercase</td>
+</tr>
+<tr>
+<td><code>-tartalmaz</code></td>
+<td><code>-contains</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Logikai</code></td>
+<td>Contains substring</td>
+</tr>
+<tr>
+<td><code>-kezdődik</code></td>
+<td><code>-startswith</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Logikai</code></td>
+<td>Starts with prefix</td>
+</tr>
+<tr>
+<td><code>-végződik</code></td>
+<td><code>-endswith</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Logikai</code></td>
+<td>Ends with suffix</td>
+</tr>
+<tr>
+<td><code>-feloszt</code></td>
+<td><code>-split</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Lista-Szöveg</code></td>
+<td>Split by separator</td>
+</tr>
+<tr>
+<td><code>-formáz</code></td>
+<td><code>-format</code></td>
+<td><code>Szöveg</code></td>
+<td>any</td>
+<td><code>Szöveg</code></td>
+<td>Format string (<code>{}</code> placeholder)</td>
+</tr>
+<tr>
+<td><code>-szelet</code></td>
+<td><code>-slice</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szám</code>, <code>Szám</code></td>
+<td><code>Szöveg</code></td>
+<td>Slice (start, end)</td>
+</tr>
+<tr>
+<td><code>-csere</code></td>
+<td><code>-replace</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code>, <code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td>Replace all occurrences</td>
+</tr>
+<tr>
+<td><code>-számmá</code></td>
+<td><code>-tonum</code></td>
+<td><code>Szöveg</code></td>
+<td>—</td>
+<td><code>vagy-Szám-vagy-Hiba</code></td>
+<td>Parse string as number</td>
+</tr>
+<tr>
+<td><code>-karakterek</code></td>
+<td><code>-chars</code></td>
+<td><code>Szöveg</code></td>
+<td>—</td>
+<td><code>Lista-Szöveg</code></td>
+<td>Split string into list of single characters</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">English aliases</label><label for="__tabbed_3_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>s-into  &quot;helló világ&quot;-it.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>n-into  s-len-it.             // 11
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>u-into  s-upper-it.           // &quot;HELLÓ VILÁG&quot;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>r-into  s-replace-it  &quot;világ&quot;-with  &quot;Ragul&quot;-with.  // &quot;helló Ragul&quot;
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>s-be  &quot;helló világ&quot;-t.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>n-be  s-hossz-t.            // 11
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>u-be  s-nagybetűs-t.        // &quot;HELLÓ VILÁG&quot;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>r-be  s-csere-t  &quot;világ&quot;-val  &quot;Ragul&quot;-val.  // &quot;helló Ragul&quot;
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="lista-lists">lista — Lists</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-rendezve</code></td>
+<td><code>-sorted</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Sort ascending</td>
+</tr>
+<tr>
+<td><code>-fordítva</code></td>
+<td><code>-reversed</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Reverse</td>
+</tr>
+<tr>
+<td><code>-első</code></td>
+<td><code>-first</code></td>
+<td><code>Lista-T</code></td>
+<td><code>T</code></td>
+<td>First element</td>
+</tr>
+<tr>
+<td><code>-utolsó</code></td>
+<td><code>-last</code></td>
+<td><code>Lista-T</code></td>
+<td><code>T</code></td>
+<td>Last element</td>
+</tr>
+<tr>
+<td><code>-egyedi</code></td>
+<td><code>-unique</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Remove duplicates</td>
+</tr>
+<tr>
+<td><code>-lapítva</code></td>
+<td><code>-flat</code></td>
+<td><code>Lista-Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Flatten one level</td>
+</tr>
+<tr>
+<td><code>-szűrve</code></td>
+<td><code>-filter</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Filter (arg: condition)</td>
+</tr>
+<tr>
+<td><code>-hozzáad</code></td>
+<td><code>-append</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Append element (arg: element)</td>
+</tr>
+<tr>
+<td><code>-eltávolít</code></td>
+<td><code>-remove</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Remove element (arg: element)</td>
+</tr>
+<tr>
+<td><code>-hossz</code></td>
+<td><code>-len</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Szám</code></td>
+<td>Length</td>
+</tr>
+<tr>
+<td><code>-tartalmaz</code></td>
+<td><code>-contains</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Logikai</code></td>
+<td>Contains element</td>
+</tr>
+<tr>
+<td><code>-beállít</code></td>
+<td><code>-set</code></td>
+<td><code>Lista-T</code></td>
+<td><code>Lista-T</code></td>
+<td>Replace element at index (non-mutating; args: index, value)</td>
+</tr>
+<tr>
+<td><code>-ismét</code></td>
+<td><code>-repeat</code></td>
+<td>any</td>
+<td><code>Lista-any</code></td>
+<td>Build a list of N copies of a value (arg: N)</td>
+</tr>
+<tr>
+<td><code>-index</code></td>
+<td><code>-index</code></td>
+<td><code>Lista-T</code></td>
+<td><code>T</code></td>
+<td>Element at index; works on strings too (arg: index)</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">English aliases</label><label for="__tabbed_4_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>lista-into  [3, 1, 4, 1, 5, 9, 2, 6]-it.
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sorted-into  lista-sorted-unique-it.          // [1, 2, 3, 4, 5, 6, 9]
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>large-into  lista-filter-from  5-above-with  obj. // [9, 6]
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>lista-be  [3, 1, 4, 1, 5, 9, 2, 6]-t.
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>rendezett-be  lista-rendezve-egyedi-t.      // [1, 2, 3, 4, 5, 6, 9]
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>nagy-be  lista-szűrve-ből  5-felett-val  t. // [9, 6]
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="minta-regex-patterns">minta — Regex Patterns</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg(s)</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-minta</code></td>
+<td><code>-match</code></td>
+<td><code>Szöveg</code></td>
+<td>pattern</td>
+<td><code>Logikai</code></td>
+<td>True if the string contains a match (<code>re.search</code>)</td>
+</tr>
+<tr>
+<td><code>-egyezés</code></td>
+<td><code>-capture</code></td>
+<td><code>Szöveg</code></td>
+<td>pattern</td>
+<td><code>vagy-Szöveg-vagy-Hiba</code></td>
+<td>First match; returns group if one capture group, list if multiple, full match if none</td>
+</tr>
+<tr>
+<td><code>-egyezések</code></td>
+<td><code>-findall</code></td>
+<td><code>Szöveg</code></td>
+<td>pattern</td>
+<td><code>Lista-Szöveg</code></td>
+<td>All non-overlapping matches</td>
+</tr>
+<tr>
+<td><code>-mintacsere</code></td>
+<td><code>-resub</code></td>
+<td><code>Szöveg</code></td>
+<td>pattern, replacement</td>
+<td><code>Szöveg</code></td>
+<td>Replace every match (<code>re.sub</code>); backreferences (<code>\1</code>, <code>\2</code> …) supported</td>
+</tr>
+<tr>
+<td><code>-mintafeloszt</code></td>
+<td><code>-resplit</code></td>
+<td><code>Szöveg</code></td>
+<td>pattern</td>
+<td><code>Lista-Szöveg</code></td>
+<td>Split on every match (<code>re.split</code>)</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">English aliases</label><label for="__tabbed_5_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>minta-from.
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>program-ours-effect
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    text-into  &quot;order #1042 placed 2026-03-16&quot;-it.
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    // check for a match
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    has-into  text-match-it  &quot;\d{4}-\d{2}-\d{2}&quot;-with.
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    has-print-doing.                   // True
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    // extract first match
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    date-into  text-capture-it  &quot;\d{4}-\d{2}-\d{2}&quot;-with.
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    date-print-doing.                  // 2026-03-16
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    // all numbers
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    nums-into  text-findall-it  &quot;\d+&quot;-with.
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    nums-print-doing.                  // [&#39;1042&#39;, &#39;2026&#39;, &#39;03&#39;, &#39;16&#39;]
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    // replace digits with *
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    masked-into  text-resub-it  &quot;\d&quot;-with  &quot;*&quot;-with.
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    masked-print-doing.                // order #**** placed ****-**-**
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    // split on non-word chars
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    words-into  text-resplit-it  &quot;\W+&quot;-with.
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    words-print-doing.                 // [&#39;order&#39;, &#39;1042&#39;, &#39;placed&#39;, &#39;2026&#39;, &#39;03&#39;, &#39;16&#39;]
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>minta-ból.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>program-nk-hatás
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    szöveg-ba  &quot;rendelés #1042 rögzítve: 2026-03-16&quot;-t.
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    // egyezés ellenőrzése
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    van-ba  szöveg-minta-t  &quot;\d{4}-\d{2}-\d{2}&quot;-val.
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    van-képernyőre-va.                 // True
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    // első egyezés
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    dátum-ba  szöveg-egyezés-t  &quot;\d{4}-\d{2}-\d{2}&quot;-val.
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    dátum-képernyőre-va.               // 2026-03-16
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    // összes szám
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    számok-ba  szöveg-egyezések-t  &quot;\d+&quot;-val.
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    számok-képernyőre-va.              // [&#39;1042&#39;, &#39;2026&#39;, &#39;03&#39;, &#39;16&#39;]
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    // számjegyek cseréje *-gal
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    maszkolt-ba  szöveg-mintacsere-t  &quot;\d&quot;-val  &quot;*&quot;-val.
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    maszkolt-képernyőre-va.            // rendelés #**** rögzítve: ****-**-**
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    // szétválasztás nem-szókaraktereken
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    szavak-ba  szöveg-mintafeloszt-t  &quot;\W+&quot;-val.
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    szavak-képernyőre-va.              // [&#39;rendelés&#39;, &#39;1042&#39;, &#39;rögzítve&#39;, &#39;2026&#39;, &#39;03&#39;, &#39;16&#39;]
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="kepernyo-terminal-io">képernyő — Terminal I/O</h2>
+<p>Character-mode terminal output, input, and framebuffer rendering. All suffixes are <strong>pass-through</strong> — they return their input value unchanged so they can appear mid-pipeline.</p>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg(s)</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-töröl</code></td>
+<td><code>-clear</code></td>
+<td>any</td>
+<td>—</td>
+<td>any</td>
+<td>Exit alternate screen (restores normal terminal); or <code>\033[2J\033[H</code> clear if not in alt-screen</td>
+</tr>
+<tr>
+<td><code>-nyomtat</code></td>
+<td><code>-write</code></td>
+<td>any</td>
+<td>—</td>
+<td>any</td>
+<td>Write <code>str(v)</code> to stdout — <strong>no newline</strong></td>
+</tr>
+<tr>
+<td><code>-kurzor</code></td>
+<td><code>-cursor</code></td>
+<td>any</td>
+<td>row, col</td>
+<td>any</td>
+<td>Move cursor to (row, col) via ANSI escape <code>\033[row;colH</code></td>
+</tr>
+<tr>
+<td><code>-billentyű</code></td>
+<td><code>-key</code></td>
+<td>any</td>
+<td>—</td>
+<td><code>Szöveg</code></td>
+<td>Non-blocking keypress; <code>''</code> if none pressed; arrow keys decoded (<code>"LEFT"</code>, <code>"RIGHT"</code>, <code>"UP"</code>, <code>"DOWN"</code>)</td>
+</tr>
+<tr>
+<td><code>-rajzol</code></td>
+<td><code>-render</code></td>
+<td><code>Lista-Lista-Szöveg</code></td>
+<td>—</td>
+<td><code>Lista-Lista-Szöveg</code></td>
+<td>Render a 2-D character framebuffer (<code>List[List[str]]</code>); enters alternate screen buffer on first call</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Alternate screen buffer:</strong> <code>-rajzol</code> enters <code>\033[?1049h</code> on first call and registers an <code>atexit</code> handler to restore the normal terminal. <code>-töröl</code> explicitly exits the alternate screen so game-over text appears in the normal shell history.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">English aliases</label><label for="__tabbed_6_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>program-ours-effect
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    // clear screen, print a message, wait 1 s, then restore
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    0-clear-doing.
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    &quot;Hello from Ragul!\n&quot;-write-doing.
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    0-sleep-it  1000-with.
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    0-clear-doing.
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>program-nk-hatás
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    0-töröl-va.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    &quot;Helló Ragulból!\n&quot;-nyomtat-va.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    0-vár-t  1000-val.
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    0-töröl-va.
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="ido-timing">idő — Timing</h2>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-vár</code></td>
+<td><code>-sleep</code></td>
+<td>any</td>
+<td>ms</td>
+<td>any</td>
+<td>Pause execution for N milliseconds; pass-through (returns input unchanged)</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">English aliases</label><label for="__tabbed_7_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>&quot;tick&quot;-write-doing.
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>0-sleep-it  500-with.
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>&quot; tock\n&quot;-write-doing.
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>&quot;tick&quot;-nyomtat-va.
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>0-vár-t  500-val.
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>&quot; tock\n&quot;-nyomtat-va.
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="datum-datetime">dátum — Date/Time</h2>
+<p>PHP-style date formatting. The canonical pipeline start is <code>0-most-t.</code> — the <code>0</code> is a dummy value discarded by <code>-most</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>Expects</th>
+<th>Arg(s)</th>
+<th>Produces</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-most</code></td>
+<td><code>-now</code></td>
+<td>any</td>
+<td>—</td>
+<td>datetime</td>
+<td>Current local datetime (input ignored)</td>
+</tr>
+<tr>
+<td><code>-dátumformáz</code></td>
+<td><code>-dateformat</code></td>
+<td>datetime</td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td>Format using PHP-style format string</td>
+</tr>
+<tr>
+<td><code>-dátumértelmez</code></td>
+<td><code>-parse</code></td>
+<td><code>Szöveg</code></td>
+<td><code>Szöveg</code></td>
+<td>datetime|<code>Hiba</code></td>
+<td>Parse string → datetime using PHP-style format; returns <code>Hiba</code> on failure or unsupported chars</td>
+</tr>
+<tr>
+<td><code>-év</code></td>
+<td><code>-year</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Year (4-digit integer)</td>
+</tr>
+<tr>
+<td><code>-hónap</code></td>
+<td><code>-month</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Month 1–12</td>
+</tr>
+<tr>
+<td><code>-nap</code></td>
+<td><code>-day</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Day 1–31</td>
+</tr>
+<tr>
+<td><code>-óra</code></td>
+<td><code>-hour</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Hour 0–23</td>
+</tr>
+<tr>
+<td><code>-perc</code></td>
+<td><code>-minute</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Minute 0–59</td>
+</tr>
+<tr>
+<td><code>-másodperc</code></td>
+<td><code>-second</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Second 0–59</td>
+</tr>
+<tr>
+<td><code>-hétfőnap</code></td>
+<td><code>-weekday</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>ISO weekday: Mon=1 … Sun=7</td>
+</tr>
+<tr>
+<td><code>-időbélyeg</code></td>
+<td><code>-timestamp</code></td>
+<td>datetime</td>
+<td>—</td>
+<td><code>Szám</code></td>
+<td>Unix timestamp (float)</td>
+</tr>
+<tr>
+<td><code>-időpontból</code></td>
+<td><code>-fromseconds</code></td>
+<td><code>Szám</code></td>
+<td>—</td>
+<td>datetime</td>
+<td>Local datetime from Unix timestamp</td>
+</tr>
+<tr>
+<td><code>-napok</code></td>
+<td><code>-adddays</code></td>
+<td>datetime</td>
+<td><code>Szám</code></td>
+<td>datetime</td>
+<td>Add N days (negative = subtract)</td>
+</tr>
+<tr>
+<td><code>-órák</code></td>
+<td><code>-addhours</code></td>
+<td>datetime</td>
+<td><code>Szám</code></td>
+<td>datetime</td>
+<td>Add N hours</td>
+</tr>
+<tr>
+<td><code>-különbség</code></td>
+<td><code>-diffseconds</code></td>
+<td>datetime</td>
+<td>datetime</td>
+<td><code>Szám</code></td>
+<td><code>(arg − self)</code> in seconds; positive when arg is later</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PHP format characters</strong> (for <code>-dátumformáz</code> and <code>-dátumértelmez</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Char</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Y</code></td>
+<td>4-digit year</td>
+<td><code>2026</code></td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>2-digit year</td>
+<td><code>26</code></td>
+</tr>
+<tr>
+<td><code>m</code></td>
+<td>Month, zero-padded</td>
+<td><code>03</code></td>
+</tr>
+<tr>
+<td><code>n</code></td>
+<td>Month, no padding</td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>Day, zero-padded</td>
+<td><code>07</code></td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td>Day, no padding</td>
+<td><code>7</code></td>
+</tr>
+<tr>
+<td><code>H</code></td>
+<td>Hour 0–23, zero-padded</td>
+<td><code>09</code></td>
+</tr>
+<tr>
+<td><code>G</code></td>
+<td>Hour 0–23, no padding</td>
+<td><code>9</code></td>
+</tr>
+<tr>
+<td><code>h</code></td>
+<td>Hour 1–12, zero-padded</td>
+<td><code>09</code></td>
+</tr>
+<tr>
+<td><code>g</code></td>
+<td>Hour 1–12, no padding</td>
+<td><code>9</code></td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>Minute, zero-padded</td>
+<td><code>05</code></td>
+</tr>
+<tr>
+<td><code>s</code></td>
+<td>Second, zero-padded</td>
+<td><code>07</code></td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>AM/PM</td>
+<td><code>AM</code></td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>am/pm</td>
+<td><code>am</code></td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td>Day abbreviation</td>
+<td><code>Sat</code></td>
+</tr>
+<tr>
+<td><code>l</code></td>
+<td>Full day name</td>
+<td><code>Saturday</code></td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>Month abbreviation</td>
+<td><code>Mar</code></td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>Full month name</td>
+<td><code>March</code></td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td>ISO weekday (Mon=1, Sun=7)</td>
+<td><code>6</code></td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>PHP weekday (Sun=0, Sat=6)</td>
+<td><code>6</code></td>
+</tr>
+<tr>
+<td><code>W</code></td>
+<td>ISO week number, zero-padded</td>
+<td><code>12</code></td>
+</tr>
+<tr>
+<td><code>z</code></td>
+<td>Day of year, 0-based</td>
+<td><code>79</code></td>
+</tr>
+<tr>
+<td><code>U</code></td>
+<td>Unix timestamp</td>
+<td><code>1742547907</code></td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>Days in the month</td>
+<td><code>31</code></td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>Leap year (<code>1</code>/<code>0</code>)</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>\X</code></td>
+<td>Literal character <code>X</code></td>
+<td><code>\Y</code> → <code>Y</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Parsing limitation:</strong> <code>-dátumértelmez</code> supports <code>Y y m d H h i s A a D l M F</code> only. Characters <code>n G j w W z U t L</code> return <code>Hiba</code> when used as parse formats.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">English aliases</label><label for="__tabbed_8_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>program-ours-effect
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    dt-into  0-now-it.
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    dt-dateformat-it  &quot;Y-m-d H:i:s&quot;-with-print-doing.
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    // → 2026-03-21 09:05:07
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    tomorrow-into  dt-adddays-it  1-with.
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    tomorrow-dateformat-it  &quot;l, F j, Y&quot;-with-print-doing.
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    // → Sunday, March 22, 2026
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>program-nk-hatás
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    dt-be  0-most-t.
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    dt-dátumformáz-t  &quot;Y-m-d H:i:s&quot;-val-képernyőre-va.
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    // → 2026-03-21 09:05:07
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    holnap-ba  dt-napok-t  1-val.
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    holnap-dátumformáz-t  &quot;l, F j, Y&quot;-val-képernyőre-va.
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    // → Sunday, March 22, 2026
+</code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="bridge-suffixes">Bridge Suffixes</h2>
+<p>Bridge suffixes convert between types and must be used when chaining across type boundaries:</p>
+<table>
+<thead>
+<tr>
+<th>Hungarian</th>
+<th>English</th>
+<th>From</th>
+<th>To</th>
+<th>Fallible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-szöveggé</code></td>
+<td><code>-tostr</code></td>
+<td><code>Szám</code></td>
+<td><code>Szöveg</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-számmá</code></td>
+<td><code>-tonum</code></td>
+<td><code>Szöveg</code></td>
+<td><code>vagy-Szám-vagy-Hiba</code></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">English aliases</label><label for="__tabbed_9_2">Hungarian</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>x-into  42-it.
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>s-into  x-tostr-it.           // &quot;42&quot;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>n-into  &quot;123&quot;-tonum-doing-?.   // 123, or propagate error
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>x-be  42-t.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>s-be  x-szöveggé-t.         // &quot;42&quot;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>n-be  &quot;123&quot;-számmá-va-e.    // 123, or propagate error
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
