@@ -253,10 +253,10 @@ def _billentyű(v: Any) -> Any:
 def _key_win() -> str:
     try:
         import msvcrt
-        if msvcrt.kbhit():
-            ch = msvcrt.getwch()
+        if msvcrt.kbhit():  # type: ignore[attr-defined]
+            ch = msvcrt.getwch()  # type: ignore[attr-defined]
             if ch in ("\x00", "\xe0"):
-                ch2 = msvcrt.getwch()
+                ch2 = msvcrt.getwch()  # type: ignore[attr-defined]
                 return {"H": "UP", "P": "DOWN", "K": "LEFT", "M": "RIGHT"}.get(ch2, ch + ch2)
             return ch
     except Exception:
