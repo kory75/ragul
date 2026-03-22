@@ -1,5 +1,5 @@
 # Ragul Project — Status Report
-**Date:** 2026-03-22 (updated — v0.3.x)
+**Date:** 2026-03-22 (updated — v0.3.2)
 
 ---
 
@@ -39,8 +39,8 @@ This report compares what those documents specify against what is currently impl
 | **v0.2.0** | **2026-03-16** | E006/E007 type checker errors; bilingual error messages; English I/O aliases; `adatok` module (JSON/CSV); `true`/`false` root aliases; `netin`/`netout` stubs; lexer arithmetic fix; error-code example files; docs overhaul |
 | **v0.2.1** | **2026-03-16** | `-val` binding resolution; fold-as-suffix call; 8 new `-val` tests; `-with`/`-val` example files + docs page |
 | **v0.3.0** | **2026-03-16** | `minta` module — 5 regex suffixes (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`); 5 English aliases; 16 new tests; bilingual example files |
-| **v0.3.x** | **2026-03-17** | `képernyő` module (5 terminal suffixes); `idő` module (`-vár`); lista `-beállít`/`-ismét`/`-index`; szöveg `-karakterek`; 11 aliases; character-mode Téglatörő/Brickbash game (HU+EN); architecture doc |
-| **v0.3.x** | **2026-03-22** | `dátum` module (15 date/time suffixes, PHP-style formatting); 15 EN aliases; 41 new tests (171 total); bilingual example files; full docs page (`docs/examples/14_date.md`); README updated |
+| **v0.3.1** | **2026-03-17** | `képernyő` module (5 terminal suffixes); `idő` module (`-vár`); lista `-beállít`/`-ismét`/`-index`; szöveg `-karakterek`; 11 aliases; character-mode Téglatörő/Brickbash game (HU+EN); architecture doc |
+| **v0.3.2** | **2026-03-22** | `dátum` module (15 date/time suffixes, PHP-style formatting); 15 EN aliases; 41 new tests (171 total); bilingual example files; full docs page (`docs/examples/14_date.md`); README updated |
 
 All versions published to PyPI as `ragul-lang`.
 
@@ -233,23 +233,13 @@ Full MkDocs Material site deployed to GitHub Pages. Includes:
 
 - [x] `minta` module — regex pattern matching (`-minta`, `-egyezés`, `-egyezések`, `-mintacsere`, `-mintafeloszt`)
 
-### v0.3.x — In Progress
+### v0.3.5 — Planned (Polish & OOP foundations)
 
-- [x] `képernyő` module — 5 terminal I/O suffixes (`-töröl`, `-nyomtat`, `-kurzor`, `-billentyű`, `-rajzol`) with EN aliases
-- [x] `idő` module — `-vár` / `-sleep` timing suffix
-- [x] lista extensions — `-beállít` (set-at-index) and `-ismét` (repeat-value)
-- [x] szöveg extension — `-karakterek` / `-chars` (split string to char list)
-- [x] 9 new English aliases added to `ALIAS_TABLE`
-- [x] lista `-index` (element-at-index; works on strings too)
-- [x] Character-mode Téglatörő/Brickbash — `examples/games/téglatörő.ragul` (HU) + `examples/games/en/brickbash.ragul` (EN) + `level1.txt`
-- [x] Architecture documentation — `Project Documents/ragul-game-architecture.md`
-- [x] Fix typo: `pozitív-e-nk-ha` / `pozitív-e-ours-if` in `docs/control.md` and `ragul-spec.md` — stray `-e` (error-propagation suffix) removed from scope name; correct form is `pozitív-nk-ha` / `pozitív-ours-if`
-- [x] Fix typo: `-szöteggé` → `-szöveggé` throughout — renamed in `stdlib/modules.py`, `model.py`, `typechecker.py`, `errors.py`, `docs/stdlib.md`, `docs/glossary.md`, `docs/types.md`, `ragul-spec.md`, and example files
-- [x] `dátum` module — date/time operations (PHP-style formatting, 15 suffixes)
-- [ ] OOP / record-update syntax for E009 to become triggerable
+- [ ] `-ja` field syntax in parser — unblocks E009 type checker and all OOP work
 - [ ] `ragul formáz` formatter command (auto-indent, canonical suffix casing)
-- [ ] Split `stdlib/modules.py` into separate per-module files (`stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py`, `stdlib/minta.py`, etc.) — easier to maintain and extend
+- [ ] Split `stdlib/modules.py` into separate per-module files (`stdlib/matematika.py`, `stdlib/szoveg.py`, `stdlib/lista.py`, `stdlib/minta.py`, etc.)
 - [ ] English aliases for module names — add entries to `ROOT_ALIASES` in `model.py` so `pattern-from.` works as an alias for `minta-ból.`, `math-from.` for `matematika-ból.`, etc.
+- [ ] Docs audit — Hungarian variable names in EN alias tabs; `true`/`false` as language-level aliases; glossary English-first ordering
 
 ---
 

@@ -187,7 +187,7 @@ program-ours-effect
 
 ---
 
-## What's in v0.3.x
+## What's in v0.3.2
 
 | Feature | Status |
 |---|---|
